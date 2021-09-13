@@ -4,26 +4,20 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.spotify.android.appremote.api.ConnectionParams
-import com.spotify.android.appremote.api.Connector.ConnectionListener
-import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.protocol.types.Track
-import com.android.volley.AuthFailureError
 
 import com.google.gson.Gson
-import eu.time.betterspotify.spotify.data.playlist.Item
+import eu.time.betterspotify.spotify.data.playlist.Playlist
 import eu.time.betterspotify.spotify.data.playlist.Playlists
 
 import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
+import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.data.SpotifyApi
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
+import eu.time.betterspotify.spotify.data.track.Item
+import eu.time.betterspotify.spotify.data.track.Tracks
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         val REDIRECT_URI = "http://localhost/Spotify"
     }
 
-    private val playlistList = mutableListOf<Item>()
+    private val playlistList = mutableListOf<Playlist>()
+    private val trackList = mutableListOf<Item>()
     private lateinit var adapter: PlaylistRecycleViewAdapter
 
     private lateinit var spotifyPlayer: SpotifyPlayer
@@ -41,18 +36,29 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-
         initRecycleView()
     }
 
     private fun initRecycleView() {
-        val rvDeviceList = findViewById<RecyclerView>(R.id.rvPlaylistList)
+        val rvPlaylistList = findViewById<RecyclerView>(R.id.rvPlaylistList)
 
-        adapter = PlaylistRecycleViewAdapter(playlistList)
+        adapter = PlaylistRecycleViewAdapter(playlistList) { playlistId ->
+            SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/$playlistId/tracks", { result ->
+                val tracks = result
 
-        rvDeviceList.adapter = adapter
-        rvDeviceList.layoutManager = LinearLayoutManager(this)
+                trackList.clear()
+                trackList.addAll(tracks)
+                rvPlaylistList.adapter = TrackRecycleViewAdapter(trackList)
+            })
+        }
+
+        rvPlaylistList.adapter = adapter
+        rvPlaylistList.layoutManager = LinearLayoutManager(this)
+    }
+
+    override fun onBackPressed() {
+        initRecycleView()
+        updateRecycleView(playlistList.toList())
     }
 
     override fun onStart() {
@@ -69,7 +75,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             startLoginActivity()
         }
-
     }
 
     private fun loadSpotify() {
@@ -91,27 +96,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun connected() {
-        // Play a playlist
-
-        SpotifyApi.getInstance().getPlaylists(this, { response ->
-            val playlists = Gson().fromJson(response, Playlists::class.java)
-            updateRecycleView(playlists.items)
-        })
-
-//        mSpotifyAppRemote.playerApi.play("spotify:track:2aIB1CdRRG7YLBu9hNw9nR")
-
-        // Subscribe to PlayerState
-//        mSpotifyAppRemote.getPlayerApi()
-//            .subscribeToPlayerState()
-//            .setEventCallback { playerState ->
-//                val track: Track = playerState.track
-//                Log.d("MainActivity", track.name.toString() + " by " + track.artist.name)
-//            }
-    }
-
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateRecycleView(newData: List<Item>) {
+    private fun updateRecycleView(newData: List<Playlist>) {
         playlistList.clear()
         playlistList.addAll(newData)
         adapter.notifyDataSetChanged()

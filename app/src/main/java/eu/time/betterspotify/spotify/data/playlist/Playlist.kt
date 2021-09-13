@@ -1,6 +1,6 @@
 package eu.time.betterspotify.spotify.data.playlist
 
-data class Item(
+data class Playlist(
     val collaborative: Boolean,
     val description: String,
     val external_urls: ExternalUrls,

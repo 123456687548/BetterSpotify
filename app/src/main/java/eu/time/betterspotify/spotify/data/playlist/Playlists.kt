@@ -2,7 +2,7 @@ package eu.time.betterspotify.spotify.data.playlist
 
 data class Playlists(
     val href: String,
-    val items: List<Item>,
+    val items: List<Playlist>,
     val limit: Int,
     val next: String,
     val offset: Int,

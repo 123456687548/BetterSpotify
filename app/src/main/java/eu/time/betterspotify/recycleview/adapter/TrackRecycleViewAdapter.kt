@@ -9,10 +9,10 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import eu.time.betterspotify.MainActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.playlist.Item
+import eu.time.betterspotify.spotify.data.playlist.Playlist
+import eu.time.betterspotify.spotify.data.track.Item
 
 class TrackRecycleViewAdapter(private val dataSet: MutableList<Item>) :
     RecyclerView.Adapter<TrackRecycleViewAdapter.ViewHolder>() {
@@ -40,11 +40,11 @@ class TrackRecycleViewAdapter(private val dataSet: MutableList<Item>) :
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.tvPlaylistName.text = dataSet[position].name
-        viewHolder.tvPlaylistUri.text = dataSet[position].uri
+        viewHolder.tvPlaylistName.text = dataSet[position].track.name
+        viewHolder.tvPlaylistUri.text = dataSet[position].track.uri
 
-        if (dataSet[position].images.isNotEmpty()) {
-            Picasso.get().load(dataSet[position].images[0].url).into(viewHolder.ivPlaylistImage)
+        if (dataSet[position].track.album.images.isNotEmpty()) {
+            Picasso.get().load(dataSet[position].track.album.images[0].url).into(viewHolder.ivPlaylistImage)
         }
     }
 

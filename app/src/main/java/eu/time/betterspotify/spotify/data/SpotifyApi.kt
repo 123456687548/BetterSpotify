@@ -17,8 +17,9 @@ import android.util.Log
 import com.google.gson.Gson
 import eu.time.betterspotify.MainActivity
 import eu.time.betterspotify.R
+import eu.time.betterspotify.spotify.data.track.Item
+import eu.time.betterspotify.spotify.data.track.Tracks
 import eu.time.betterspotify.util.newSha256
-
 
 class SpotifyApi private constructor() {
     companion object {
@@ -112,6 +113,55 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
+    private fun refreshToken(context: Context) {
+        val param: MutableMap<String, String> = HashMap()
+        param["client_id"] = CLIENT_ID
+        param["grant_type"] = "refresh_token"
+        param["refresh_token"] = token.refreshToken
+
+        val bodyBuilder = StringBuilder()
+
+        param.forEach { (key, value) ->
+            bodyBuilder.append(key).append("=").append(value).append("&")
+        }
+
+        var body = bodyBuilder.substring(0, bodyBuilder.length - 1)
+
+        val queue = Volley.newRequestQueue(context)
+
+        val stringRequest = object : StringRequest(Method.POST, "https://accounts.spotify.com/api/token", {
+            token = Gson().fromJson(it, TokenResult::class.java)
+
+            val sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+            if (sharedPref != null) {
+                with(sharedPref.edit()) {
+                    putString(context.getString(R.string.spotify_access_token), token.accessToken)
+                    putString(context.getString(R.string.spotify_refresh_token), token.refreshToken)
+                    apply()
+                }
+            }
+
+            startMainActivity(context)
+        }, {
+            it.message?.let { it1 -> Log.d("request", it1) }
+        }) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                return param
+            }
+
+            override fun getBody(): ByteArray {
+                return body.toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/x-www-form-urlencoded"
+            }
+        }
+
+        queue.add(stringRequest)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun requestAccess(context: Context) {
         val scopes = this.scopes.joinToString(" ")
@@ -161,13 +211,40 @@ class SpotifyApi private constructor() {
         return code
     }
 
-    fun getPlaylists(context: Context, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
+    fun getPlaylists(
+        context: Context, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshToken(context)
+            getPlaylists(context, onSuccess)
+        }
+    ) {
         val header: MutableMap<String, String> = HashMap()
         header["Accept"] = "application/json"
         header["Content-Type"] = "application/json"
         header["Authorization"] = "Bearer ${token.accessToken}"
 
         sendGetRequest(context, "https://api.spotify.com/v1/me/playlists", header, onSuccess, onError)
+    }
+
+    fun getPlaylistTracks(
+        context: Context, url: String, onSuccess: (response: List<Item>) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshToken(context)
+            getPlaylistTracks(context, url, onSuccess)
+        }, trackList: MutableList<Item> = mutableListOf()
+    ) {
+        val header: MutableMap<String, String> = HashMap()
+        header["Accept"] = "application/json"
+        header["Content-Type"] = "application/json"
+        header["Authorization"] = "Bearer ${token.accessToken}"
+
+        sendGetRequest(context, url, header, { result ->
+            val tracks = Gson().fromJson(result, Tracks::class.java)
+            trackList.addAll(tracks.items)
+            if (tracks.next == null) {
+                onSuccess(trackList)
+            } else {
+                getPlaylistTracks(context, tracks.next, onSuccess, onError, trackList)
+            }
+        }, onError)
     }
 
     fun initalize(accessToken: String, refreshToken: String) {
@@ -216,7 +293,7 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
-    private fun startMainActivity(context: Context){
+    private fun startMainActivity(context: Context) {
         val intent = Intent(context, MainActivity::class.java)
         context.startActivity(intent)
     }
