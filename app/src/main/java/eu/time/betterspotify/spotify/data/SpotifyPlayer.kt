@@ -5,6 +5,8 @@ import android.util.Log
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.spotify.protocol.types.PlayerState
+import com.spotify.protocol.types.Track
 import eu.time.betterspotify.MainActivity
 
 class SpotifyPlayer private constructor() {
@@ -24,8 +26,8 @@ class SpotifyPlayer private constructor() {
 
     private var isConnected = false
 
-    fun getRemote(context: Context): SpotifyAppRemote {
-        if(!isConnected) connect(context)
+    fun getRemote(): SpotifyAppRemote? {
+        if (!isConnected) return null
         return mSpotifyAppRemote
     }
 
@@ -44,6 +46,8 @@ class SpotifyPlayer private constructor() {
 
                     // Now you can start interacting with App Remote
 //                    connected()
+
+
                     isConnected = true
                 }
 

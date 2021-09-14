@@ -2,14 +2,14 @@ package eu.time.betterspotify.spotify.data.track
 
 data class Track(
     val album: Album,
-    val artists: List<ArtistX>,
+    val artists: List<Artist>,
     val available_markets: List<String>,
     val disc_number: Int,
     val duration_ms: Int,
     val episode: Boolean,
     val explicit: Boolean,
     val external_ids: ExternalIds,
-    val external_urls: ExternalUrlsXXXX,
+    val external_urls: ExternalUrls,
     val href: String,
     val id: String,
     val is_local: Boolean,

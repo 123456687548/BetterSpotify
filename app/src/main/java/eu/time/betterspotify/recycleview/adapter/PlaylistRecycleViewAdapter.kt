@@ -8,13 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import eu.time.betterspotify.R
-import eu.time.betterspotify.spotify.data.SpotifyApi
-import eu.time.betterspotify.spotify.data.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.playlist.Playlist
-import eu.time.betterspotify.spotify.data.track.Tracks
+import eu.time.betterspotify.util.loadImageFromUrl
 
 class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, private val playlistCallback: (String) -> Unit) :
     RecyclerView.Adapter<PlaylistRecycleViewAdapter.ViewHolder>() {
@@ -23,17 +20,15 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
         lateinit var playlist: Playlist
         lateinit var callback: (String) -> Unit
 
-        val tvPlaylistName: TextView = view.findViewById(R.id.tvPlaylistName)
-        val tvPlaylistUri: TextView = view.findViewById(R.id.tvPlaylistUri)
-        val ivPlaylistImage: ImageView = view.findViewById(R.id.ivPlaylistImage)
+        val tvPlaylistName: TextView = view.findViewById(R.id.tvTitle)
+        val tvPlaylistUri: TextView = view.findViewById(R.id.tvArtist)
+        val ivPlaylistImage: ImageView = view.findViewById(R.id.ivCover)
 
         init {
             view.setOnClickListener {
                 val uri = playlist.uri
 
                 callback(playlist.id)
-
-
 
 //                SpotifyPlayer.getInstance().getRemote(view.context).playerApi.play(uri)
             }
@@ -54,7 +49,7 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
         viewHolder.tvPlaylistUri.text = dataSet[position].tracks.total.toString()
 
         if (dataSet[position].images.isNotEmpty()) {
-            Picasso.get().load(dataSet[position].images[0].url).into(viewHolder.ivPlaylistImage)
+            viewHolder.ivPlaylistImage.loadImageFromUrl(dataSet[position].images[0].url)
         }
     }
 
