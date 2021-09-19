@@ -42,12 +42,12 @@
             android:id="@+id/btnPlay"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@drawable/ic_baseline_play_arrow_24"
+            android:src="@drawable/ic_baseline_play_arrow_48"
             android:visibility="gone"/>
 
     <ImageButton
             android:id="@+id/btnQueue"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@drawable/ic_baseline_queue_24" />
+            android:src="@drawable/ic_baseline_queue_48" />
 </LinearLayout>

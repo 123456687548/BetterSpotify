@@ -1,7 +1,6 @@
 package eu.time.betterspotify
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -60,17 +59,17 @@ class BigPlayerActivity : AppCompatActivity() {
                 when (it.playbackOptions.repeatMode) {
                     0 -> { //is no repeat -> repeat all
                         playerApi.setRepeat(2)
-                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_24)
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
                         btnRepeat.setColorFilter(activeColor)
                     }
                     1 -> { // is repeat one -> no repeat
                         playerApi.setRepeat(0)
-                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_24)
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
                         btnRepeat.clearColorFilter()
                     }
                     2 -> { // is repeat all -> repeat one
                         playerApi.setRepeat(1)
-                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_24)
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
                     }
                 }
             }
@@ -96,10 +95,10 @@ class BigPlayerActivity : AppCompatActivity() {
             playerApi?.playerState?.setResultCallback {
                 if (it.isPaused) {
                     playerApi.resume()
-                    btnPlay.setImageResource(R.drawable.ic_baseline_pause_24)
+                    btnPlay.setImageResource(R.drawable.ic_baseline_pause_48)
                 } else {
                     playerApi.pause()
-                    btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                    btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_48)
                 }
             }
         }
@@ -170,9 +169,9 @@ class BigPlayerActivity : AppCompatActivity() {
                             }
 
                             if (playerState.isPaused) {
-                                btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                                btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_48)
                             } else {
-                                btnPlay.setImageResource(R.drawable.ic_baseline_pause_24)
+                                btnPlay.setImageResource(R.drawable.ic_baseline_pause_48)
                             }
 
                             if (playerState.playbackOptions.isShuffling) {
@@ -183,14 +182,14 @@ class BigPlayerActivity : AppCompatActivity() {
 
                             when (playerState.playbackOptions.repeatMode) {
                                 0 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_24)
+                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
                                     btnRepeat.clearColorFilter()
                                 }
                                 1 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_24)
+                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
                                 }
                                 2 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_24)
+                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
                                     btnRepeat.setColorFilter(activeColor)
                                 }
                             }
