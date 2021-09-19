@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import eu.time.betterspotify.R
+import eu.time.betterspotify.spotify.data.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.playlist.Playlist
 import eu.time.betterspotify.util.loadImageFromUrl
 
@@ -26,11 +27,11 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
 
         init {
             view.setOnClickListener {
-                val uri = playlist.uri
-
                 callback(playlist.id)
+            }
 
-//                SpotifyPlayer.getInstance().getRemote(view.context).playerApi.play(uri)
+            ivPlaylistImage.setOnClickListener {
+                SpotifyPlayer.getInstance().getRemote()?.playerApi?.play(playlist.uri)
             }
         }
     }

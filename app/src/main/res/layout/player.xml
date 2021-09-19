@@ -26,6 +26,7 @@
         </FrameLayout>
 
         <LinearLayout
+                android:id="@+id/llPlayerInfo"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="2dp"

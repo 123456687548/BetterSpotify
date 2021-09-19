@@ -1,118 +1,53 @@
 package eu.time.betterspotify
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
-import android.view.ViewStub
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-
-import com.google.gson.Gson
 import com.spotify.protocol.types.PlayerState
 import com.spotify.protocol.types.Track
-import eu.time.betterspotify.spotify.data.playlist.Playlist
-import eu.time.betterspotify.spotify.data.playlist.Playlists
-
-import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
-import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
-import eu.time.betterspotify.spotify.data.SpotifyApi
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.track.Item
 import eu.time.betterspotify.util.loadImageFromUri
-import eu.time.betterspotify.util.loadImageFromUrl
-import java.util.*
-import kotlin.properties.Delegates
+import eu.time.betterspotify.util.toTimestampString
+import java.util.concurrent.TimeUnit
 
-
-class MainActivity : AppCompatActivity() {
-    companion object {
-        val CLIENT_ID = "46d14dadfde64caaaf171e15245a9fe6"
-        val REDIRECT_URI = "http://localhost/Spotify"
-    }
-
-    private val playlistList = mutableListOf<Playlist>()
-    private val trackList = mutableListOf<Item>()
-    private lateinit var adapter: PlaylistRecycleViewAdapter
-
+class BigPlayerActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
-
-    private lateinit var playerView: ViewStub
-
     private var activeColor = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        playerView = findViewById(R.id.stubPlayer)
-        initRecycleView()
+        setContentView(R.layout.fragment_big_player)
 
         activeColor = Color.valueOf(getColor(R.color.green_900)).toArgb()
-    }
-
-    private fun initRecycleView() {
-        val rvPlaylistList = findViewById<RecyclerView>(R.id.rvPlaylistList)
-
-        adapter = PlaylistRecycleViewAdapter(playlistList) { playlistId ->
-            SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/$playlistId/tracks", { result ->
-                val tracks = result
-
-                trackList.clear()
-                trackList.addAll(tracks)
-                rvPlaylistList.adapter = TrackRecycleViewAdapter(trackList)
-            })
-        }
-
-        rvPlaylistList.adapter = adapter
-        rvPlaylistList.layoutManager = LinearLayoutManager(this)
-    }
-
-    override fun onBackPressed() {
-        initRecycleView()
-        updateRecycleView(playlistList.toList())
     }
 
     override fun onStart() {
         super.onStart()
 
-        val sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        val accessToken = sharedPref.getString(getString(R.string.spotify_access_token), "").toString()
-        val refreshToken = sharedPref.getString(getString(R.string.spotify_refresh_token), "").toString()
+        spotifyPlayer = SpotifyPlayer.getInstance()
 
-        if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
-            SpotifyApi.getInstance().initalize(accessToken, refreshToken)
+        spotifyPlayer.connect(this)
 
-            loadSpotify()
-
-            val playerView = findViewById<ViewStub>(R.id.stubPlayer)
-            playerView?.inflate()
-
-            initPlayer()
-        } else {
-            startLoginActivity()
-        }
+        initPlayer()
     }
 
     private fun initPlayer() {
-        val llPlayerInfo = findViewById<LinearLayout>(R.id.llPlayerInfo)
+        val btnClose = findViewById<ImageButton>(R.id.btnClose)
+
         val btnRepeat = findViewById<ImageButton>(R.id.btnRepeat)
         val btnShuffle = findViewById<ImageButton>(R.id.btnShuffle)
         val btnPlay = findViewById<ImageButton>(R.id.btnPlay)
+        val btnPrevious = findViewById<ImageButton>(R.id.btnPrevious)
+        val btnSkip = findViewById<ImageButton>(R.id.btnSkip)
 
-        var update = true
-
-        llPlayerInfo.setOnClickListener {
-            update = false
-            val intent = Intent(this, BigPlayerActivity::class.java)
-            startActivity(intent)
-            overridePendingTransition(R.anim.slide_up,0 )
+        btnClose.setOnClickListener {
+            finish()
         }
 
         btnRepeat.setOnClickListener {
@@ -166,27 +101,49 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        btnPrevious.setOnClickListener {
+            SpotifyPlayer.getInstance().getRemote()?.playerApi?.skipPrevious()
+        }
+
+        btnSkip.setOnClickListener {
+            SpotifyPlayer.getInstance().getRemote()?.playerApi?.skipNext()
+        }
+
         val mainHandler = Handler(Looper.getMainLooper())
 
+        val context = this
+
         mainHandler.post(object : Runnable {
+            @SuppressLint("SetTextI18n")
             override fun run() {
+                spotifyPlayer.connect(context)
+
                 SpotifyPlayer.getInstance().getRemote()?.playerApi
                     ?.subscribeToPlayerState()
                     ?.setEventCallback { playerState: PlayerState ->
                         val track: Track? = playerState.track
                         if (track != null) {
-                            playerView.visibility = View.VISIBLE
+                            val ivPlayerCover = findViewById<ImageView>(R.id.ivBigPlayerCover)
+                            val tvPlayerTitle = findViewById<TextView>(R.id.tvBigPlayerTitle)
+                            val tvPlayerArtist = findViewById<TextView>(R.id.tvBigPlayerArtist)
+                            val pbProgress = findViewById<SeekBar>(R.id.pbProgress)
+                            val tvBigPlayerCurrentProgress = findViewById<TextView>(R.id.tvBigPlayerCurrentProgress)
+                            val tvBigPlayerMaxProgress = findViewById<TextView>(R.id.tvBigPlayerMaxProgress)
 
-                            val ivPlayerCover = findViewById<ImageView>(R.id.ivPlayerCover)
-                            val tvPlayerTitle = findViewById<TextView>(R.id.tvPlayerTitle)
-                            val tvPlayerArtist = findViewById<TextView>(R.id.tvPlayerArtist)
-                            val pbProgress = findViewById<ProgressBar>(R.id.pbProgress)
+                            val trackDuration = track.duration
+                            val trackProgress = playerState.playbackPosition
 
-                            pbProgress.max = track.duration.toInt()
-                            pbProgress.progress = playerState.playbackPosition.toInt()
+                            pbProgress.max = trackDuration.toInt()
+                            pbProgress.progress = trackProgress.toInt()
+
+
+                            tvBigPlayerCurrentProgress.text = trackProgress.toTimestampString()
+                            tvBigPlayerMaxProgress.text = trackDuration.toTimestampString()
+
+                            tvPlayerTitle.isSelected = true
 
                             if (tvPlayerTitle.text != track.name) {
-                                spotifyPlayer.getRemote()?.imagesApi?.getImage(track.imageUri)
+                                SpotifyPlayer.getInstance().getRemote()?.imagesApi?.getImage(track.imageUri)
 
                                 tvPlayerTitle.text = track.name
                                 tvPlayerArtist.text = track.artist.name
@@ -219,26 +176,11 @@ class MainActivity : AppCompatActivity() {
                                     btnRepeat.setColorFilter(activeColor)
                                 }
                             }
-                        } else {
-                            playerView.visibility = View.INVISIBLE
                         }
                     }
 
-                if (update) {
-                    mainHandler.postDelayed(this, 1000)
-                }
+                mainHandler.postDelayed(this, 1000)
             }
-        })
-    }
-
-    private fun loadSpotify() {
-        spotifyPlayer = SpotifyPlayer.getInstance()
-
-        spotifyPlayer.connect(this)
-
-        SpotifyApi.getInstance().getPlaylists(this, { response ->
-            val playlists = Gson().fromJson(response, Playlists::class.java)
-            updateRecycleView(playlists.items)
         })
     }
 
@@ -250,15 +192,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun updateRecycleView(newData: List<Playlist>) {
-        playlistList.clear()
-        playlistList.addAll(newData)
-        adapter.notifyDataSetChanged()
-    }
-
-    private fun startLoginActivity() {
-        val intent = Intent(this, SpotifyAuthenticationActivity::class.java)
-        startActivity(intent)
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, R.anim.slide_down)
     }
 }

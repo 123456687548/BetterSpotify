@@ -7,6 +7,7 @@ import eu.time.betterspotify.spotify.data.SpotifyApi
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.concurrent.TimeUnit
 
 fun String.sha256(): String {
     val md = MessageDigest.getInstance("SHA-256")
@@ -27,4 +28,17 @@ fun ImageView.loadImageFromUri(uri: ImageUri) {
     SpotifyPlayer.getInstance().getRemote()?.imagesApi?.getImage(uri)?.setResultCallback {
         setImageBitmap(it)
     }
+}
+
+fun Long.toTimestampString(): String {
+    val hours = TimeUnit.MILLISECONDS.toHours(this).toInt()
+    val minutes = (TimeUnit.MILLISECONDS.toMinutes(this) % 60).toInt()
+    val seconds = (TimeUnit.MILLISECONDS.toSeconds(this) % 60).toInt()
+
+    val hoursString = if (hours == 0) "" else if (hours < 10) "0${hours}:" else "$hours:"
+//    val minutesString = if(minutes < 10) "0$minutes:" else "$minutes:"
+    val minutesString = "$minutes:"
+    val secondsString = if(seconds < 10) "0$seconds" else "$seconds"
+
+    return "$hoursString$minutesString$secondsString"
 }

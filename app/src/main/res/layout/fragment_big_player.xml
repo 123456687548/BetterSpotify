@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".BigPlayerFragment"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageButton
+                android:id="@+id/btnClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                android:background="@null" />
+
+        <LinearLayout
+                android:id="@+id/llPlaylistName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wiedergabe aus playlist"
+                    android:layout_gravity="center" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Playlist name"
+                    android:layout_gravity="center" />
+
+        </LinearLayout>
+
+        <ImageButton
+                android:id="@+id/btnMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_more_vert_24"
+                android:background="@null" />
+    </LinearLayout>
+
+    <ImageView
+            android:id="@+id/ivBigPlayerCover"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp" />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+            <TextView
+                    android:id="@+id/tvBigPlayerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:text="Lok auf 2 Beinen"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true" />
+
+            <TextView
+                    android:id="@+id/tvBigPlayerArtist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Peter Fox" />
+
+        </LinearLayout>
+
+        <ImageButton
+                android:id="@+id/btnLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/ic_baseline_check_box_outline_blank_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+        <SeekBar
+                android:id="@+id/pbProgress"
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:progressTint="@color/green_900"
+                android:thumbTint="@color/green_1000" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/tvBigPlayerCurrentProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1:20"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1" />
+
+            <TextView
+                    android:id="@+id/tvBigPlayerMaxProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3:44"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="end"
+                    android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+        <ImageButton
+                android:id="@+id/btnShuffle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_shuffle_24"
+                android:background="@null"
+                android:layout_weight="1" />
+
+        <ImageButton
+                android:id="@+id/btnPrevious"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_skip_previous_24"
+                android:background="@null"
+                android:layout_weight="1" />
+
+        <ImageButton
+                android:id="@+id/btnPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_play_arrow_24"
+                android:background="@null"
+                android:layout_weight="1" />
+
+        <ImageButton
+                android:id="@+id/btnSkip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_skip_next_24"
+                android:background="@null"
+                android:layout_weight="1" />
+
+        <ImageButton
+                android:id="@+id/btnRepeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_repeat_24"
+                android:background="@null"
+                android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+        <TextView
+                android:id="@+id/tvBigPlayerDevice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="TimPC"
+                android:layout_weight="1" />
+
+        <ImageButton
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_share_24"
+                android:background="@null" />
+
+        <ImageButton
+                android:id="@+id/btnQueue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_queue_music_24"
+                android:background="@null"
+                android:layout_marginStart="20dp" />
+    </LinearLayout>
+</LinearLayout>

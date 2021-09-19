@@ -26,7 +26,6 @@ class SpotifyAuthenticationActivity : AppCompatActivity() {
             startMainActivity()
         }
 
-        val action: String? = intent?.action
         val data: Uri? = intent?.data
 
         if (data != null) {
