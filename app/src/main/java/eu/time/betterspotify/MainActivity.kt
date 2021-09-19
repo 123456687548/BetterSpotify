@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.view.ViewStub
 import android.widget.*
@@ -27,9 +26,6 @@ import eu.time.betterspotify.spotify.data.SpotifyApi
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.track.Item
 import eu.time.betterspotify.util.loadImageFromUri
-import eu.time.betterspotify.util.loadImageFromUrl
-import java.util.*
-import kotlin.properties.Delegates
 
 
 class MainActivity : AppCompatActivity() {
@@ -186,8 +182,6 @@ class MainActivity : AppCompatActivity() {
                             pbProgress.progress = playerState.playbackPosition.toInt()
 
                             if (tvPlayerTitle.text != track.name) {
-                                spotifyPlayer.getRemote()?.imagesApi?.getImage(track.imageUri)
-
                                 tvPlayerTitle.text = track.name
                                 tvPlayerArtist.text = track.artist.name
 
@@ -245,6 +239,13 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
+//        if (::spotifyPlayer.isInitialized) {
+//            spotifyPlayer.disconnect()
+//        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         if (::spotifyPlayer.isInitialized) {
             spotifyPlayer.disconnect()
         }

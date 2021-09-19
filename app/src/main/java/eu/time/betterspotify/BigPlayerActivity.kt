@@ -7,14 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.widget.*
 import com.spotify.protocol.types.PlayerState
 import com.spotify.protocol.types.Track
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
 import eu.time.betterspotify.util.loadImageFromUri
 import eu.time.betterspotify.util.toTimestampString
-import java.util.concurrent.TimeUnit
+
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
+
 
 class BigPlayerActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
@@ -45,6 +47,7 @@ class BigPlayerActivity : AppCompatActivity() {
         val btnPlay = findViewById<ImageButton>(R.id.btnPlay)
         val btnPrevious = findViewById<ImageButton>(R.id.btnPrevious)
         val btnSkip = findViewById<ImageButton>(R.id.btnSkip)
+        val pbProgress = findViewById<SeekBar>(R.id.pbProgress)
 
         btnClose.setOnClickListener {
             finish()
@@ -109,6 +112,18 @@ class BigPlayerActivity : AppCompatActivity() {
             SpotifyPlayer.getInstance().getRemote()?.playerApi?.skipNext()
         }
 
+        pbProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    SpotifyPlayer.getInstance().getRemote()?.playerApi?.seekTo(progress.toLong())
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+
         val mainHandler = Handler(Looper.getMainLooper())
 
         val context = this
@@ -129,6 +144,8 @@ class BigPlayerActivity : AppCompatActivity() {
                             val pbProgress = findViewById<SeekBar>(R.id.pbProgress)
                             val tvBigPlayerCurrentProgress = findViewById<TextView>(R.id.tvBigPlayerCurrentProgress)
                             val tvBigPlayerMaxProgress = findViewById<TextView>(R.id.tvBigPlayerMaxProgress)
+                            val tvPlayerDevice = findViewById<TextView>(R.id.tvBigPlayerDevice)
+                            val tvPlayerContext = findViewById<TextView>(R.id.tvPlayerContext)
 
                             val trackDuration = track.duration
                             val trackProgress = playerState.playbackPosition
@@ -143,8 +160,9 @@ class BigPlayerActivity : AppCompatActivity() {
                             tvPlayerTitle.isSelected = true
 
                             if (tvPlayerTitle.text != track.name) {
-                                SpotifyPlayer.getInstance().getRemote()?.imagesApi?.getImage(track.imageUri)
-
+                                SpotifyPlayer.getInstance().getRemote()?.playerApi?.subscribeToPlayerContext()?.setEventCallback { playerContext ->
+                                    tvPlayerContext.text = playerContext.title
+                                }
                                 tvPlayerTitle.text = track.name
                                 tvPlayerArtist.text = track.artist.name
 
@@ -187,6 +205,13 @@ class BigPlayerActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
+//        if (::spotifyPlayer.isInitialized) {
+//            spotifyPlayer.disconnect()
+//        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         if (::spotifyPlayer.isInitialized) {
             spotifyPlayer.disconnect()
         }
