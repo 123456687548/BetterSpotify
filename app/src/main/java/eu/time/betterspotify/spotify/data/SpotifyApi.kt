@@ -211,6 +211,28 @@ class SpotifyApi private constructor() {
         return code
     }
 
+    fun search(context: Context, query: String, types: List<String>, onSuccess: (response: String) -> Unit) {
+        val urlEncodedTypes = types.joinToString("%2C")
+
+        sendSearch(context, query, urlEncodedTypes, onSuccess)
+    }
+
+    private fun sendSearch(
+        context: Context, query: String, types: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshToken(context)
+            sendSearch(context, query, types, onSuccess)
+        }
+    ) {
+        val header: MutableMap<String, String> = HashMap()
+        header["Accept"] = "application/json"
+        header["Content-Type"] = "application/json"
+        header["Authorization"] = "Bearer ${token.accessToken}"
+
+        val url = "https://api.spotify.com/v1/search?q=$query&type=$types"
+
+        sendGetRequest(context, url, header, onSuccess, onError)
+    }
+
     fun getPlaylists(
         context: Context, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshToken(context)

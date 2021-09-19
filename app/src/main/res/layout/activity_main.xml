@@ -33,27 +33,30 @@
                 android:id="@+id/btnSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_search_48" />
+                android:src="@drawable/ic_baseline_search_48"
+                android:background="@null" />
 
         <ImageButton
                 android:id="@+id/btnLibrary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_library_music_48" />
+                android:src="@drawable/ic_baseline_library_music_48"
+                android:background="@null" />
 
         <ImageButton
-                android:id="@+id/btnLibrary"
+                android:id="@+id/btnQueue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_library_music_48" />
+                android:src="@drawable/ic_baseline_queue_music_48"
+                android:background="@null" />
 
     </LinearLayout>
 
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:name="eu.time.betterspotify.BigPlayerFragment"-->
-<!--            android:id="@+id/fragmentContainerView" />-->
+    <!--    <androidx.fragment.app.FragmentContainerView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:name="eu.time.betterspotify.BigPlayerFragment"-->
+    <!--            android:id="@+id/fragmentContainerView" />-->
 
 
 </LinearLayout>

@@ -51,6 +51,12 @@ class MainActivity : AppCompatActivity() {
         initRecycleView()
 
         activeColor = Color.valueOf(getColor(R.color.green_900)).toArgb()
+
+
+        findViewById<ImageButton>(R.id.btnSearch).setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initRecycleView() {
