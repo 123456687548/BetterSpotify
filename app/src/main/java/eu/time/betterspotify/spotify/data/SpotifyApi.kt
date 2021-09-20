@@ -189,7 +189,6 @@ class SpotifyApi private constructor() {
     }
 
     private fun generateNonce(): String {
-        Log.d("generateNonce", "called")
         val chars = "abcdefghijklmnopqrstuvwxyz123456789"
         val nonce = StringBuilder()
         val random = Random()
@@ -220,7 +219,7 @@ class SpotifyApi private constructor() {
     private fun sendSearch(
         context: Context, query: String, types: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshToken(context)
-            sendSearch(context, query, types, onSuccess)
+//            sendSearch(context, query, types, onSuccess)
         }
     ) {
         val header: MutableMap<String, String> = HashMap()
@@ -236,7 +235,7 @@ class SpotifyApi private constructor() {
     fun getPlaylists(
         context: Context, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshToken(context)
-            getPlaylists(context, onSuccess)
+//            getPlaylists(context, onSuccess)
         }
     ) {
         val header: MutableMap<String, String> = HashMap()
@@ -250,7 +249,7 @@ class SpotifyApi private constructor() {
     fun getPlaylistTracks(
         context: Context, url: String, onSuccess: (response: List<Item>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshToken(context)
-            getPlaylistTracks(context, url, onSuccess)
+//            getPlaylistTracks(context, url, onSuccess)
         }, trackList: MutableList<Item> = mutableListOf()
     ) {
         val header: MutableMap<String, String> = HashMap()

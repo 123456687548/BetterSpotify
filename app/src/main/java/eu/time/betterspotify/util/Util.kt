@@ -25,9 +25,12 @@ fun ImageView.loadImageFromUrl(url: String) {
 }
 
 fun ImageView.loadImageFromUri(uri: ImageUri) {
-    SpotifyPlayer.getInstance().getRemote()?.imagesApi?.getImage(uri)?.setResultCallback {
-        setImageBitmap(it)
-    }
+
+    SpotifyImageManager.getInstance().loadBitmap(uri, this)
+
+//    SpotifyPlayer.getInstance().getRemote()?.imagesApi?.getImage(uri)?.setResultCallback {
+//        setImageBitmap(it)
+//    }
 }
 
 fun Long.toTimestampString(): String {

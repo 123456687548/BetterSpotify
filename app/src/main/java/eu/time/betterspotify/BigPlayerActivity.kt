@@ -1,6 +1,5 @@
 package eu.time.betterspotify
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,15 +14,47 @@ import eu.time.betterspotify.util.toTimestampString
 
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class BigPlayerActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
     private var activeColor = -1
 
+    private lateinit var btnClose: ImageButton
+    private lateinit var btnRepeat: ImageButton
+    private lateinit var btnShuffle: ImageButton
+    private lateinit var btnPlay: ImageButton
+    private lateinit var btnPrevious: ImageButton
+    private lateinit var btnSkip: ImageButton
+    private lateinit var ivPlayerCover: ImageView
+    private lateinit var tvPlayerTitle: TextView
+    private lateinit var tvPlayerArtist: TextView
+    private lateinit var pbProgress: SeekBar
+    private lateinit var tvBigPlayerCurrentProgress: TextView
+    private lateinit var tvBigPlayerMaxProgress: TextView
+    private lateinit var tvPlayerDevice: TextView
+    private lateinit var tvPlayerContext: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_big_player)
+        setContentView(R.layout.activity_big_player)
+
+        btnClose = findViewById(R.id.btnClose)
+        btnRepeat = findViewById(R.id.btnRepeat)
+        btnShuffle = findViewById(R.id.btnShuffle)
+        btnPlay = findViewById(R.id.btnPlay)
+        btnPrevious = findViewById(R.id.btnPrevious)
+        btnSkip = findViewById(R.id.btnSkip)
+        ivPlayerCover = findViewById(R.id.ivBigPlayerCover)
+        tvPlayerTitle = findViewById(R.id.tvBigPlayerTitle)
+        tvPlayerArtist = findViewById(R.id.tvBigPlayerArtist)
+        pbProgress = findViewById(R.id.pbProgress)
+        tvBigPlayerCurrentProgress = findViewById(R.id.tvBigPlayerCurrentProgress)
+        tvBigPlayerMaxProgress = findViewById(R.id.tvBigPlayerMaxProgress)
+        tvPlayerDevice = findViewById(R.id.tvBigPlayerDevice)
+        tvPlayerContext = findViewById(R.id.tvPlayerContext)
 
         activeColor = Color.valueOf(getColor(R.color.green_900)).toArgb()
     }
@@ -39,16 +70,10 @@ class BigPlayerActivity : AppCompatActivity() {
     }
 
     private fun initPlayer() {
-        val btnClose = findViewById<ImageButton>(R.id.btnClose)
-
-        val btnRepeat = findViewById<ImageButton>(R.id.btnRepeat)
-        val btnShuffle = findViewById<ImageButton>(R.id.btnShuffle)
-        val btnPlay = findViewById<ImageButton>(R.id.btnPlay)
-        val btnPrevious = findViewById<ImageButton>(R.id.btnPrevious)
-        val btnSkip = findViewById<ImageButton>(R.id.btnSkip)
-        val pbProgress = findViewById<SeekBar>(R.id.pbProgress)
+        var active = true
 
         btnClose.setOnClickListener {
+            active = false
             finish()
         }
 
@@ -128,77 +153,74 @@ class BigPlayerActivity : AppCompatActivity() {
         val context = this
 
         mainHandler.post(object : Runnable {
-            @SuppressLint("SetTextI18n")
             override fun run() {
                 spotifyPlayer.connect(context)
 
-                SpotifyPlayer.getInstance().getRemote()?.playerApi
-                    ?.subscribeToPlayerState()
-                    ?.setEventCallback { playerState: PlayerState ->
-                        val track: Track? = playerState.track
-                        if (track != null) {
-                            val ivPlayerCover = findViewById<ImageView>(R.id.ivBigPlayerCover)
-                            val tvPlayerTitle = findViewById<TextView>(R.id.tvBigPlayerTitle)
-                            val tvPlayerArtist = findViewById<TextView>(R.id.tvBigPlayerArtist)
-                            val pbProgress = findViewById<SeekBar>(R.id.pbProgress)
-                            val tvBigPlayerCurrentProgress = findViewById<TextView>(R.id.tvBigPlayerCurrentProgress)
-                            val tvBigPlayerMaxProgress = findViewById<TextView>(R.id.tvBigPlayerMaxProgress)
-                            val tvPlayerDevice = findViewById<TextView>(R.id.tvBigPlayerDevice)
-                            val tvPlayerContext = findViewById<TextView>(R.id.tvPlayerContext)
-
-                            val trackDuration = track.duration
-                            val trackProgress = playerState.playbackPosition
-
-                            pbProgress.max = trackDuration.toInt()
-                            pbProgress.progress = trackProgress.toInt()
-
-
-                            tvBigPlayerCurrentProgress.text = trackProgress.toTimestampString()
-                            tvBigPlayerMaxProgress.text = trackDuration.toTimestampString()
-
-                            tvPlayerTitle.isSelected = true
-
-                            if (tvPlayerTitle.text != track.name) {
-                                SpotifyPlayer.getInstance().getRemote()?.playerApi?.subscribeToPlayerContext()?.setEventCallback { playerContext ->
-                                    tvPlayerContext.text = playerContext.title
-                                }
-                                tvPlayerTitle.text = track.name
-                                tvPlayerArtist.text = track.artist.name
-
-                                ivPlayerCover.loadImageFromUri(track.imageUri)
-                            }
-
-                            if (playerState.isPaused) {
-                                btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_48)
-                            } else {
-                                btnPlay.setImageResource(R.drawable.ic_baseline_pause_48)
-                            }
-
-                            if (playerState.playbackOptions.isShuffling) {
-                                btnShuffle.setColorFilter(activeColor)
-                            } else {
-                                btnShuffle.clearColorFilter()
-                            }
-
-                            when (playerState.playbackOptions.repeatMode) {
-                                0 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
-                                    btnRepeat.clearColorFilter()
-                                }
-                                1 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
-                                }
-                                2 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
-                                    btnRepeat.setColorFilter(activeColor)
-                                }
-                            }
-                        }
+                CoroutineScope(Dispatchers.IO).launch {
+                    SpotifyPlayer.getInstance().getRemote()?.playerApi?.playerState?.setResultCallback { playerState ->
+                        updateBigPlayer(playerState)
                     }
+                }
 
-                mainHandler.postDelayed(this, 1000)
+                if (active) {
+                    mainHandler.postDelayed(this, 1000)
+                }
             }
         })
+    }
+
+    private fun updateBigPlayer(playerState: PlayerState) {
+        runOnUiThread {
+            val track: Track? = playerState.track
+            if (track != null) {
+                val trackDuration = track.duration
+                val trackProgress = playerState.playbackPosition
+
+                pbProgress.max = trackDuration.toInt()
+                pbProgress.progress = trackProgress.toInt()
+
+                tvBigPlayerCurrentProgress.text = trackProgress.toTimestampString()
+                tvBigPlayerMaxProgress.text = trackDuration.toTimestampString()
+
+                tvPlayerTitle.isSelected = true
+
+                if (tvPlayerTitle.text != track.name) {
+                    SpotifyPlayer.getInstance().getRemote()?.playerApi?.subscribeToPlayerContext()?.setEventCallback { playerContext ->
+                        tvPlayerContext.text = playerContext.title
+                    }
+                    tvPlayerTitle.text = track.name
+                    tvPlayerArtist.text = track.artist.name
+
+                    ivPlayerCover.loadImageFromUri(track.imageUri)
+                }
+
+                if (playerState.isPaused) {
+                    btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_48)
+                } else {
+                    btnPlay.setImageResource(R.drawable.ic_baseline_pause_48)
+                }
+
+                if (playerState.playbackOptions.isShuffling) {
+                    btnShuffle.setColorFilter(activeColor)
+                } else {
+                    btnShuffle.clearColorFilter()
+                }
+
+                when (playerState.playbackOptions.repeatMode) {
+                    0 -> {
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
+                        btnRepeat.clearColorFilter()
+                    }
+                    1 -> {
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
+                    }
+                    2 -> {
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
+                        btnRepeat.setColorFilter(activeColor)
+                    }
+                }
+            }
+        }
     }
 
     override fun onStop() {

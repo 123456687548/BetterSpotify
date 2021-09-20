@@ -26,7 +26,9 @@ import eu.time.betterspotify.spotify.data.SpotifyApi
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.track.Item
 import eu.time.betterspotify.util.loadImageFromUri
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -42,16 +44,36 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var playerView: ViewStub
 
+    private lateinit var llPlayerInfo: LinearLayout
+    private lateinit var btnRepeat: ImageButton
+    private lateinit var btnShuffle: ImageButton
+    private lateinit var btnPlay: ImageButton
+    private lateinit var ivPlayerCover: ImageView
+    private lateinit var tvPlayerTitle: TextView
+    private lateinit var tvPlayerArtist: TextView
+    private lateinit var pbProgress: ProgressBar
+
     private var activeColor = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         playerView = findViewById(R.id.stubPlayer)
+        playerView.inflate()
+
+        llPlayerInfo = findViewById(R.id.llPlayerInfo)
+        btnRepeat = findViewById(R.id.btnRepeat)
+        btnShuffle = findViewById(R.id.btnShuffle)
+        btnPlay = findViewById(R.id.btnPlay)
+        ivPlayerCover = findViewById(R.id.ivPlayerCover)
+        tvPlayerTitle = findViewById(R.id.tvPlayerTitle)
+        tvPlayerArtist = findViewById(R.id.tvPlayerArtist)
+        pbProgress = findViewById(R.id.pbProgress)
+
         initRecycleView()
 
         activeColor = Color.valueOf(getColor(R.color.green_900)).toArgb()
-
 
         findViewById<ImageButton>(R.id.btnSearch).setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
@@ -64,10 +86,8 @@ class MainActivity : AppCompatActivity() {
 
         adapter = PlaylistRecycleViewAdapter(playlistList) { playlistId ->
             SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/$playlistId/tracks", { result ->
-                val tracks = result
-
                 trackList.clear()
-                trackList.addAll(tracks)
+                trackList.addAll(result)
                 rvPlaylistList.adapter = TrackRecycleViewAdapter(trackList)
             })
         }
@@ -93,9 +113,6 @@ class MainActivity : AppCompatActivity() {
 
             loadSpotify()
 
-            val playerView = findViewById<ViewStub>(R.id.stubPlayer)
-            playerView?.inflate()
-
             initPlayer()
         } else {
             startLoginActivity()
@@ -103,18 +120,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initPlayer() {
-        val llPlayerInfo = findViewById<LinearLayout>(R.id.llPlayerInfo)
-        val btnRepeat = findViewById<ImageButton>(R.id.btnRepeat)
-        val btnShuffle = findViewById<ImageButton>(R.id.btnShuffle)
-        val btnPlay = findViewById<ImageButton>(R.id.btnPlay)
-
-        var update = true
+        var active = true
 
         llPlayerInfo.setOnClickListener {
-            update = false
+            active = false
             val intent = Intent(this, BigPlayerActivity::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.slide_up,0 )
+            overridePendingTransition(R.anim.slide_up, 0)
         }
 
         btnRepeat.setOnClickListener {
@@ -172,63 +184,64 @@ class MainActivity : AppCompatActivity() {
 
         mainHandler.post(object : Runnable {
             override fun run() {
-                SpotifyPlayer.getInstance().getRemote()?.playerApi
-                    ?.subscribeToPlayerState()
-                    ?.setEventCallback { playerState: PlayerState ->
-                        val track: Track? = playerState.track
-                        if (track != null) {
-                            playerView.visibility = View.VISIBLE
-
-                            val ivPlayerCover = findViewById<ImageView>(R.id.ivPlayerCover)
-                            val tvPlayerTitle = findViewById<TextView>(R.id.tvPlayerTitle)
-                            val tvPlayerArtist = findViewById<TextView>(R.id.tvPlayerArtist)
-                            val pbProgress = findViewById<ProgressBar>(R.id.pbProgress)
-
-                            pbProgress.max = track.duration.toInt()
-                            pbProgress.progress = playerState.playbackPosition.toInt()
-
-                            if (tvPlayerTitle.text != track.name) {
-                                tvPlayerTitle.text = track.name
-                                tvPlayerArtist.text = track.artist.name
-
-                                ivPlayerCover.loadImageFromUri(track.imageUri)
-                            }
-
-                            if (playerState.isPaused) {
-                                btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_48)
-                            } else {
-                                btnPlay.setImageResource(R.drawable.ic_baseline_pause_48)
-                            }
-
-                            if (playerState.playbackOptions.isShuffling) {
-                                btnShuffle.setColorFilter(activeColor)
-                            } else {
-                                btnShuffle.clearColorFilter()
-                            }
-
-                            when (playerState.playbackOptions.repeatMode) {
-                                0 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
-                                    btnRepeat.clearColorFilter()
-                                }
-                                1 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
-                                }
-                                2 -> {
-                                    btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
-                                    btnRepeat.setColorFilter(activeColor)
-                                }
-                            }
-                        } else {
-                            playerView.visibility = View.INVISIBLE
-                        }
+                CoroutineScope(Dispatchers.IO).launch {
+                    SpotifyPlayer.getInstance().getRemote()?.playerApi?.playerState?.setResultCallback { playerState ->
+                        updateTinyPlayer(playerState)
                     }
+                }
 
-                if (update) {
+                if (active) {
                     mainHandler.postDelayed(this, 1000)
                 }
             }
         })
+    }
+
+    private fun updateTinyPlayer(playerState: PlayerState) {
+        runOnUiThread {
+            val track: Track? = playerState.track
+            if (track != null) {
+                playerView.visibility = View.VISIBLE
+
+                pbProgress.max = track.duration.toInt()
+                pbProgress.progress = playerState.playbackPosition.toInt()
+
+                if (tvPlayerTitle.text != track.name) {
+                    tvPlayerTitle.text = track.name
+                    tvPlayerArtist.text = track.artist.name
+
+                    ivPlayerCover.loadImageFromUri(track.imageUri)
+                }
+
+                if (playerState.isPaused) {
+                    btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_48)
+                } else {
+                    btnPlay.setImageResource(R.drawable.ic_baseline_pause_48)
+                }
+
+                if (playerState.playbackOptions.isShuffling) {
+                    btnShuffle.setColorFilter(activeColor)
+                } else {
+                    btnShuffle.clearColorFilter()
+                }
+
+                when (playerState.playbackOptions.repeatMode) {
+                    0 -> {
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
+                        btnRepeat.clearColorFilter()
+                    }
+                    1 -> {
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
+                    }
+                    2 -> {
+                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
+                        btnRepeat.setColorFilter(activeColor)
+                    }
+                }
+            } else {
+                playerView.visibility = View.INVISIBLE
+            }
+        }
     }
 
     private fun loadSpotify() {

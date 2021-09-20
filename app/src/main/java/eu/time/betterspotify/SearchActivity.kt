@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,9 +35,8 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
 
+            //todo search types wie in der app
             override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
-                Log.d("onTextChanged", text.toString())
-
                 if (text.isNotEmpty()) {
                     SpotifyApi.getInstance().search(context, text.toString(), listOf("track", "artist")) { result ->
                         val searchResult = Gson().fromJson(result, Search::class.java)
