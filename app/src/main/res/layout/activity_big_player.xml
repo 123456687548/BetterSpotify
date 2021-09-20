@@ -93,7 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@null"
-                android:src="@drawable/ic_baseline_check_box_outline_blank_48" />
+                android:src="@drawable/ic_baseline_check_box_outline_blank_48"
+                android:visibility="gone" />
 
     </LinearLayout>
 
@@ -189,7 +190,7 @@
                 android:id="@+id/tvBigPlayerDevice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="TimPC"
+                android:text="TimPC ToDo"
                 android:layout_weight="1" />
 
         <ImageButton
