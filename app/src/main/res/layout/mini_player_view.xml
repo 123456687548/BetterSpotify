@@ -5,22 +5,22 @@
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:orientation="horizontal">
 
         <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="64dp"
+                android:layout_height="match_parent" >
 
             <ImageView
                     android:id="@+id/ivPlayerCover"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
             <ImageButton
                     android:id="@+id/btnPlay"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@null"
                     android:src="@drawable/ic_baseline_play_arrow_48" />
         </FrameLayout>
@@ -28,9 +28,9 @@
         <LinearLayout
                 android:id="@+id/llPlayerInfo"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="10dp"
                 android:orientation="vertical"
                 android:layout_gravity="center"
                 android:layout_weight="1">
@@ -39,34 +39,32 @@
                     android:id="@+id/tvPlayerTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_gravity="start|center"
                     android:text="Title"
                     android:textSize="20sp"
-                    android:maxLines="1" />
+                    android:singleLine="true" />
 
             <TextView
                     android:id="@+id/tvPlayerArtist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_gravity="start|center"
                     android:text="Artist"
                     android:textSize="20sp"
-                    android:maxLines="1" />
+                    android:singleLine="true" />
         </LinearLayout>
 
         <ImageButton
                 android:id="@+id/btnShuffle"
                 android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_height="match_parent"
                 android:background="@null"
                 android:src="@drawable/ic_baseline_shuffle_48" />
 
         <ImageButton
                 android:id="@+id/btnRepeat"
                 android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_height="match_parent"
                 android:background="@null"
                 android:src="@drawable/ic_baseline_repeat_48" />
     </LinearLayout>

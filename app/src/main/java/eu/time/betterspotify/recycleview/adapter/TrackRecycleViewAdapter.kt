@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
@@ -36,7 +37,9 @@ class TrackRecycleViewAdapter(private val dataSet: MutableList<Item>) :
             }
 
             btnQueue.setOnClickListener {
-                SpotifyPlayer.getInstance().getRemote()?.playerApi?.queue(track.uri)
+                SpotifyPlayer.getInstance().getRemote()?.playerApi?.queue(track.uri)?.setResultCallback {
+                    Toast.makeText(view.context, "${track.name} queued!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

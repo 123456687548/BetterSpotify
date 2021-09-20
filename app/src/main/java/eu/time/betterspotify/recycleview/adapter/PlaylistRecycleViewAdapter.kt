@@ -21,7 +21,7 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
         lateinit var callback: (String) -> Unit
 
         val tvPlaylistName: TextView = view.findViewById(R.id.tvTitle)
-        val tvPlaylistUri: TextView = view.findViewById(R.id.tvArtist)
+        val tvPlaylistSize: TextView = view.findViewById(R.id.tvPlaylistSize)
         val ivPlaylistImage: ImageView = view.findViewById(R.id.ivCover)
 
         init {
@@ -41,12 +41,11 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
         return ViewHolder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.playlist = dataSet[position]
         viewHolder.callback = playlistCallback
         viewHolder.tvPlaylistName.text = dataSet[position].name
-        viewHolder.tvPlaylistUri.text = dataSet[position].tracks.total.toString()
+        viewHolder.tvPlaylistSize.text = dataSet[position].tracks.total.toString()
 
         if (dataSet[position].images.isNotEmpty()) {
             viewHolder.ivPlaylistImage.loadImageFromUrl(dataSet[position].images[0].url)
