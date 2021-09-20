@@ -9,7 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
-import eu.time.betterspotify.spotify.data.SpotifyPlayer
+import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.track.Item
 import eu.time.betterspotify.spotify.data.track.Track
 import eu.time.betterspotify.util.loadImageFromUrl

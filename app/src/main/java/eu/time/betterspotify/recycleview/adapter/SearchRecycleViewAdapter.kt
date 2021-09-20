@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
-import eu.time.betterspotify.spotify.data.SpotifyPlayer
+import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.search.Item
 import eu.time.betterspotify.util.loadImageFromUrl
 

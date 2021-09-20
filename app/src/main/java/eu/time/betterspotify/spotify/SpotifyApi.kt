@@ -1,4 +1,4 @@
-package eu.time.betterspotify.spotify.data
+package eu.time.betterspotify.spotify
 
 import android.content.Context
 import com.android.volley.AuthFailureError
@@ -15,6 +15,7 @@ import android.util.Log
 import com.google.gson.Gson
 import eu.time.betterspotify.MainActivity
 import eu.time.betterspotify.R
+import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.track.Item
 import eu.time.betterspotify.spotify.data.track.Tracks
 import eu.time.betterspotify.util.sha256

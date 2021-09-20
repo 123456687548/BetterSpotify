@@ -16,8 +16,8 @@ import eu.time.betterspotify.spotify.data.playlist.Playlists
 
 import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
-import eu.time.betterspotify.spotify.data.SpotifyApi
-import eu.time.betterspotify.spotify.data.SpotifyPlayer
+import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.track.Item
 
 class MainActivity : AppCompatActivity() {

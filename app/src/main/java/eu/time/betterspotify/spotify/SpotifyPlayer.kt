@@ -1,4 +1,4 @@
-package eu.time.betterspotify.spotify.data
+package eu.time.betterspotify.spotify
 
 import android.content.Context
 import android.util.Log
@@ -12,7 +12,7 @@ class SpotifyPlayer private constructor() {
         private lateinit var INSTANCE: SpotifyPlayer
 
         fun getInstance(): SpotifyPlayer {
-            if (!::INSTANCE.isInitialized) {
+            if (!Companion::INSTANCE.isInitialized) {
                 INSTANCE = SpotifyPlayer()
             }
 

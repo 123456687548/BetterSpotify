@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import eu.time.betterspotify.recycleview.adapter.SearchRecycleViewAdapter
-import eu.time.betterspotify.spotify.data.SpotifyApi
+import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.data.search.Item
 import eu.time.betterspotify.spotify.data.search.Search
 

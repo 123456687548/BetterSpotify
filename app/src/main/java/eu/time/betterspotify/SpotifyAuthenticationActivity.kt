@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import eu.time.betterspotify.spotify.data.SpotifyApi
+import eu.time.betterspotify.spotify.SpotifyApi
 
 class SpotifyAuthenticationActivity : AppCompatActivity() {
 

@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.util.LruCache
 import android.widget.ImageView
 import com.spotify.protocol.types.ImageUri
-import eu.time.betterspotify.spotify.data.SpotifyPlayer
+import eu.time.betterspotify.spotify.SpotifyPlayer
 
 class SpotifyImageManager private constructor() {
     private val memoryCache: LruCache<String, Bitmap>

@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.*
 import com.spotify.protocol.types.PlayerState
 import com.spotify.protocol.types.Track
-import eu.time.betterspotify.spotify.data.SpotifyPlayer
+import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.util.loadImageFromUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
