@@ -1,6 +1,5 @@
 package eu.time.betterspotify.recycleview.adapter
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
@@ -55,7 +53,6 @@ class TrackRecycleViewAdapter(private val dataSet: MutableList<Item>) :
         return ViewHolder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.track = dataSet[position].track
         viewHolder.tvTrack.text = viewHolder.track.name

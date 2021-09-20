@@ -1,8 +1,6 @@
 package eu.time.betterspotify.spotify.data
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.android.volley.AuthFailureError
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
@@ -162,7 +160,6 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun requestAccess(context: Context) {
         val scopes = this.scopes.joinToString(" ")
         val codeChallenge = generateCodeChallenge(codeVerifier)
@@ -200,7 +197,6 @@ class SpotifyApi private constructor() {
         return nonce.toString()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun generateCodeChallenge(codeVerifier: String): String {
         val hash = codeVerifier.sha256()
         val base64Hash = String(Base64.getUrlEncoder().encode(hash))

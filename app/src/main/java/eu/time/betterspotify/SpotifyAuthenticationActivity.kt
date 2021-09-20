@@ -3,16 +3,13 @@ package eu.time.betterspotify
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import androidx.annotation.RequiresApi
 import eu.time.betterspotify.spotify.data.SpotifyApi
 
 class SpotifyAuthenticationActivity : AppCompatActivity() {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_spotify_authentication)
@@ -41,7 +38,7 @@ class SpotifyAuthenticationActivity : AppCompatActivity() {
         }
     }
 
-    private fun startMainActivity(){
+    private fun startMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
