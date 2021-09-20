@@ -1,6 +1,5 @@
 package eu.time.betterspotify.recycleview.adapter
 
-import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.track.Item

@@ -19,7 +19,7 @@ import eu.time.betterspotify.MainActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.track.Item
 import eu.time.betterspotify.spotify.data.track.Tracks
-import eu.time.betterspotify.util.newSha256
+import eu.time.betterspotify.util.sha256
 
 class SpotifyApi private constructor() {
     companion object {
@@ -34,7 +34,7 @@ class SpotifyApi private constructor() {
         }
     }
 
-    private var initalized = false
+    private var initialized = false
 
     private val CLIENT_ID = "46d14dadfde64caaaf171e15245a9fe6"
     private val REDIRECT_URI = "http://localhost/Spotify"
@@ -76,7 +76,7 @@ class SpotifyApi private constructor() {
             bodyBuilder.append(key).append("=").append(value).append("&")
         }
 
-        var body = bodyBuilder.substring(0, bodyBuilder.length - 1)
+        val body = bodyBuilder.substring(0, bodyBuilder.length - 1)
 
         val queue = Volley.newRequestQueue(context)
 
@@ -125,7 +125,7 @@ class SpotifyApi private constructor() {
             bodyBuilder.append(key).append("=").append(value).append("&")
         }
 
-        var body = bodyBuilder.substring(0, bodyBuilder.length - 1)
+        val body = bodyBuilder.substring(0, bodyBuilder.length - 1)
 
         val queue = Volley.newRequestQueue(context)
 
@@ -202,11 +202,11 @@ class SpotifyApi private constructor() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun generateCodeChallenge(codeVerifier: String): String {
-        val hash = codeVerifier.newSha256()
+        val hash = codeVerifier.sha256()
         val base64Hash = String(Base64.getUrlEncoder().encode(hash))
         var code = base64Hash.replace(Regex("\\+"), "-")
-        code = code.replace(Regex("/"), "_");
-        code = code.replace(Regex("=+$"), "");
+        code = code.replace(Regex("/"), "_")
+        code = code.replace(Regex("=+$"), "")
         return code
     }
 
@@ -268,20 +268,20 @@ class SpotifyApi private constructor() {
         }, onError)
     }
 
-    fun initalize(accessToken: String, refreshToken: String) {
-        if (initalized) return
+    fun initialize(accessToken: String, refreshToken: String) {
+        if (initialized) return
 
         token = TokenResult(accessToken, refreshToken)
 
-        initalized = true
+        initialized = true
     }
 
-    fun initalize(context: Context) {
-        if (initalized) return
+    fun initialize(context: Context) {
+        if (initialized) return
 
         requestAccess(context)
 
-        initalized = true
+        initialized = true
     }
 
     private fun sendGetRequest(context: Context, url: String, header: MutableMap<String, String>, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {

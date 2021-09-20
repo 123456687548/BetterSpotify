@@ -22,7 +22,7 @@ class SpotifyAuthenticationActivity : AppCompatActivity() {
         val refreshToken = sharedPref.getString(getString(R.string.spotify_refresh_token), "").toString()
 
         if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
-            SpotifyApi.getInstance().initalize(accessToken, refreshToken)
+            SpotifyApi.getInstance().initialize(accessToken, refreshToken)
             startMainActivity()
         }
 

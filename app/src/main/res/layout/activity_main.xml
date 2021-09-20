@@ -16,11 +16,15 @@
             android:layout_marginBottom="8dp"
             android:layout_weight="1" />
 
-    <ViewStub
-            android:id="@+id/stubPlayer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout="@layout/player" />
+    <include
+            android:id="@+id/miniPlayer"
+            layout="@layout/mini_player_view" />
+
+<!--    <ViewStub-->
+<!--            android:id="@+id/stubPlayer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout="@layout/player" />-->
 
     <LinearLayout
             android:id="@+id/buttonContainer"

@@ -23,4 +23,8 @@
             android:fadeScrollbars="false"
             android:layout_marginBottom="8dp"
             android:layout_weight="1" />
+
+    <include
+            android:id="@+id/miniPlayer"
+            layout="@layout/mini_player_view" />
 </LinearLayout>
