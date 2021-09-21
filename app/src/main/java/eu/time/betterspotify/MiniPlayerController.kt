@@ -46,7 +46,7 @@ class MiniPlayerController private constructor() {
                 }
 
                 if (active) {
-                    mainHandler.postDelayed(this, 1000)
+                    mainHandler.postDelayed(this, 50)
                 }
             }
         })
@@ -78,17 +78,12 @@ class MiniPlayerController private constructor() {
                 when (it.playbackOptions.repeatMode) {
                     0 -> { //is no repeat -> repeat all
                         playerApi.setRepeat(2)
-                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
-                        btnRepeat.setColorFilter(activeColor)
                     }
                     1 -> { // is repeat one -> no repeat
                         playerApi.setRepeat(0)
-                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
-                        btnRepeat.clearColorFilter()
                     }
                     2 -> { // is repeat all -> repeat one
                         playerApi.setRepeat(1)
-                        btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
                     }
                 }
             }
@@ -100,10 +95,8 @@ class MiniPlayerController private constructor() {
             playerApi?.playerState?.setResultCallback {
                 if (it.playbackOptions.isShuffling) {
                     playerApi.setShuffle(false)
-                    btnShuffle.clearColorFilter()
                 } else {
                     playerApi.setShuffle(true)
-                    btnShuffle.setColorFilter(activeColor)
                 }
             }
         }
@@ -114,10 +107,8 @@ class MiniPlayerController private constructor() {
             playerApi?.playerState?.setResultCallback {
                 if (it.isPaused) {
                     playerApi.resume()
-                    btnPlay.setImageResource(R.drawable.ic_baseline_pause_48)
                 } else {
                     playerApi.pause()
-                    btnPlay.setImageResource(R.drawable.ic_baseline_play_arrow_48)
                 }
             }
         }

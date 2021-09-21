@@ -112,7 +112,7 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
-    private fun refreshToken(context: Context) {
+    private fun refreshToken(context: Context, retryCallback: () -> Unit) {
         val param: MutableMap<String, String> = HashMap()
         param["client_id"] = CLIENT_ID
         param["grant_type"] = "refresh_token"
@@ -140,7 +140,8 @@ class SpotifyApi private constructor() {
                 }
             }
 
-            startMainActivity(context)
+            retryCallback()
+//            startMainActivity(context)
         }, {
             it.message?.let { it1 -> Log.d("request", it1) }
         }) {
@@ -215,8 +216,9 @@ class SpotifyApi private constructor() {
 
     private fun sendSearch(
         context: Context, query: String, types: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
-            refreshToken(context)
-//            sendSearch(context, query, types, onSuccess)
+            refreshToken(context) {
+                sendSearch(context, query, types, onSuccess)
+            }
         }
     ) {
         val header: MutableMap<String, String> = HashMap()
@@ -231,8 +233,9 @@ class SpotifyApi private constructor() {
 
     fun getPlaylists(
         context: Context, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
-            refreshToken(context)
-//            getPlaylists(context, onSuccess)
+            refreshToken(context) {
+                getPlaylists(context, onSuccess)
+            }
         }
     ) {
         val header: MutableMap<String, String> = HashMap()
@@ -245,8 +248,9 @@ class SpotifyApi private constructor() {
 
     fun getPlaylistTracks(
         context: Context, url: String, onSuccess: (response: List<Item>) -> Unit, onError: (error: VolleyError) -> Unit = {
-            refreshToken(context)
-//            getPlaylistTracks(context, url, onSuccess)
+            refreshToken(context) {
+                getPlaylistTracks(context, url, onSuccess)
+            }
         }, trackList: MutableList<Item> = mutableListOf()
     ) {
         val header: MutableMap<String, String> = HashMap()
