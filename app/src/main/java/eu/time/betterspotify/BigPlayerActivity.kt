@@ -62,9 +62,7 @@ class BigPlayerActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        spotifyPlayer = SpotifyPlayer.getInstance()
-
-        spotifyPlayer.connect(this)
+        spotifyPlayer = SpotifyPlayer.getInstance(this)
 
         initPlayer()
     }
@@ -78,7 +76,7 @@ class BigPlayerActivity : AppCompatActivity() {
         }
 
         btnRepeat.setOnClickListener {
-            val playerApi = SpotifyPlayer.getInstance().getRemote()?.playerApi
+            val playerApi = spotifyPlayer.getRemote()?.playerApi
 
             playerApi?.playerState?.setResultCallback {
                 when (it.playbackOptions.repeatMode) {
@@ -96,7 +94,7 @@ class BigPlayerActivity : AppCompatActivity() {
         }
 
         btnShuffle.setOnClickListener {
-            val playerApi = SpotifyPlayer.getInstance().getRemote()?.playerApi
+            val playerApi = spotifyPlayer.getRemote()?.playerApi
 
             playerApi?.playerState?.setResultCallback {
                 if (it.playbackOptions.isShuffling) {
@@ -108,7 +106,7 @@ class BigPlayerActivity : AppCompatActivity() {
         }
 
         btnPlay.setOnClickListener {
-            val playerApi = SpotifyPlayer.getInstance().getRemote()?.playerApi
+            val playerApi = spotifyPlayer.getRemote()?.playerApi
 
             playerApi?.playerState?.setResultCallback {
                 if (it.isPaused) {
@@ -120,17 +118,17 @@ class BigPlayerActivity : AppCompatActivity() {
         }
 
         btnPrevious.setOnClickListener {
-            SpotifyPlayer.getInstance().getRemote()?.playerApi?.skipPrevious()
+            spotifyPlayer.getRemote()?.playerApi?.skipPrevious()
         }
 
         btnSkip.setOnClickListener {
-            SpotifyPlayer.getInstance().getRemote()?.playerApi?.skipNext()
+            spotifyPlayer.getRemote()?.playerApi?.skipNext()
         }
 
         pbProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    SpotifyPlayer.getInstance().getRemote()?.playerApi?.seekTo(progress.toLong())
+                    spotifyPlayer.getRemote()?.playerApi?.seekTo(progress.toLong())
                 }
             }
 
@@ -145,10 +143,10 @@ class BigPlayerActivity : AppCompatActivity() {
 
         mainHandler.post(object : Runnable {
             override fun run() {
-                spotifyPlayer.connect(context)
+//                spotifyPlayer.connect(context)
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    SpotifyPlayer.getInstance().getRemote()?.playerApi?.playerState?.setResultCallback { playerState ->
+                    spotifyPlayer.getRemote()?.playerApi?.playerState?.setResultCallback { playerState ->
                         updateBigPlayer(playerState)
                     }
                 }
@@ -176,7 +174,7 @@ class BigPlayerActivity : AppCompatActivity() {
                 tvPlayerTitle.isSelected = true
 
                 if (tvPlayerTitle.text != track.name) {
-                    SpotifyPlayer.getInstance().getRemote()?.playerApi?.subscribeToPlayerContext()?.setEventCallback { playerContext ->
+                    spotifyPlayer.getRemote()?.playerApi?.subscribeToPlayerContext()?.setEventCallback { playerContext ->
                         tvPlayerContext.text = playerContext.title
                     }
                     tvPlayerTitle.text = track.name
@@ -214,6 +212,13 @@ class BigPlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (::spotifyPlayer.isInitialized) {
+            spotifyPlayer.disconnect()
+        }
+    }
+
     override fun onStop() {
         super.onStop()
 
@@ -224,9 +229,9 @@ class BigPlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::spotifyPlayer.isInitialized) {
-            spotifyPlayer.disconnect()
-        }
+//        if (::spotifyPlayer.isInitialized) {
+//            spotifyPlayer.disconnect()
+//        }
     }
 
     override fun finish() {

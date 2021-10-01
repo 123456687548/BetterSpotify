@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import eu.time.betterspotify.recycleview.adapter.SearchRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.search.Item
 import eu.time.betterspotify.spotify.data.search.Search
 
 class SearchActivity : AppCompatActivity() {
+    private lateinit var spotifyPlayer: SpotifyPlayer
     private lateinit var adapter: SearchRecycleViewAdapter
     private val searchResults = mutableListOf<Item>()
     private lateinit var etSearchField: EditText
@@ -24,6 +26,8 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        spotifyPlayer = SpotifyPlayer.getInstance(this)
 
         initRecycleView()
 
@@ -70,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecycleView() {
         val rvSearchResult = findViewById<RecyclerView>(R.id.rvSearchResult)
 
-        adapter = SearchRecycleViewAdapter(searchResults)
+        adapter = SearchRecycleViewAdapter(searchResults, spotifyPlayer)
 
         rvSearchResult.adapter = adapter
         rvSearchResult.layoutManager = LinearLayoutManager(this)

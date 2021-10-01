@@ -11,10 +11,10 @@ import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.playlist.Playlist
 import eu.time.betterspotify.util.loadImageFromUrl
 
-class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, private val playlistCallback: (String) -> Unit) :
+class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, private val spotifyPlayer: SpotifyPlayer, private val playlistCallback: (String) -> Unit) :
     RecyclerView.Adapter<PlaylistRecycleViewAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, private val spotifyPlayer: SpotifyPlayer) : RecyclerView.ViewHolder(view) {
         lateinit var playlist: Playlist
         lateinit var callback: (String) -> Unit
 
@@ -28,7 +28,7 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
             }
 
             ivPlaylistImage.setOnClickListener {
-                SpotifyPlayer.getInstance().getRemote()?.playerApi?.play(playlist.uri)
+                spotifyPlayer.getRemote()?.playerApi?.play(playlist.uri)
             }
         }
     }
@@ -36,7 +36,7 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.playlist_view, viewGroup, false)
 
-        return ViewHolder(view)
+        return ViewHolder(view, spotifyPlayer)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {

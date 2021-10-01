@@ -18,6 +18,7 @@ import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
+import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.track.Item
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        spotifyPlayer = SpotifyPlayer.getInstance(this)
+
         initRecycleView()
 
         activeColor = Color.valueOf(getColor(R.color.green_900)).toArgb()
@@ -51,11 +54,11 @@ class MainActivity : AppCompatActivity() {
     private fun initRecycleView() {
         val rvPlaylistList = findViewById<RecyclerView>(R.id.rvPlaylistList)
 
-        adapter = PlaylistRecycleViewAdapter(playlistList) { playlistId ->
+        adapter = PlaylistRecycleViewAdapter(playlistList, spotifyPlayer) { playlistId ->
             SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/$playlistId/tracks", { result ->
                 trackList.clear()
                 trackList.addAll(result)
-                rvPlaylistList.adapter = TrackRecycleViewAdapter(trackList)
+                rvPlaylistList.adapter = TrackRecycleViewAdapter(trackList, spotifyPlayer)
             })
         }
 
@@ -71,14 +74,12 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        val accessToken = sharedPref.getString(getString(R.string.spotify_access_token), "").toString()
-        val refreshToken = sharedPref.getString(getString(R.string.spotify_refresh_token), "").toString()
+        val token = getToken()
 
-        if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
-            SpotifyApi.getInstance().initialize(accessToken, refreshToken)
+        if(token != null){
+            SpotifyApi.getInstance().initialize(token)
 
-            loadSpotify()
+            loadPlaylists()
 
             MiniPlayerController.getInstance().start(this)
         } else {
@@ -86,21 +87,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSpotify() {
-        spotifyPlayer = SpotifyPlayer.getInstance()
+    private fun getToken(): TokenResult? {
+        val sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        val accessToken = sharedPref.getString(getString(R.string.spotify_access_token), "").toString()
+        val refreshToken = sharedPref.getString(getString(R.string.spotify_refresh_token), "").toString()
 
-        spotifyPlayer.connect(this)
+        if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
+            return TokenResult(accessToken, refreshToken)
+        }
 
+        return null
+    }
+
+    private fun loadPlaylists() {
         SpotifyApi.getInstance().getPlaylists(this, { response ->
             val playlists = Gson().fromJson(response, Playlists::class.java)
             updateRecycleView(playlists.items)
         })
     }
 
+    override fun onPause() {
+        super.onPause()
+        MiniPlayerController.getInstance().stop()
+
+        if (::spotifyPlayer.isInitialized) {
+            spotifyPlayer.disconnect()
+        }
+    }
+
     override fun onStop() {
         super.onStop()
 
-        MiniPlayerController.getInstance().stop()
 //        if (::spotifyPlayer.isInitialized) {
 //            spotifyPlayer.disconnect()
 //        }
@@ -108,9 +125,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::spotifyPlayer.isInitialized) {
-            spotifyPlayer.disconnect()
-        }
+//        if (::spotifyPlayer.isInitialized) {
+//            spotifyPlayer.disconnect()
+//        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

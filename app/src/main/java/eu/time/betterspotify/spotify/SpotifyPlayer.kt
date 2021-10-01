@@ -2,6 +2,7 @@ package eu.time.betterspotify.spotify
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -11,10 +12,12 @@ class SpotifyPlayer private constructor() {
     companion object {
         private lateinit var INSTANCE: SpotifyPlayer
 
-        fun getInstance(): SpotifyPlayer {
+        fun getInstance(context: Context): SpotifyPlayer {
             if (!Companion::INSTANCE.isInitialized) {
                 INSTANCE = SpotifyPlayer()
             }
+
+            INSTANCE.connect(context)
 
             return INSTANCE
         }
@@ -47,6 +50,7 @@ class SpotifyPlayer private constructor() {
 
                 override fun onFailure(throwable: Throwable) {
                     Log.e("MyActivity", throwable.message, throwable)
+                    Toast.makeText(context, throwable.message, Toast.LENGTH_LONG).show()
 
                     // Something went wrong when attempting to connect! Handle errors here
                 }

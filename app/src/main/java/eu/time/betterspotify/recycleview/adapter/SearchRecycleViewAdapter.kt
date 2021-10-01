@@ -12,10 +12,10 @@ import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.search.Item
 import eu.time.betterspotify.util.loadImageFromUrl
 
-class SearchRecycleViewAdapter(private val dataSet: MutableList<Item>) :
+class SearchRecycleViewAdapter(private val dataSet: MutableList<Item>, private val spotifyPlayer: SpotifyPlayer) :
     RecyclerView.Adapter<SearchRecycleViewAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, private val spotifyPlayer: SpotifyPlayer) : RecyclerView.ViewHolder(view) {
         lateinit var track: Item
         val tvTrack: TextView = view.findViewById(R.id.tvTitle)
         val tvArtist: TextView = view.findViewById(R.id.tvArtist)
@@ -33,12 +33,12 @@ class SearchRecycleViewAdapter(private val dataSet: MutableList<Item>) :
             }
 
             btnQueue.setOnClickListener {
-                SpotifyPlayer.getInstance().getRemote()?.playerApi?.queue(track.uri)
+                spotifyPlayer.getRemote()?.playerApi?.queue(track.uri)
             }
         }
 
         private fun playTrack() {
-            SpotifyPlayer.getInstance().getRemote()?.playerApi?.play(track.uri)
+            spotifyPlayer.getRemote()?.playerApi?.play(track.uri)
         }
     }
 
@@ -46,7 +46,7 @@ class SearchRecycleViewAdapter(private val dataSet: MutableList<Item>) :
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.track_view, viewGroup, false)
 
-        return ViewHolder(view)
+        return ViewHolder(view, spotifyPlayer)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {

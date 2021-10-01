@@ -25,10 +25,15 @@ class MiniPlayerController private constructor() {
         }
     }
 
+    private lateinit var spotifyPlayer: SpotifyPlayer
+
     private var activeColor = -1
     private var active = false
 
+
     fun start(context: Context) {
+        spotifyPlayer = SpotifyPlayer.getInstance(context)
+
         activeColor = Color.valueOf(context.getColor(R.color.green_900)).toArgb()
 
         initListeners(context)
@@ -40,7 +45,7 @@ class MiniPlayerController private constructor() {
         mainHandler.post(object : Runnable {
             override fun run() {
                 CoroutineScope(Dispatchers.IO).launch {
-                    SpotifyPlayer.getInstance().getRemote()?.playerApi?.playerState?.setResultCallback { playerState ->
+                    spotifyPlayer.getRemote()?.playerApi?.playerState?.setResultCallback { playerState ->
                         updateMiniPlayerUI(context, playerState)
                     }
                 }
@@ -72,7 +77,7 @@ class MiniPlayerController private constructor() {
         }
 
         btnRepeat.setOnClickListener {
-            val playerApi = SpotifyPlayer.getInstance().getRemote()?.playerApi
+            val playerApi = spotifyPlayer.getRemote()?.playerApi
 
             playerApi?.playerState?.setResultCallback {
                 when (it.playbackOptions.repeatMode) {
@@ -90,7 +95,7 @@ class MiniPlayerController private constructor() {
         }
 
         btnShuffle.setOnClickListener {
-            val playerApi = SpotifyPlayer.getInstance().getRemote()?.playerApi
+            val playerApi = spotifyPlayer.getRemote()?.playerApi
 
             playerApi?.playerState?.setResultCallback {
                 if (it.playbackOptions.isShuffling) {
@@ -102,7 +107,7 @@ class MiniPlayerController private constructor() {
         }
 
         btnPlay.setOnClickListener {
-            val playerApi = SpotifyPlayer.getInstance().getRemote()?.playerApi
+            val playerApi = spotifyPlayer.getRemote()?.playerApi
 
             playerApi?.playerState?.setResultCallback {
                 if (it.isPaused) {

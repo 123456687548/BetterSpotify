@@ -277,6 +277,14 @@ class SpotifyApi private constructor() {
         initialized = true
     }
 
+    fun initialize(token: TokenResult) {
+        if (initialized) return
+
+        this.token = token
+
+        initialized = true
+    }
+
     fun initialize(context: Context) {
         if (initialized) return
 
