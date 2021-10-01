@@ -35,14 +35,12 @@ class TrackRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, pr
             }
 
             btnQueue.setOnClickListener {
-                spotifyPlayer.getRemote()?.playerApi?.queue(track.uri)?.setResultCallback {
-                    Toast.makeText(view.context, "${track.name} queued!", Toast.LENGTH_SHORT).show()
-                }
+                spotifyPlayer.queueTrack(it.context, track)
             }
         }
 
         private fun playTrack() {
-            spotifyPlayer.getRemote()?.playerApi?.play(track.uri)
+            spotifyPlayer.playUri(track.uri)
         }
     }
 

@@ -28,7 +28,7 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
             }
 
             ivPlaylistImage.setOnClickListener {
-                spotifyPlayer.getRemote()?.playerApi?.play(playlist.uri)
+                spotifyPlayer.playUri(playlist.uri)
             }
         }
     }

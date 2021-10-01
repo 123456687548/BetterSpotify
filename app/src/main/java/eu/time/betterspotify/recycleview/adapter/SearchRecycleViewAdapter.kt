@@ -38,7 +38,7 @@ class SearchRecycleViewAdapter(private val dataSet: MutableList<Track>, private 
         }
 
         private fun playTrack() {
-            spotifyPlayer.getRemote()?.playerApi?.play(track.uri)
+            spotifyPlayer.playUri(track.uri)
         }
     }
 

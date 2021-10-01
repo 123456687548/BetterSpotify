@@ -45,7 +45,7 @@ class MiniPlayerController private constructor() {
         mainHandler.post(object : Runnable {
             override fun run() {
                 CoroutineScope(Dispatchers.IO).launch {
-                    spotifyPlayer.getRemote()?.playerApi?.playerState?.setResultCallback { playerState ->
+                    spotifyPlayer.getPlayerState { playerState ->
                         updateMiniPlayerUI(context, playerState)
                     }
                 }
@@ -57,7 +57,7 @@ class MiniPlayerController private constructor() {
         })
     }
 
-    fun stop(){
+    fun stop() {
         active = false
     }
 
@@ -77,45 +77,15 @@ class MiniPlayerController private constructor() {
         }
 
         btnRepeat.setOnClickListener {
-            val playerApi = spotifyPlayer.getRemote()?.playerApi
-
-            playerApi?.playerState?.setResultCallback {
-                when (it.playbackOptions.repeatMode) {
-                    0 -> { //is no repeat -> repeat all
-                        playerApi.setRepeat(2)
-                    }
-                    1 -> { // is repeat one -> no repeat
-                        playerApi.setRepeat(0)
-                    }
-                    2 -> { // is repeat all -> repeat one
-                        playerApi.setRepeat(1)
-                    }
-                }
-            }
+            spotifyPlayer.changeRepeatMode()
         }
 
         btnShuffle.setOnClickListener {
-            val playerApi = spotifyPlayer.getRemote()?.playerApi
-
-            playerApi?.playerState?.setResultCallback {
-                if (it.playbackOptions.isShuffling) {
-                    playerApi.setShuffle(false)
-                } else {
-                    playerApi.setShuffle(true)
-                }
-            }
+            spotifyPlayer.toggleShuffle()
         }
 
         btnPlay.setOnClickListener {
-            val playerApi = spotifyPlayer.getRemote()?.playerApi
-
-            playerApi?.playerState?.setResultCallback {
-                if (it.isPaused) {
-                    playerApi.resume()
-                } else {
-                    playerApi.pause()
-                }
-            }
+            spotifyPlayer.togglePlay()
         }
     }
 

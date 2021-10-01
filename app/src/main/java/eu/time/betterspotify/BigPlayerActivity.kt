@@ -76,59 +76,29 @@ class BigPlayerActivity : AppCompatActivity() {
         }
 
         btnRepeat.setOnClickListener {
-            val playerApi = spotifyPlayer.getRemote()?.playerApi
-
-            playerApi?.playerState?.setResultCallback {
-                when (it.playbackOptions.repeatMode) {
-                    0 -> { //is no repeat -> repeat all
-                        playerApi.setRepeat(2)
-                    }
-                    1 -> { // is repeat one -> no repeat
-                        playerApi.setRepeat(0)
-                    }
-                    2 -> { // is repeat all -> repeat one
-                        playerApi.setRepeat(1)
-                    }
-                }
-            }
+            spotifyPlayer.changeRepeatMode()
         }
 
         btnShuffle.setOnClickListener {
-            val playerApi = spotifyPlayer.getRemote()?.playerApi
-
-            playerApi?.playerState?.setResultCallback {
-                if (it.playbackOptions.isShuffling) {
-                    playerApi.setShuffle(false)
-                } else {
-                    playerApi.setShuffle(true)
-                }
-            }
+            spotifyPlayer.toggleShuffle()
         }
 
         btnPlay.setOnClickListener {
-            val playerApi = spotifyPlayer.getRemote()?.playerApi
-
-            playerApi?.playerState?.setResultCallback {
-                if (it.isPaused) {
-                    playerApi.resume()
-                } else {
-                    playerApi.pause()
-                }
-            }
+            spotifyPlayer.togglePlay()
         }
 
         btnPrevious.setOnClickListener {
-            spotifyPlayer.getRemote()?.playerApi?.skipPrevious()
+            spotifyPlayer.skipPrevious()
         }
 
         btnSkip.setOnClickListener {
-            spotifyPlayer.getRemote()?.playerApi?.skipNext()
+            spotifyPlayer.skipNext()
         }
 
         pbProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    spotifyPlayer.getRemote()?.playerApi?.seekTo(progress.toLong())
+                    spotifyPlayer.seekTo(progress)
                 }
             }
 
@@ -139,14 +109,10 @@ class BigPlayerActivity : AppCompatActivity() {
 
         val mainHandler = Handler(Looper.getMainLooper())
 
-        val context = this
-
         mainHandler.post(object : Runnable {
             override fun run() {
-//                spotifyPlayer.connect(context)
-
                 CoroutineScope(Dispatchers.IO).launch {
-                    spotifyPlayer.getRemote()?.playerApi?.playerState?.setResultCallback { playerState ->
+                    spotifyPlayer.getPlayerState { playerState ->
                         updateBigPlayer(playerState)
                     }
                 }
@@ -174,7 +140,7 @@ class BigPlayerActivity : AppCompatActivity() {
                 tvPlayerTitle.isSelected = true
 
                 if (tvPlayerTitle.text != track.name) {
-                    spotifyPlayer.getRemote()?.playerApi?.subscribeToPlayerContext()?.setEventCallback { playerContext ->
+                    spotifyPlayer.getPlayerContext { playerContext ->
                         tvPlayerContext.text = playerContext.title
                     }
                     tvPlayerTitle.text = track.name
@@ -195,15 +161,15 @@ class BigPlayerActivity : AppCompatActivity() {
                     btnShuffle.clearColorFilter()
                 }
 
-                when (playerState.playbackOptions.repeatMode) {
-                    0 -> {
+                when (spotifyPlayer.getRepeatMode(playerState)) {
+                    SpotifyPlayer.RepeatMode.NONE -> {
                         btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
                         btnRepeat.clearColorFilter()
                     }
-                    1 -> {
+                    SpotifyPlayer.RepeatMode.REPEAT_ONE -> {
                         btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
                     }
-                    2 -> {
+                    SpotifyPlayer.RepeatMode.REPEAT_ALL -> {
                         btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
                         btnRepeat.setColorFilter(activeColor)
                     }

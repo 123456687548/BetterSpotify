@@ -39,7 +39,7 @@ class QueueRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, pr
         }
 
         private fun playTrack() {
-            spotifyPlayer.getRemote()?.playerApi?.play(track.uri)
+            spotifyPlayer.playUri(track.uri)
         }
     }
 

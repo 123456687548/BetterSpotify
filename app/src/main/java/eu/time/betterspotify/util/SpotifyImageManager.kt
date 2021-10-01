@@ -24,12 +24,12 @@ class SpotifyImageManager private constructor() {
     }
 
     fun loadBitmap(imageUri: ImageUri, imageView: ImageView) {
-        if(imageUri.raw == null) return
+        if (imageUri.raw == null) return
 
         val bitmap: Bitmap? = getBitmapFromMemCache(imageUri.raw!!)?.also {
             imageView.setImageBitmap(it)
         } ?: run {
-            SpotifyPlayer.getInstance(imageView.context).getRemote()?.imagesApi?.getImage(imageUri)?.setResultCallback {
+            SpotifyPlayer.getInstance(imageView.context).getImage(imageUri) {
                 memoryCache.put(imageUri.raw, it)
                 imageView.setImageBitmap(it)
             }
