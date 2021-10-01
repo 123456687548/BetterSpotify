@@ -1,4 +1,6 @@
-package eu.time.betterspotify.spotify.data.playlist
+package eu.time.betterspotify.spotify.data.results.playlist
+
+import eu.time.betterspotify.spotify.data.types.Playlist
 
 data class Playlists(
     val href: String,

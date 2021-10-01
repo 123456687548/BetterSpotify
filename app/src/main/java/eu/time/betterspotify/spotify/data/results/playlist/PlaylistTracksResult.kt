@@ -1,8 +1,8 @@
-package eu.time.betterspotify.spotify.data.search
+package eu.time.betterspotify.spotify.data.results.playlist
 
-data class Tracks(
+data class PlaylistTracksResult(
     val href: String,
-    val items: List<Item>,
+    val items: List<PlaylistItem>,
     val limit: Int,
     val next: String,
     val offset: Int,

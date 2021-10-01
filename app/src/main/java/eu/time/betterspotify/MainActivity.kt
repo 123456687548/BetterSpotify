@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.google.gson.Gson
-import eu.time.betterspotify.spotify.data.playlist.Playlist
-import eu.time.betterspotify.spotify.data.playlist.Playlists
 
 import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.TokenResult
-import eu.time.betterspotify.spotify.data.track.Item
+import eu.time.betterspotify.spotify.data.results.playlist.PlaylistItem
+import eu.time.betterspotify.spotify.data.results.playlist.Playlists
+import eu.time.betterspotify.spotify.data.types.Playlist
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val playlistList = mutableListOf<Playlist>()
-    private val trackList = mutableListOf<Item>()
+    private val trackList = mutableListOf<PlaylistItem>()
     private lateinit var adapter: PlaylistRecycleViewAdapter
 
     private lateinit var spotifyPlayer: SpotifyPlayer

@@ -7,6 +7,7 @@ import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import eu.time.betterspotify.MainActivity
+import eu.time.betterspotify.spotify.data.types.Track
 
 class SpotifyPlayer private constructor() {
     companion object {
@@ -26,6 +27,12 @@ class SpotifyPlayer private constructor() {
     private lateinit var mSpotifyAppRemote: SpotifyAppRemote
 
     private var isConnected = false
+
+    fun queueTrack(context: Context, track: Track) {
+        getRemote()?.playerApi?.queue(track.uri)?.setResultCallback {
+            Toast.makeText(context, "${track.name} queued!", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     fun getRemote(): SpotifyAppRemote? {
         if (!isConnected) return null

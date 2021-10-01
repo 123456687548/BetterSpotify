@@ -1,4 +1,4 @@
-package eu.time.betterspotify.spotify.data.playlist
+package eu.time.betterspotify.spotify.data.types
 
 data class Tracks(
     val href: String,

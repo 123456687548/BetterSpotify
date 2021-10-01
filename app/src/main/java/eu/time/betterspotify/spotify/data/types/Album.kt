@@ -1,8 +1,9 @@
-package eu.time.betterspotify.spotify.data.search
+package eu.time.betterspotify.spotify.data.types
 
 data class Album(
     val album_type: String,
     val artists: List<Artist>,
+    val available_markets: List<String>,
     val external_urls: ExternalUrls,
     val href: String,
     val id: String,

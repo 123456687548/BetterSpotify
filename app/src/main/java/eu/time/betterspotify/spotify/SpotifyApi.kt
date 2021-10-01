@@ -16,8 +16,8 @@ import com.google.gson.Gson
 import eu.time.betterspotify.MainActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.TokenResult
-import eu.time.betterspotify.spotify.data.track.Item
-import eu.time.betterspotify.spotify.data.track.Tracks
+import eu.time.betterspotify.spotify.data.results.playlist.PlaylistItem
+import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
 import eu.time.betterspotify.util.sha256
 
 class SpotifyApi private constructor() {
@@ -247,11 +247,11 @@ class SpotifyApi private constructor() {
     }
 
     fun getPlaylistTracks(
-        context: Context, url: String, onSuccess: (response: List<Item>) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, url: String, onSuccess: (response: List<PlaylistItem>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshToken(context) {
                 getPlaylistTracks(context, url, onSuccess)
             }
-        }, trackList: MutableList<Item> = mutableListOf()
+        }, trackList: MutableList<PlaylistItem> = mutableListOf()
     ) {
         val header: MutableMap<String, String> = HashMap()
         header["Accept"] = "application/json"
@@ -259,7 +259,7 @@ class SpotifyApi private constructor() {
         header["Authorization"] = "Bearer ${token.accessToken}"
 
         sendGetRequest(context, url, header, { result ->
-            val tracks = Gson().fromJson(result, Tracks::class.java)
+            val tracks = Gson().fromJson(result, PlaylistTracksResult::class.java)
             trackList.addAll(tracks.items)
             if (tracks.next == null) {
                 onSuccess(trackList)

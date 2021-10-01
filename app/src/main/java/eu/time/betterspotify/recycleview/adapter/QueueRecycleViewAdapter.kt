@@ -9,11 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.track.Item
-import eu.time.betterspotify.spotify.data.track.Track
+import eu.time.betterspotify.spotify.data.results.playlist.PlaylistItem
+import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.loadImageFromUrl
 
-class QueueRecycleViewAdapter(private val dataSet: MutableList<Item>, private val spotifyPlayer: SpotifyPlayer) :
+class QueueRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, private val spotifyPlayer: SpotifyPlayer) :
     RecyclerView.Adapter<QueueRecycleViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val spotifyPlayer: SpotifyPlayer) : RecyclerView.ViewHolder(view) {
@@ -34,7 +34,7 @@ class QueueRecycleViewAdapter(private val dataSet: MutableList<Item>, private va
             }
 
             btnQueue.setOnClickListener {
-                spotifyPlayer.getRemote()?.playerApi?.queue(track.uri)
+                spotifyPlayer.queueTrack(it.context, track)
             }
         }
 

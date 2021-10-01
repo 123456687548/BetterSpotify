@@ -14,13 +14,13 @@ import com.google.gson.Gson
 import eu.time.betterspotify.recycleview.adapter.SearchRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.search.Item
-import eu.time.betterspotify.spotify.data.search.Search
+import eu.time.betterspotify.spotify.data.results.search.SearchResult
+import eu.time.betterspotify.spotify.data.types.Track
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
     private lateinit var adapter: SearchRecycleViewAdapter
-    private val searchResults = mutableListOf<Item>()
+    private val searchResults = mutableListOf<Track>()
     private lateinit var etSearchField: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
                 if (text.isNotEmpty()) {
                     SpotifyApi.getInstance().search(context, text.toString(), listOf("track", "artist")) { result ->
-                        val searchResult = Gson().fromJson(result, Search::class.java)
+                        val searchResult = Gson().fromJson(result, SearchResult::class.java)
 
                         updateRecycleView(searchResult.tracks.items)
                     }
@@ -81,7 +81,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateRecycleView(newData: List<Item>) {
+    private fun updateRecycleView(newData: List<Track>) {
         searchResults.clear()
         searchResults.addAll(newData)
         adapter.notifyDataSetChanged()
