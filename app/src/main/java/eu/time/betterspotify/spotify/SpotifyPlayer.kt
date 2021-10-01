@@ -9,7 +9,8 @@ import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.ImageUri
 import com.spotify.protocol.types.PlayerContext
 import com.spotify.protocol.types.PlayerState
-import eu.time.betterspotify.MainActivity
+import eu.time.betterspotify.spotify.SpotifyApi.Companion.CLIENT_ID
+import eu.time.betterspotify.spotify.SpotifyApi.Companion.REDIRECT_URI
 import eu.time.betterspotify.spotify.data.types.Track
 
 class SpotifyPlayer private constructor() {
@@ -127,8 +128,8 @@ class SpotifyPlayer private constructor() {
     fun connect(context: Context) {
         if (isConnected) return
 
-        val connectionParams = ConnectionParams.Builder(MainActivity.CLIENT_ID)
-            .setRedirectUri(MainActivity.REDIRECT_URI)
+        val connectionParams = ConnectionParams.Builder(CLIENT_ID)
+            .setRedirectUri(REDIRECT_URI)
             .showAuthView(true)
             .build()
 

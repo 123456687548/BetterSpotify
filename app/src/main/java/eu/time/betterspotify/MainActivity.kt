@@ -22,11 +22,6 @@ import eu.time.betterspotify.spotify.data.results.playlist.Playlists
 import eu.time.betterspotify.spotify.data.types.Playlist
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        const val CLIENT_ID = "46d14dadfde64caaaf171e15245a9fe6"
-        const val REDIRECT_URI = "http://localhost/Spotify"
-    }
-
     private val playlistList = mutableListOf<Playlist>()
     private val trackList = mutableListOf<PlaylistItem>()
     private lateinit var adapter: PlaylistRecycleViewAdapter
@@ -76,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         val token = getToken()
 
-        if(token != null){
+        if (token != null) {
             SpotifyApi.getInstance().initialize(token)
 
             loadPlaylists()

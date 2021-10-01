@@ -22,6 +22,9 @@ import eu.time.betterspotify.util.sha256
 
 class SpotifyApi private constructor() {
     companion object {
+        const val CLIENT_ID = "46d14dadfde64caaaf171e15245a9fe6"
+        const val REDIRECT_URI = "http://localhost/Spotify"
+
         private lateinit var INSTANCE: SpotifyApi
 
         fun getInstance(): SpotifyApi {
@@ -34,9 +37,6 @@ class SpotifyApi private constructor() {
     }
 
     private var initialized = false
-
-    private val CLIENT_ID = "46d14dadfde64caaaf171e15245a9fe6"
-    private val REDIRECT_URI = "http://localhost/Spotify"
 
     private val codeVerifier = generateNonce()
 
