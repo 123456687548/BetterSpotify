@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
             loadPlaylists()
 
-            MiniPlayerController.getInstance().start(this)
+            PlayerController.getInstance().start(this)
         } else {
             startLoginActivity()
         }
@@ -103,26 +103,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        MiniPlayerController.getInstance().stop()
+        PlayerController.getInstance().stop()
 
         if (::spotifyPlayer.isInitialized) {
             spotifyPlayer.disconnect()
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-//        if (::spotifyPlayer.isInitialized) {
-//            spotifyPlayer.disconnect()
-//        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        if (::spotifyPlayer.isInitialized) {
-//            spotifyPlayer.disconnect()
-//        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

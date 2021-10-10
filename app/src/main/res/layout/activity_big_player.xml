@@ -52,7 +52,7 @@
     </LinearLayout>
 
     <ImageView
-            android:id="@+id/ivBigPlayerCover"
+            android:id="@+id/ivPlayerCover"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:layout_marginTop="20dp"
@@ -69,7 +69,7 @@
                 android:layout_weight="1">
 
             <TextView
-                    android:id="@+id/tvBigPlayerTitle"
+                    android:id="@+id/tvPlayerTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
@@ -79,7 +79,7 @@
                     android:singleLine="true" />
 
             <TextView
-                    android:id="@+id/tvBigPlayerArtist"
+                    android:id="@+id/tvPlayerArtist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
@@ -105,7 +105,7 @@
             android:layout_marginTop="20dp">
 
         <SeekBar
-                android:id="@+id/pbProgress"
+                android:id="@+id/sbProgress"
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
                 android:progressTint="@color/green_900"
@@ -117,7 +117,7 @@
                 android:orientation="horizontal">
 
             <TextView
-                    android:id="@+id/tvBigPlayerCurrentProgress"
+                    android:id="@+id/tvPlayerCurrentProgress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1:20"
@@ -125,7 +125,7 @@
                     android:layout_weight="1" />
 
             <TextView
-                    android:id="@+id/tvBigPlayerMaxProgress"
+                    android:id="@+id/tvPlayerMaxProgress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3:44"
@@ -187,7 +187,7 @@
             android:layout_marginTop="20dp">
 
         <TextView
-                android:id="@+id/tvBigPlayerDevice"
+                android:id="@+id/tvPlayerDevice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="TimPC ToDo"

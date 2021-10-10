@@ -63,13 +63,16 @@ class SearchActivity : AppCompatActivity() {
 
         focusSearchField()
 
-        MiniPlayerController.getInstance().start(this)
+        PlayerController.getInstance().start(this)
     }
 
     override fun onStop() {
         super.onStop()
+    }
 
-        MiniPlayerController.getInstance().stop()
+    override fun onPause() {
+        super.onPause()
+        PlayerController.getInstance().stop()
     }
 
     private fun initRecycleView() {
