@@ -152,7 +152,7 @@ class PlayerController private constructor() {
         val tvPlayerDevice: TextView? = activity.findViewById(R.id.tvPlayerDevice)
         val tvPlayerContext: TextView? = activity.findViewById(R.id.tvPlayerContext)
 
-        val miniPlayer: View? = activity.findViewById<View>(R.id.miniPlayer)
+        val miniPlayer: View? = activity.findViewById(R.id.miniPlayer)
 
         context.runOnUiThread {
             val track: Track? = playerState.track
