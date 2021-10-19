@@ -27,6 +27,8 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        spotifyPlayer = SpotifyPlayer.getInstance(this)
+
         initRecycleView()
 
         etSearchField = findViewById(R.id.etSearchField)
@@ -58,8 +60,6 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
-        spotifyPlayer = SpotifyPlayer.getInstance(this)
 
         focusSearchField()
 
