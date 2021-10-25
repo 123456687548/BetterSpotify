@@ -59,6 +59,8 @@ class SearchRecycleViewAdapter(private val dataSet: MutableList<Track>, private 
 
         if (dataSet[position].album.images.isNotEmpty()) {
             viewHolder.ivCover.loadImageFromUrl(dataSet[position].album.images[0].url)
+        } else {
+            viewHolder.ivCover.setImageResource(R.drawable.ic_no_cover_24)
         }
     }
 

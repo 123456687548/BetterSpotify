@@ -60,6 +60,8 @@ class QueueRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, pr
 
         if (dataSet[position].track.album.images.isNotEmpty()) {
             viewHolder.ivCover.loadImageFromUrl(dataSet[position].track.album.images[0].url)
+        } else {
+            viewHolder.ivCover.setImageResource(R.drawable.ic_no_cover_24)
         }
     }
 

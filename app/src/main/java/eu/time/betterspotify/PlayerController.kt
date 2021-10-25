@@ -195,24 +195,22 @@ class PlayerController private constructor() {
 
                 if (btnShuffle != null) {
                     if (playerState.playbackOptions.isShuffling) {
-                        btnShuffle.setColorFilter(activeColor)
+                        btnShuffle.setImageResource(R.drawable.ic_shuffle_on_48)
                     } else {
-                        btnShuffle.clearColorFilter()
+                        btnShuffle.setImageResource(R.drawable.ic_shuffle_off_48)
                     }
                 }
 
                 if (btnRepeat != null) {
                     when (playerState.playbackOptions.repeatMode) {
                         0 -> {
-                            btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
-                            btnRepeat.clearColorFilter()
+                            btnRepeat.setImageResource(R.drawable.ic_repeat_off_48)
                         }
                         1 -> {
-                            btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_one_48)
+                            btnRepeat.setImageResource(R.drawable.ic_repeat_one_48)
                         }
                         2 -> {
-                            btnRepeat.setImageResource(R.drawable.ic_baseline_repeat_48)
-                            btnRepeat.setColorFilter(activeColor)
+                            btnRepeat.setImageResource(R.drawable.ic_repeat_all_48)
                         }
                     }
                 }
