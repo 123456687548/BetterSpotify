@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.spotify.protocol.types.Empty
 import com.spotify.protocol.types.ImageUri
 import com.spotify.protocol.types.PlayerContext
 import com.spotify.protocol.types.PlayerState
