@@ -221,10 +221,7 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = HashMap()
-        header["Accept"] = "application/json"
-        header["Content-Type"] = "application/json"
-        header["Authorization"] = "Bearer ${token.accessToken}"
+        val header: MutableMap<String, String> = createHeader()
 
         val url = "https://api.spotify.com/v1/search?q=$query&type=$types"
 
@@ -238,10 +235,7 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = HashMap()
-        header["Accept"] = "application/json"
-        header["Content-Type"] = "application/json"
-        header["Authorization"] = "Bearer ${token.accessToken}"
+        val header: MutableMap<String, String> = createHeader()
 
         sendGetRequest(context, "https://api.spotify.com/v1/me/playlists", header, onSuccess, onError)
     }
@@ -253,10 +247,7 @@ class SpotifyApi private constructor() {
             }
         }, trackList: MutableList<PlaylistItem> = mutableListOf()
     ) {
-        val header: MutableMap<String, String> = HashMap()
-        header["Accept"] = "application/json"
-        header["Content-Type"] = "application/json"
-        header["Authorization"] = "Bearer ${token.accessToken}"
+        val header: MutableMap<String, String> = createHeader()
 
         sendGetRequest(context, url, header, { result ->
             val tracks = Gson().fromJson(result, PlaylistTracksResult::class.java)
@@ -291,6 +282,14 @@ class SpotifyApi private constructor() {
         requestAccess(context)
 
         initialized = true
+    }
+
+    private fun createHeader(): MutableMap<String, String> {
+        val header: MutableMap<String, String> = HashMap()
+        header["Accept"] = "application/json"
+        header["Content-Type"] = "application/json"
+        header["Authorization"] = "Bearer ${token.accessToken}"
+        return header
     }
 
     private fun sendGetRequest(context: Context, url: String, header: MutableMap<String, String>, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
