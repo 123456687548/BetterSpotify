@@ -59,14 +59,14 @@
                 android:layout_width="64dp"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:src="@drawable/ic_baseline_shuffle_48" />
+                android:src="@drawable/ic_shuffle_off_48" />
 
         <ImageButton
                 android:id="@+id/btnRepeat"
                 android:layout_width="64dp"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:src="@drawable/ic_baseline_repeat_48" />
+                android:src="@drawable/ic_repeat_off_48" />
     </LinearLayout>
 
     <ProgressBar

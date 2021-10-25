@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyPlayer
@@ -57,6 +58,8 @@ class QueueRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, pr
 
         if (dataSet[position].track.album.images.isNotEmpty()) {
             viewHolder.ivCover.loadImageFromUrl(dataSet[position].track.album.images[0].url)
+        } else {
+            viewHolder.ivCover.setImageResource(R.drawable.ic_no_cover_24)
         }
     }
 

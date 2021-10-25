@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.results.playlist.PlaylistItem
 import eu.time.betterspotify.spotify.data.types.Track
+import eu.time.betterspotify.util.loadImageFromUri
 import eu.time.betterspotify.util.loadImageFromUrl
 
 class TrackRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, private val spotifyPlayer: SpotifyPlayer) :
@@ -57,6 +59,8 @@ class TrackRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, pr
 
         if (dataSet[position].track.album.images.isNotEmpty()) {
             viewHolder.ivCover.loadImageFromUrl(dataSet[position].track.album.images[0].url)
+        } else {
+            viewHolder.ivCover.setImageResource(R.drawable.ic_no_cover_24)
         }
     }
 
