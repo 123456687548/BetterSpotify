@@ -71,6 +71,7 @@ class PlayerController private constructor() {
         val btnClose: ImageButton? = activity.findViewById(R.id.btnClose)
         val btnPrevious: ImageButton? = activity.findViewById(R.id.btnPrevious)
         val btnSkip: ImageButton? = activity.findViewById(R.id.btnSkip)
+        val btnLike: ImageButton? = activity.findViewById(R.id.btnLike)
         val sbProgress: SeekBar? = activity.findViewById(R.id.sbProgress)
 
         llPlayerInfo?.setOnClickListener {
@@ -103,6 +104,21 @@ class PlayerController private constructor() {
 
         btnSkip?.setOnClickListener {
             spotifyPlayer.skipNext()
+        }
+
+        btnLike?.setOnClickListener {
+            spotifyPlayer.getPlayerState { playerState ->
+                val track = playerState.track
+                if (track != null) {
+                    spotifyPlayer.toggleLike(track.uri) { wasLiked ->
+                        if (wasLiked) {
+                            btnLike.setImageResource(R.drawable.ic_liked_48)
+                        } else {
+                            btnLike.setImageResource(R.drawable.ic_not_liked_48)
+                        }
+                    }
+                }
+            }
         }
 
         sbProgress?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -142,6 +158,7 @@ class PlayerController private constructor() {
         val btnRepeat: ImageButton? = activity.findViewById(R.id.btnRepeat)
         val btnShuffle: ImageButton? = activity.findViewById(R.id.btnShuffle)
         val btnPlay: ImageButton? = activity.findViewById(R.id.btnPlay)
+        val btnLike: ImageButton? = activity.findViewById(R.id.btnLike)
         val ivPlayerCover: ImageView? = activity.findViewById(R.id.ivPlayerCover)
         val tvPlayerTitle: TextView? = activity.findViewById(R.id.tvPlayerTitle)
         val tvPlayerArtist: TextView? = activity.findViewById(R.id.tvPlayerArtist)
@@ -183,6 +200,16 @@ class PlayerController private constructor() {
                     tvPlayerArtist?.text = track.artist.name
 
                     ivPlayerCover?.loadImageFromUri(track.imageUri)
+
+                    if (btnLike != null) {
+                        spotifyPlayer.getLibraryState(track.uri) { libraryState ->
+                            if (libraryState.isAdded) {
+                                btnLike.setImageResource(R.drawable.ic_liked_48)
+                            } else {
+                                btnLike.setImageResource(R.drawable.ic_not_liked_48)
+                            }
+                        }
+                    }
                 }
 
                 if (btnPlay != null) {
