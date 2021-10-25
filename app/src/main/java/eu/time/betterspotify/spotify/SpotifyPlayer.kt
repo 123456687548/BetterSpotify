@@ -96,10 +96,8 @@ class SpotifyPlayer private constructor() {
         getRemote()?.playerApi?.play(uri)
     }
 
-    fun queueTrack(context: Context, track: Track) {
-        getRemote()?.playerApi?.queue(track.uri)?.setResultCallback {
-            Toast.makeText(context, "${track.name} queued!", Toast.LENGTH_SHORT).show()
-        }
+    fun queueTrack(track: Track, callback: (Empty) -> Unit = {}) {
+        getRemote()?.playerApi?.queue(track.uri)?.setResultCallback(callback)
     }
 
     fun getPlayerState(callback: (playerState: PlayerState) -> Unit) {

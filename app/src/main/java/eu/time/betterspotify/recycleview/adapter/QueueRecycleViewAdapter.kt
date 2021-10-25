@@ -33,8 +33,10 @@ class QueueRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, pr
                 playTrack()
             }
 
-            btnQueue.setOnClickListener {
-                spotifyPlayer.queueTrack(it.context, track)
+            btnQueue.setOnClickListener { view ->
+                spotifyPlayer.queueTrack(track) {
+                    Toast.makeText(view.context, "${track.name} queued!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
