@@ -6,9 +6,7 @@ import android.widget.Toast
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.protocol.types.ImageUri
-import com.spotify.protocol.types.PlayerContext
-import com.spotify.protocol.types.PlayerState
+import com.spotify.protocol.types.*
 import eu.time.betterspotify.spotify.SpotifyApi.Companion.CLIENT_ID
 import eu.time.betterspotify.spotify.SpotifyApi.Companion.REDIRECT_URI
 import eu.time.betterspotify.spotify.data.types.Track
@@ -99,6 +97,26 @@ class SpotifyPlayer private constructor() {
     fun queueTrack(context: Context, track: Track) {
         getRemote()?.playerApi?.queue(track.uri)?.setResultCallback {
             Toast.makeText(context, "${track.name} queued!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun toggleLike(uri: String, callback: (Boolean) -> Unit = {}) {
+        getLibraryState(uri) { libraryState ->
+            if (libraryState.isAdded) {
+                getRemote()?.userApi?.removeFromLibrary(uri)?.setResultCallback {
+                    callback(false)
+                }
+            } else {
+                getRemote()?.userApi?.addToLibrary(uri)?.setResultCallback{
+                    callback(true)
+                }
+            }
+        }
+    }
+
+    fun getLibraryState(uri: String, callback: (libraryState: LibraryState) -> Unit) {
+        getRemote()?.userApi?.getLibraryState(uri)?.setResultCallback { libraryState ->
+            callback(libraryState)
         }
     }
 
