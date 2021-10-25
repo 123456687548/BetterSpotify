@@ -167,7 +167,8 @@ class PlayerController private constructor() {
         val tvPlayerCurrentProgress: TextView? = activity.findViewById(R.id.tvPlayerCurrentProgress)
         val tvPlayerMaxProgress: TextView? = activity.findViewById(R.id.tvPlayerMaxProgress)
         val tvPlayerDevice: TextView? = activity.findViewById(R.id.tvPlayerDevice)
-        val tvPlayerContext: TextView? = activity.findViewById(R.id.tvPlayerContext)
+        val tvPlayerContextTitle: TextView? = activity.findViewById(R.id.tvPlayerContextTitle)
+        val tvPlayerContextSubtitle: TextView? = activity.findViewById(R.id.tvPlayerContextSubtitle)
 
         val miniPlayer: View? = activity.findViewById(R.id.miniPlayer)
 
@@ -190,9 +191,10 @@ class PlayerController private constructor() {
                 tvPlayerTitle?.isSelected = true
 
                 if (tvPlayerTitle?.text != track.name) {
-                    if (tvPlayerContext != null) {
+                    if (tvPlayerContextTitle != null && tvPlayerContextSubtitle != null) {
                         spotifyPlayer.getPlayerContext { playerContext ->
-                            tvPlayerContext.text = playerContext.title
+                            tvPlayerContextTitle.text = playerContext.title
+                            tvPlayerContextSubtitle.text = playerContext.subtitle
                         }
                     }
 
