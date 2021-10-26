@@ -237,7 +237,7 @@ class SpotifyApi private constructor() {
     ) {
         val header: MutableMap<String, String> = createHeader()
 
-        sendGetRequest(context, "https://api.spotify.com/v1/me/playlists", header, onSuccess, onError)
+        sendGetRequest(context, "https://api.spotify.com/v1/me/playlists?limit=50", header, onSuccess, onError)
     }
 
     fun getPlaylistTracks(
