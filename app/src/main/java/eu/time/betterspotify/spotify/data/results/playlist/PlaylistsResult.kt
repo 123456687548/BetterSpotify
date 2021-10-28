@@ -2,7 +2,7 @@ package eu.time.betterspotify.spotify.data.results.playlist
 
 import eu.time.betterspotify.spotify.data.types.Playlist
 
-data class Playlists(
+data class PlaylistsResult(
     val href: String,
     val items: List<Playlist>,
     val limit: Int,

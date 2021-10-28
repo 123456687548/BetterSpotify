@@ -6,23 +6,32 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import eu.time.betterspotify.recycleview.adapter.SearchRecycleViewAdapter
+import eu.time.betterspotify.recycleview.adapter.ArtistRecycleViewAdapter
+import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.results.search.SearchResult
+import eu.time.betterspotify.spotify.data.types.Artist
 import eu.time.betterspotify.spotify.data.types.Track
 import java.util.*
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
-    private lateinit var adapter: SearchRecycleViewAdapter
-    private val searchResults = mutableListOf<Track>()
+    private lateinit var adapterTracks: TrackRecycleViewAdapter
+    private lateinit var adapterArtists: ArtistRecycleViewAdapter
+    private val searchResultTracks = mutableListOf<Track>()
+    private val searchResultArtists = mutableListOf<Artist>()
     private lateinit var etSearchField: EditText
+
+    private lateinit var rvSearchResultTracks: RecyclerView
+    private lateinit var rvSearchResultArtists: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +64,8 @@ class SearchActivity : AppCompatActivity() {
                             SpotifyApi.getInstance().search(context, text.toString(), listOf("track", "artist")) { result ->
                                 val searchResult = Gson().fromJson(result, SearchResult::class.java)
 
-                                updateRecycleView(searchResult.tracks.items)
+                                updateRecycleView(searchResult)
+                                changeViewVisibility()
                             }
                         }
                     }, 200)
@@ -73,9 +83,11 @@ class SearchActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        focusSearchField()
+//        changeViewVisibility()
 
         PlayerController.getInstance().start(this)
+
+        focusSearchField()
     }
 
     override fun onStop() {
@@ -88,18 +100,50 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initRecycleView() {
-        val rvSearchResult = findViewById<RecyclerView>(R.id.rvSearchResult)
+        val rvSearchResultTracks = findViewById<RecyclerView>(R.id.rvSearchResultTracks)
+        val rvSearchResultArtists = findViewById<RecyclerView>(R.id.rvSearchResultArtists)
 
-        adapter = SearchRecycleViewAdapter(searchResults, spotifyPlayer)
+        adapterTracks = TrackRecycleViewAdapter(searchResultTracks, spotifyPlayer)
 
-        rvSearchResult.adapter = adapter
-        rvSearchResult.layoutManager = LinearLayoutManager(this)
+        rvSearchResultTracks.adapter = adapterTracks
+        rvSearchResultTracks.layoutManager = LinearLayoutManager(this)
+
+        adapterArtists = ArtistRecycleViewAdapter(searchResultArtists, spotifyPlayer)
+
+        rvSearchResultArtists.adapter = adapterArtists
+        rvSearchResultArtists.layoutManager = LinearLayoutManager(this)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateRecycleView(newData: List<Track>) {
-        searchResults.clear()
-        searchResults.addAll(newData)
-        adapter.notifyDataSetChanged()
+    private fun updateRecycleView(newData: SearchResult) {
+        searchResultTracks.clear()
+        searchResultTracks.addAll(newData.tracks.items)
+        adapterTracks.notifyDataSetChanged()
+
+        searchResultArtists.clear()
+        searchResultArtists.addAll(newData.artists.items.subList(0, 2))
+        adapterArtists.notifyDataSetChanged()
+    }
+
+    private fun changeViewVisibility() {
+        val rvSearchResultTracks = findViewById<RecyclerView>(R.id.rvSearchResultTracks)
+        val rvSearchResultArtists = findViewById<RecyclerView>(R.id.rvSearchResultArtists)
+        val tvTitleTrack = findViewById<TextView>(R.id.tvTitleTrack)
+        val tvTitleArtist = findViewById<TextView>(R.id.tvTitleArtist)
+
+        if (searchResultTracks.isNotEmpty()) {
+            tvTitleTrack.visibility = View.VISIBLE
+            rvSearchResultTracks.visibility = View.VISIBLE
+        } else {
+            tvTitleTrack.visibility = View.INVISIBLE
+            rvSearchResultTracks.visibility = View.INVISIBLE
+        }
+        if (searchResultArtists.isNotEmpty()) {
+            tvTitleArtist.visibility = View.VISIBLE
+            rvSearchResultArtists.visibility = View.VISIBLE
+        } else {
+            tvTitleArtist.visibility = View.INVISIBLE
+            rvSearchResultArtists.visibility = View.INVISIBLE
+        }
     }
 }

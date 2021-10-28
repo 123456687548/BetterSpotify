@@ -16,8 +16,8 @@ import com.google.gson.Gson
 import eu.time.betterspotify.MainActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.TokenResult
-import eu.time.betterspotify.spotify.data.results.playlist.PlaylistItem
 import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
+import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.sha256
 
 class SpotifyApi private constructor() {
@@ -245,7 +245,7 @@ class SpotifyApi private constructor() {
     ) {
         val header: MutableMap<String, String> = createHeader()
 
-        val url = "https://api.spotify.com/v1/search?q=$query&type=$types"
+        val url = "https://api.spotify.com/v1/search?q=$query&type=$types&limit=10"
 
         sendGetRequest(context, url, header, onSuccess, onError)
     }
@@ -263,21 +263,26 @@ class SpotifyApi private constructor() {
     }
 
     fun getPlaylistTracks(
-        context: Context, url: String, onSuccess: (response: List<PlaylistItem>) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, url: String, onSuccess: (response: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
                 getPlaylistTracks(context, url, onSuccess)
             }
-        }, trackList: MutableList<PlaylistItem> = mutableListOf()
+        }, trackList: MutableList<Track> = mutableListOf()
     ) {
         val header: MutableMap<String, String> = createHeader()
 
         sendGetRequest(context, url, header, { result ->
-            val tracks = Gson().fromJson(result, PlaylistTracksResult::class.java)
-            trackList.addAll(tracks.items)
-            if (tracks.next == null) {
+            val result = Gson().fromJson(result, PlaylistTracksResult::class.java)
+
+            val tracks = mutableListOf<Track>()
+
+            result.items.forEach { tracks.add(it.track) }
+
+            trackList.addAll(tracks)
+            if (result.next == null) {
                 onSuccess(trackList)
             } else {
-                getPlaylistTracks(context, tracks.next, onSuccess, onError, trackList)
+                getPlaylistTracks(context, result.next, onSuccess, onError, trackList)
             }
         }, onError)
     }

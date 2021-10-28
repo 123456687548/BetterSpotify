@@ -10,57 +10,46 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.types.Track
+import eu.time.betterspotify.spotify.data.types.Artist
 import eu.time.betterspotify.util.loadImageFromUrl
 
-class SearchRecycleViewAdapter(private val dataSet: MutableList<Track>, private val spotifyPlayer: SpotifyPlayer) :
-    RecyclerView.Adapter<SearchRecycleViewAdapter.ViewHolder>() {
+class ArtistRecycleViewAdapter(private val dataSet: MutableList<Artist>, private val spotifyPlayer: SpotifyPlayer) :
+    RecyclerView.Adapter<ArtistRecycleViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val spotifyPlayer: SpotifyPlayer) : RecyclerView.ViewHolder(view) {
-        lateinit var track: Track
-        val tvTrack: TextView = view.findViewById(R.id.tvTitle)
+        lateinit var artist: Artist
         val tvArtist: TextView = view.findViewById(R.id.tvArtist)
         val ivCover: ImageView = view.findViewById(R.id.ivCover)
         private val btnPlay: ImageButton = view.findViewById(R.id.btnPlay)
-        private val btnQueue: ImageButton = view.findViewById(R.id.btnQueue)
 
         init {
             view.setOnClickListener {
-                playTrack()
+                //todo open artist page
             }
 
             btnPlay.setOnClickListener {
-                playTrack()
-            }
-
-            btnQueue.setOnClickListener { view ->
-                spotifyPlayer.queueTrack(track) {
-                    Toast.makeText(view.context, "${track.name} queued!", Toast.LENGTH_SHORT).show()
-                }
+                playArtist()
             }
         }
 
-        private fun playTrack() {
-            spotifyPlayer.playUri(track.uri)
+        private fun playArtist() {
+            spotifyPlayer.playUri(artist.uri)
         }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.track_view, viewGroup, false)
+            .inflate(R.layout.artist_view, viewGroup, false)
 
         return ViewHolder(view, spotifyPlayer)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.track = dataSet[position]
-        viewHolder.tvTrack.text = viewHolder.track.name
-        viewHolder.tvArtist.text = viewHolder.track.artists[0].name
+        viewHolder.artist = dataSet[position]
+        viewHolder.tvArtist.text = viewHolder.artist.name
 
-        if (dataSet[position].album.images.isNotEmpty()) {
-            viewHolder.ivCover.loadImageFromUrl(dataSet[position].album.images[0].url)
-        } else {
-            viewHolder.ivCover.setImageResource(R.drawable.ic_no_cover_24)
+        if (dataSet[position].images.isNotEmpty()) {
+            viewHolder.ivCover.loadImageFromUrl(dataSet[position].images[0].url)
         }
     }
 

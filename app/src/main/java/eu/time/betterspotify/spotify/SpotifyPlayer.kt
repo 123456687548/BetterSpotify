@@ -101,6 +101,10 @@ class SpotifyPlayer private constructor() {
         SpotifyApi.getInstance().playContext(context!!, contextUri, offset)
     }
 
+    fun queueUri(uri: String, callback: (Empty) -> Unit = {}) {
+        getRemote()?.playerApi?.queue(uri)?.setResultCallback(callback)
+    }
+
     fun queueTrack(track: Track, callback: (Empty) -> Unit = {}) {
         getRemote()?.playerApi?.queue(track.uri)?.setResultCallback(callback)
     }

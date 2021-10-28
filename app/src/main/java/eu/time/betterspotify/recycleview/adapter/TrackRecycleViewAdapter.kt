@@ -16,7 +16,7 @@ import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.loadImageFromUrl
 import kotlin.properties.Delegates
 
-class TrackRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, private val spotifyPlayer: SpotifyPlayer, private val contextUri: String? = null) :
+class TrackRecycleViewAdapter(private val dataSet: MutableList<Track>, private val spotifyPlayer: SpotifyPlayer, private val contextUri: String? = null) :
     RecyclerView.Adapter<TrackRecycleViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val spotifyPlayer: SpotifyPlayer, private val contextUri: String?) : RecyclerView.ViewHolder(view) {
@@ -61,13 +61,13 @@ class TrackRecycleViewAdapter(private val dataSet: MutableList<PlaylistItem>, pr
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.track = dataSet[position].track
+        viewHolder.track = dataSet[position]
         viewHolder.tvTrack.text = viewHolder.track.name
         viewHolder.tvArtist.text = viewHolder.track.artists[0].name
         viewHolder.trackPlaylistPos = position
 
-        if (dataSet[position].track.album.images.isNotEmpty()) {
-            viewHolder.ivCover.loadImageFromUrl(dataSet[position].track.album.images[0].url)
+        if (dataSet[position].album.images.isNotEmpty()) {
+            viewHolder.ivCover.loadImageFromUrl(dataSet[position].album.images[0].url)
         } else {
             viewHolder.ivCover.setImageResource(R.drawable.ic_no_cover_24)
         }
