@@ -16,6 +16,7 @@ import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.results.search.SearchResult
 import eu.time.betterspotify.spotify.data.types.Track
+import java.util.*
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
@@ -36,17 +37,28 @@ class SearchActivity : AppCompatActivity() {
         val context = this.applicationContext
 
         etSearchField.addTextChangedListener(object : TextWatcher {
+            lateinit var lastChangeTimer: Timer
+
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
 
             //todo search types wie in der app
             override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
                 if (text.isNotEmpty()) {
-                    SpotifyApi.getInstance().search(context, text.toString(), listOf("track", "artist")) { result ->
-                        val searchResult = Gson().fromJson(result, SearchResult::class.java)
-
-                        updateRecycleView(searchResult.tracks.items)
+                    if (::lastChangeTimer.isInitialized) {
+                        lastChangeTimer.cancel()
                     }
+
+                    lastChangeTimer = Timer("lastChangeTimer")
+                    lastChangeTimer.schedule(object : TimerTask() {
+                        override fun run() {
+                            SpotifyApi.getInstance().search(context, text.toString(), listOf("track", "artist")) { result ->
+                                val searchResult = Gson().fromJson(result, SearchResult::class.java)
+
+                                updateRecycleView(searchResult.tracks.items)
+                            }
+                        }
+                    }, 200)
                 }
             }
         })
