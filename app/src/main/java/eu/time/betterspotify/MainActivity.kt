@@ -49,11 +49,11 @@ class MainActivity : AppCompatActivity() {
     private fun initRecycleView() {
         val rvPlaylistList = findViewById<RecyclerView>(R.id.rvPlaylistList)
 
-        adapter = PlaylistRecycleViewAdapter(playlistList, spotifyPlayer) { playlistId ->
-            SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/$playlistId/tracks", { result ->
+        adapter = PlaylistRecycleViewAdapter(playlistList, spotifyPlayer) { playlist ->
+            SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/${playlist.id}/tracks", { result ->
                 trackList.clear()
                 trackList.addAll(result)
-                rvPlaylistList.adapter = TrackRecycleViewAdapter(trackList, spotifyPlayer)
+                rvPlaylistList.adapter = TrackRecycleViewAdapter(trackList, spotifyPlayer, playlist.uri)
             })
         }
 

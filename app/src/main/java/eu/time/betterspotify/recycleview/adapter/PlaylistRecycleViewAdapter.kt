@@ -11,12 +11,12 @@ import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.types.Playlist
 import eu.time.betterspotify.util.loadImageFromUrl
 
-class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, private val spotifyPlayer: SpotifyPlayer, private val playlistCallback: (String) -> Unit) :
+class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, private val spotifyPlayer: SpotifyPlayer, private val playlistCallback: (Playlist) -> Unit) :
     RecyclerView.Adapter<PlaylistRecycleViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val spotifyPlayer: SpotifyPlayer) : RecyclerView.ViewHolder(view) {
         lateinit var playlist: Playlist
-        lateinit var callback: (String) -> Unit
+        lateinit var callback: (Playlist) -> Unit
 
         val tvPlaylistName: TextView = view.findViewById(R.id.tvTitle)
         val tvPlaylistSize: TextView = view.findViewById(R.id.tvPlaylistSize)
@@ -24,7 +24,7 @@ class PlaylistRecycleViewAdapter(private val dataSet: MutableList<Playlist>, pri
 
         init {
             view.setOnClickListener {
-                callback(playlist.id)
+                callback(playlist)
             }
 
             ivPlaylistImage.setOnClickListener {

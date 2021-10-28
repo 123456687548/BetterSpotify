@@ -28,12 +28,14 @@ class SpotifyPlayer private constructor() {
                 INSTANCE = SpotifyPlayer()
             }
 
+            INSTANCE.context = context
             INSTANCE.connect(context)
 
             return INSTANCE
         }
     }
 
+    private var context: Context? = null
     private lateinit var mSpotifyAppRemote: SpotifyAppRemote
 
     private var isConnected = false
@@ -94,6 +96,11 @@ class SpotifyPlayer private constructor() {
         getRemote()?.playerApi?.play(uri)
     }
 
+    fun playContext(contextUri: String, offset: Int) {
+        if (context == null) return
+        SpotifyApi.getInstance().playContext(context!!, contextUri, offset)
+    }
+
     fun queueTrack(track: Track, callback: (Empty) -> Unit = {}) {
         getRemote()?.playerApi?.queue(track.uri)?.setResultCallback(callback)
     }
@@ -105,7 +112,7 @@ class SpotifyPlayer private constructor() {
                     callback(false)
                 }
             } else {
-                getRemote()?.userApi?.addToLibrary(uri)?.setResultCallback{
+                getRemote()?.userApi?.addToLibrary(uri)?.setResultCallback {
                     callback(true)
                 }
             }

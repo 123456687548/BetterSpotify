@@ -112,6 +112,14 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
+    private fun needsToRefreshToken(error: VolleyError): Boolean = error.networkResponse.statusCode == 401
+
+    private fun refreshTokenIfNeeded(context: Context, error: VolleyError, retryCallback: () -> Unit) {
+        if (!needsToRefreshToken(error)) return
+
+        refreshToken(context, retryCallback)
+    }
+
     private fun refreshToken(context: Context, retryCallback: () -> Unit) {
         val param: MutableMap<String, String> = HashMap()
         param["client_id"] = CLIENT_ID
@@ -141,7 +149,6 @@ class SpotifyApi private constructor() {
             }
 
             retryCallback()
-//            startMainActivity(context)
         }, {
             it.message?.let { it1 -> Log.d("request", it1) }
         }) {
@@ -208,6 +215,21 @@ class SpotifyApi private constructor() {
         return code
     }
 
+    fun playContext(
+        context: Context, contextUri: String, offset: Int, onSuccess: (response: String) -> Unit = {}, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                playContext(context, contextUri, offset, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+        val body = "{\"context_uri\":\"$contextUri\",\"offset\":{\"position\":$offset}}"
+
+        val url = "https://api.spotify.com/v1/me/player/play"
+
+        sendPutRequest(context, url, header, body, onSuccess, onError)
+    }
+
     fun search(context: Context, query: String, types: List<String>, onSuccess: (response: String) -> Unit) {
         val urlEncodedTypes = types.joinToString("%2C")
 
@@ -216,7 +238,7 @@ class SpotifyApi private constructor() {
 
     private fun sendSearch(
         context: Context, query: String, types: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
-            refreshToken(context) {
+            refreshTokenIfNeeded(context, it) {
                 sendSearch(context, query, types, onSuccess)
             }
         }
@@ -230,7 +252,7 @@ class SpotifyApi private constructor() {
 
     fun getPlaylists(
         context: Context, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
-            refreshToken(context) {
+            refreshTokenIfNeeded(context, it) {
                 getPlaylists(context, onSuccess)
             }
         }
@@ -242,7 +264,7 @@ class SpotifyApi private constructor() {
 
     fun getPlaylistTracks(
         context: Context, url: String, onSuccess: (response: List<PlaylistItem>) -> Unit, onError: (error: VolleyError) -> Unit = {
-            refreshToken(context) {
+            refreshTokenIfNeeded(context, it) {
                 getPlaylistTracks(context, url, onSuccess)
             }
         }, trackList: MutableList<PlaylistItem> = mutableListOf()
@@ -290,6 +312,30 @@ class SpotifyApi private constructor() {
         header["Content-Type"] = "application/json"
         header["Authorization"] = "Bearer ${token.accessToken}"
         return header
+    }
+
+    private fun sendPutRequest(
+        context: Context,
+        url: String,
+        header: MutableMap<String, String>,
+        body: String,
+        onSuccess: (response: String) -> Unit,
+        onError: (error: VolleyError) -> Unit = {}
+    ) {
+        val queue = Volley.newRequestQueue(context)
+
+        val stringRequest = object : StringRequest(Method.PUT, url, onSuccess, onError) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                return header
+            }
+
+            override fun getBody(): ByteArray {
+                return body.toByteArray()
+            }
+        }
+
+        queue.add(stringRequest)
     }
 
     private fun sendGetRequest(context: Context, url: String, header: MutableMap<String, String>, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
