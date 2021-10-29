@@ -12,6 +12,9 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.BetterSpotify">
         <activity
+                android:name=".ArtistActivity"
+                android:exported="true" />
+        <activity
                 android:name=".SearchActivity"
                 android:exported="true" />
         <activity

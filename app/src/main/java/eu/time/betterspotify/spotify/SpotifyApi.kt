@@ -236,6 +236,34 @@ class SpotifyApi private constructor() {
         sendSearch(context, query, urlEncodedTypes, onSuccess)
     }
 
+    fun getArtistAlbums(
+        context: Context, artistId: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getArtistAlbums(context, artistId, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val url = "https://api.spotify.com/v1/artists/$artistId/albums?include_groups=album,single&limit=50"
+
+        sendGetRequest(context, url, header, onSuccess, onError)
+    }
+
+    fun getArtistTopTracks(
+        context: Context, artistId: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getArtistAlbums(context, artistId, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val url = "https://api.spotify.com/v1/artists/$artistId/top-tracks?market=DE"
+
+        sendGetRequest(context, url, header, onSuccess, onError)
+    }
+
     private fun sendSearch(
         context: Context, query: String, types: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {

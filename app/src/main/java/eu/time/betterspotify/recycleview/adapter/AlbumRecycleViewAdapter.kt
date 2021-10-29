@@ -1,6 +1,5 @@
 package eu.time.betterspotify.recycleview.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,50 +9,53 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.types.Artist
+import eu.time.betterspotify.spotify.data.types.Album
 import eu.time.betterspotify.util.loadImageFromUrl
 
-import eu.time.betterspotify.ArtistActivity
+class AlbumRecycleViewAdapter(private val dataSet: MutableList<Album>, private val spotifyPlayer: SpotifyPlayer, private val contextUri: String? = null) :
+    RecyclerView.Adapter<AlbumRecycleViewAdapter.ViewHolder>() {
 
-class ArtistRecycleViewAdapter(private val dataSet: MutableList<Artist>, private val spotifyPlayer: SpotifyPlayer) :
-    RecyclerView.Adapter<ArtistRecycleViewAdapter.ViewHolder>() {
-
-    class ViewHolder(view: View, private val spotifyPlayer: SpotifyPlayer) : RecyclerView.ViewHolder(view) {
-        lateinit var artist: Artist
+    class ViewHolder(view: View, private val spotifyPlayer: SpotifyPlayer, private val contextUri: String?) : RecyclerView.ViewHolder(view) {
+        lateinit var album: Album
+        var trackPlaylistPos: Int = 0
+        val tvTrack: TextView = view.findViewById(R.id.tvTitle)
         val tvArtist: TextView = view.findViewById(R.id.tvArtist)
         val ivCover: ImageView = view.findViewById(R.id.ivCover)
         private val btnPlay: ImageButton = view.findViewById(R.id.btnPlay)
+        private val btnQueue: ImageButton = view.findViewById(R.id.btnQueue)
 
         init {
             view.setOnClickListener {
-                val intent = Intent(it.context, ArtistActivity::class.java)
-                ArtistActivity.artist = artist
-                it.context.startActivity(intent)
+
             }
 
             btnPlay.setOnClickListener {
-                playArtist()
-            }
-        }
 
-        private fun playArtist() {
-            spotifyPlayer.playUri(artist.uri)
+            }
+
+            btnQueue.setOnClickListener { view ->
+
+            }
         }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.artist_view, viewGroup, false)
+            .inflate(R.layout.track_view, viewGroup, false)
 
-        return ViewHolder(view, spotifyPlayer)
+        return ViewHolder(view, spotifyPlayer, contextUri)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.artist = dataSet[position]
-        viewHolder.tvArtist.text = viewHolder.artist.name
+        viewHolder.album = dataSet[position]
+        viewHolder.tvTrack.text = viewHolder.album.name
+        viewHolder.tvArtist.text = viewHolder.album.artists[0].name
+        viewHolder.trackPlaylistPos = position
 
         if (dataSet[position].images.isNotEmpty()) {
             viewHolder.ivCover.loadImageFromUrl(dataSet[position].images[0].url)
+        } else {
+            viewHolder.ivCover.setImageResource(R.drawable.ic_no_cover_24)
         }
     }
 
