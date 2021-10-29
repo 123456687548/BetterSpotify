@@ -21,6 +21,7 @@ import eu.time.betterspotify.spotify.data.results.search.SearchResult
 import eu.time.betterspotify.spotify.data.types.Artist
 import eu.time.betterspotify.spotify.data.types.Track
 import java.util.*
+import kotlin.streams.toList
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
@@ -121,7 +122,7 @@ class SearchActivity : AppCompatActivity() {
         adapterTracks.notifyDataSetChanged()
 
         searchResultArtists.clear()
-        searchResultArtists.addAll(newData.artists.items.subList(0, 2))
+        searchResultArtists.addAll(newData.artists.items.stream().limit(2).toList())
         adapterArtists.notifyDataSetChanged()
     }
 
