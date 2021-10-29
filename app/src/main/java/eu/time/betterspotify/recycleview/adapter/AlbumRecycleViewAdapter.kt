@@ -1,12 +1,16 @@
 package eu.time.betterspotify.recycleview.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import eu.time.betterspotify.AlbumActivity
+import eu.time.betterspotify.ArtistActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.types.Album
@@ -19,29 +23,33 @@ class AlbumRecycleViewAdapter(private val dataSet: MutableList<Album>, private v
         lateinit var album: Album
         var trackPlaylistPos: Int = 0
         val tvTrack: TextView = view.findViewById(R.id.tvTitle)
-        val tvArtist: TextView = view.findViewById(R.id.tvArtist)
         val ivCover: ImageView = view.findViewById(R.id.ivCover)
         private val btnPlay: ImageButton = view.findViewById(R.id.btnPlay)
         private val btnQueue: ImageButton = view.findViewById(R.id.btnQueue)
 
         init {
             view.setOnClickListener {
-
+                val intent = Intent(it.context, AlbumActivity::class.java)
+                AlbumActivity.album = album
+                it.context.startActivity(intent)
             }
 
             btnPlay.setOnClickListener {
-
+                spotifyPlayer.playUri(album.uri)
             }
 
             btnQueue.setOnClickListener { view ->
-
+                //todo queue every track of album one by one
+//                spotifyPlayer.queueUri(album.uri) {
+//                    Toast.makeText(view.context, "${album.name} queued!", Toast.LENGTH_SHORT).show()
+//                }
             }
         }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.track_view, viewGroup, false)
+            .inflate(R.layout.album_view, viewGroup, false)
 
         return ViewHolder(view, spotifyPlayer, contextUri)
     }
@@ -49,7 +57,6 @@ class AlbumRecycleViewAdapter(private val dataSet: MutableList<Album>, private v
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.album = dataSet[position]
         viewHolder.tvTrack.text = viewHolder.album.name
-        viewHolder.tvArtist.text = viewHolder.album.artists[0].name
         viewHolder.trackPlaylistPos = position
 
         if (dataSet[position].images.isNotEmpty()) {

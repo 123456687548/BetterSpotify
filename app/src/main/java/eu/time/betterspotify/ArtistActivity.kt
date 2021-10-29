@@ -35,6 +35,8 @@ class ArtistActivity : AppCompatActivity() {
         val tvArtist = findViewById<TextView>(R.id.tvArtist)
         tvArtist.text = artist.name
 
+        initRecycleView()
+
         SpotifyApi.getInstance().getArtistAlbums(this, artist.id, { respone ->
             val type: Type = object : TypeToken<ResultContainer<Album>>() {}.type
             val result = Gson().fromJson<ResultContainer<Album>>(respone, type)
@@ -49,8 +51,6 @@ class ArtistActivity : AppCompatActivity() {
             topTracksList.addAll(result.tracks)
             topTracksAdapter.notifyDataSetChanged()
         })
-
-        initRecycleView()
     }
 
     private fun initRecycleView() {

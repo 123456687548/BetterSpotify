@@ -1,7 +1,7 @@
 package eu.time.betterspotify.spotify.data.types
 
 data class Track(
-    val album: Album,
+    var album: Album,
     val artists: List<Artist>,
     val available_markets: List<String>,
     val disc_number: Int,

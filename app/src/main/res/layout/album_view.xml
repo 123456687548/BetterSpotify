@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:orientation="horizontal">
+
+    <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="match_parent">
+
+        <ImageView
+                android:id="@+id/ivCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        <ImageButton
+                android:id="@+id/btnPlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:src="@drawable/ic_baseline_play_arrow_48" />
+    </FrameLayout>
+
+    <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="jksfdghjsfkgjasdaasdasdasdadsadasdsdhsdafa"
+            android:textSize="20sp"
+            android:maxLines="1" />
+
+    <ImageButton
+            android:id="@+id/btnQueue"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:src="@drawable/ic_baseline_queue_48" />
+</LinearLayout>

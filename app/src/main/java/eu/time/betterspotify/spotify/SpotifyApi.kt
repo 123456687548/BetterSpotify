@@ -13,12 +13,16 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import eu.time.betterspotify.MainActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
+import eu.time.betterspotify.spotify.data.types.Album
+import eu.time.betterspotify.spotify.data.types.ResultContainer
 import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.sha256
+import java.lang.reflect.Type
 
 class SpotifyApi private constructor() {
     companion object {
@@ -311,6 +315,28 @@ class SpotifyApi private constructor() {
                 onSuccess(trackList)
             } else {
                 getPlaylistTracks(context, result.next, onSuccess, onError, trackList)
+            }
+        }, onError)
+    }
+
+    fun getAlbumTracks(
+        context: Context, url: String, onSuccess: (response: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getAlbumTracks(context, url, onSuccess)
+            }
+        }, trackList: MutableList<Track> = mutableListOf()
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        sendGetRequest(context, url, header, { response ->
+            val type: Type = object : TypeToken<ResultContainer<Track>>() {}.type
+            val result = Gson().fromJson<ResultContainer<Track>>(response, type)
+
+            trackList.addAll(result.items)
+            if (result.next == null) {
+                onSuccess(trackList)
+            } else {
+                getAlbumTracks(context, result.next, onSuccess, onError, trackList)
             }
         }, onError)
     }
