@@ -217,6 +217,7 @@ class PlayerController private constructor() {
                             tvPlayerContextSubtitle?.setTextColor(contrastColor)
                             btnClose?.drawable?.setTint(contrastColor)
                             btnOptions?.drawable?.setTint(contrastColor)
+                            activity.window.statusBarColor = dominantColor
                         }
                     }
 
