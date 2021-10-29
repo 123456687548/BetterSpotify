@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.util.LruCache
 import android.widget.ImageView
 import com.spotify.protocol.types.ImageUri
+import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyPlayer
 
 class SpotifyImageManager private constructor() {
@@ -23,15 +24,22 @@ class SpotifyImageManager private constructor() {
         }
     }
 
-    fun loadBitmap(imageUri: ImageUri, imageView: ImageView) {
+    //todo cache to disk?
+    fun loadBitmap(imageUri: ImageUri, imageView: ImageView, callback: () -> Unit = {}) {
         if (imageUri.raw == null) return
+        if (imageUri.raw!!.contains("localfileimage")) {
+            imageView.setImageResource(R.drawable.ic_no_cover_24)
+            callback()
+        }
 
         val bitmap: Bitmap? = getBitmapFromMemCache(imageUri.raw!!)?.also {
             imageView.setImageBitmap(it)
+            callback()
         } ?: run {
             SpotifyPlayer.getInstance(imageView.context).getImage(imageUri) {
                 memoryCache.put(imageUri.raw, it)
                 imageView.setImageBitmap(it)
+                callback()
             }
             null
         }

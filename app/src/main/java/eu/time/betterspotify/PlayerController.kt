@@ -11,11 +11,12 @@ import android.widget.*
 import com.spotify.protocol.types.PlayerState
 import com.spotify.protocol.types.Track
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.util.loadImageFromUri
-import eu.time.betterspotify.util.toTimestampString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import android.graphics.drawable.GradientDrawable
+import eu.time.betterspotify.util.*
+
 
 class PlayerController private constructor() {
     companion object {
@@ -159,6 +160,8 @@ class PlayerController private constructor() {
         val btnShuffle: ImageButton? = activity.findViewById(R.id.btnShuffle)
         val btnPlay: ImageButton? = activity.findViewById(R.id.btnPlay)
         val btnLike: ImageButton? = activity.findViewById(R.id.btnLike)
+        val btnClose: ImageButton? = activity.findViewById(R.id.btnClose)
+        val btnOptions: ImageButton? = activity.findViewById(R.id.btnOptions)
         val ivPlayerCover: ImageView? = activity.findViewById(R.id.ivPlayerCover)
         val tvPlayerTitle: TextView? = activity.findViewById(R.id.tvPlayerTitle)
         val tvPlayerArtist: TextView? = activity.findViewById(R.id.tvPlayerArtist)
@@ -169,6 +172,7 @@ class PlayerController private constructor() {
         val tvPlayerDevice: TextView? = activity.findViewById(R.id.tvPlayerDevice)
         val tvPlayerContextTitle: TextView? = activity.findViewById(R.id.tvPlayerContextTitle)
         val tvPlayerContextSubtitle: TextView? = activity.findViewById(R.id.tvPlayerContextSubtitle)
+        val vBackground: View? = activity.findViewById(R.id.vBackground)
 
         val miniPlayer: View? = activity.findViewById(R.id.miniPlayer)
 
@@ -201,7 +205,20 @@ class PlayerController private constructor() {
                     tvPlayerTitle?.text = track.name
                     tvPlayerArtist?.text = track.artist.name
 
-                    ivPlayerCover?.loadImageFromUri(track.imageUri)
+                    ivPlayerCover?.loadImageFromUri(track.imageUri) {
+                        if (vBackground != null) {
+                            val dominantColor = ivPlayerCover.getDominantColor()
+
+                            val gd = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(dominantColor, 0x000000, 0x000000))
+                            gd.cornerRadius = 0f
+                            vBackground.background = gd
+                            val contrastColor = getContrastColor(dominantColor)
+                            tvPlayerContextTitle?.setTextColor(contrastColor)
+                            tvPlayerContextSubtitle?.setTextColor(contrastColor)
+                            btnClose?.drawable?.setTint(contrastColor)
+                            btnOptions?.drawable?.setTint(contrastColor)
+                        }
+                    }
 
                     if (btnLike != null) {
                         spotifyPlayer.getLibraryState(track.uri) { libraryState ->
