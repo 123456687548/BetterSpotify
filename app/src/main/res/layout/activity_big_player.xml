@@ -119,8 +119,8 @@
                     android:id="@+id/sbProgress"
                     android:layout_width="match_parent"
                     android:layout_height="16dp"
-                    android:progressTint="@color/green_900"
-                    android:thumbTint="@color/green_1000" />
+                    android:progressTint="@color/spotify_green"
+                    android:thumbTint="@color/green_900" />
 
             <LinearLayout
                     android:layout_width="match_parent"

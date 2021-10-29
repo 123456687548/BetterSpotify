@@ -74,6 +74,6 @@
             android:layout_width="match_parent"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_height="5dp"
-            android:progressTint="@color/green_900" />
+            android:progressTint="@color/spotify_green" />
 
 </LinearLayout>
