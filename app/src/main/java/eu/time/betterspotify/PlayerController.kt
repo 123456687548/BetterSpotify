@@ -218,6 +218,11 @@ class PlayerController private constructor() {
                             btnClose?.drawable?.setTint(contrastColor)
                             btnOptions?.drawable?.setTint(contrastColor)
                             activity.window.statusBarColor = dominantColor
+                            if (contrastColor == Color.WHITE) {
+                                activity.window.decorView.systemUiVisibility = activity.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                            } else {
+                                activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                            }
                         }
                     }
 

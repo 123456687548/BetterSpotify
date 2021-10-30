@@ -120,7 +120,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="16dp"
                     android:progressTint="@color/spotify_green"
-                    android:thumbTint="@color/green_900" />
+                    android:thumbTint="@color/spotify_green" />
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -203,6 +203,12 @@
                     android:layout_height="wrap_content"
                     android:text="TimPC ToDo"
                     android:layout_weight="1" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swKeepAwake"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Keep Alive"/>
 
             <ImageButton
                     android:id="@+id/btnShare"

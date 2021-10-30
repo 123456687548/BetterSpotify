@@ -2,6 +2,10 @@ package eu.time.betterspotify
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
+import android.widget.CompoundButton
+import androidx.appcompat.widget.SwitchCompat
 import eu.time.betterspotify.spotify.SpotifyPlayer
 
 class BigPlayerActivity : AppCompatActivity() {
@@ -10,6 +14,16 @@ class BigPlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_big_player)
+
+        val swKeepAlive = findViewById<SwitchCompat>(R.id.swKeepAwake)
+
+        swKeepAlive.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
     }
 
     override fun onStart() {
