@@ -202,12 +202,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="TimPC ToDo"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1" />
 
             <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/swKeepAwake"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="Keep Alive"/>
 
             <ImageButton
@@ -215,7 +217,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_share_24"
-                    android:background="@null" />
+                    android:background="@null"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp" />
 
             <ImageButton
                     android:id="@+id/btnQueue"
@@ -223,6 +227,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_queue_music_24"
                     android:background="@null"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="20dp" />
         </LinearLayout>
     </LinearLayout>
