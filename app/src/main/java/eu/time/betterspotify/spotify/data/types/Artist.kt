@@ -7,5 +7,6 @@ data class Artist(
     val name: String,
     val type: String,
     val uri: String,
-    val images: List<Image>
+    val images: List<Image>,
+    val followers: List<Followers>
 )

@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.graphics.drawable.GradientDrawable
+import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.util.*
 import java.util.*
 
@@ -256,6 +257,12 @@ class PlayerController private constructor() {
                                 btnLike.setImageResource(R.drawable.ic_not_liked_48)
                             }
                         }
+                    }
+
+                    if (tvPlayerDevice != null) {
+                        SpotifyApi.getInstance().getPlayerState(context, { ownPlayerState ->
+                            tvPlayerDevice.text = ownPlayerState.device.name
+                        })
                     }
                 }
 

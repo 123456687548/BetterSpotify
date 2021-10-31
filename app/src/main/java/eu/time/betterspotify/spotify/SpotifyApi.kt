@@ -14,10 +14,12 @@ import android.net.Uri
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.spotify.protocol.client.RemoteWampClient
 import eu.time.betterspotify.LibraryActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
+import eu.time.betterspotify.spotify.data.types.PlayerState
 import eu.time.betterspotify.spotify.data.types.ResultContainer
 import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.sha256
@@ -218,6 +220,23 @@ class SpotifyApi private constructor() {
         return code
     }
 
+    fun getPlayerState(
+        context: Context, onSuccess: (result: PlayerState) -> Unit = {}, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getPlayerState(context, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val url = "https://api.spotify.com/v1/me/player"
+
+        sendGetRequest(context, url, header, { response ->
+            val result = Gson().fromJson(response, PlayerState::class.java)
+            onSuccess(result)
+        }, onError)
+    }
+
     fun playContext(
         context: Context, contextUri: String, offset: Int, onSuccess: (response: String) -> Unit = {}, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
@@ -392,6 +411,14 @@ class SpotifyApi private constructor() {
                 return body.toByteArray()
             }
         }
+
+        queue.add(stringRequest)
+    }
+
+    private fun sendGetRequest(context: Context, url: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
+        val queue = Volley.newRequestQueue(context)
+
+        val stringRequest = object : StringRequest(Method.GET, url, onSuccess, onError) {}
 
         queue.add(stringRequest)
     }
