@@ -21,6 +21,7 @@
             android:layout_height="0dp"
             android:scrollbars="vertical"
             android:scrollbarSize="5dp"
+            android:scrollbarThumbVertical="@color/green_900"
             android:fadeScrollbars="false"
             android:layout_marginBottom="8dp"
             android:layout_weight="1" />
