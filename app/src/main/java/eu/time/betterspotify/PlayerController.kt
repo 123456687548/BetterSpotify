@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.graphics.drawable.GradientDrawable
 import eu.time.betterspotify.util.*
+import java.util.*
 
 
 class PlayerController private constructor() {
@@ -123,9 +124,19 @@ class PlayerController private constructor() {
         }
 
         sbProgress?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            lateinit var lastChangeTimer: Timer
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    spotifyPlayer.seekTo(progress)
+                    if (::lastChangeTimer.isInitialized) {
+                        lastChangeTimer.cancel()
+                    }
+
+                    lastChangeTimer = Timer("lastChangeTimer")
+                    lastChangeTimer.schedule(object : TimerTask() {
+                        override fun run() {
+                            spotifyPlayer.seekTo(progress)
+                        }
+                    }, 20)
                 }
             }
 
