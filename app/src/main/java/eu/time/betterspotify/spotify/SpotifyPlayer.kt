@@ -56,7 +56,7 @@ class SpotifyPlayer private constructor() {
         }
     }
 
-    fun getRepeatMode(playerState: PlayerState): RepeatMode {
+    private fun getRepeatMode(playerState: PlayerState): RepeatMode {
         return RepeatMode.fromInt(playerState.playbackOptions.repeatMode)
     }
 

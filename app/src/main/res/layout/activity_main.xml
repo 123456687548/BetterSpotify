@@ -3,7 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity"
+        tools:context=".LibraryActivity"
         android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -20,34 +20,5 @@
             android:id="@+id/miniPlayer"
             layout="@layout/mini_player_view" />
 
-    <LinearLayout
-            android:id="@+id/buttonContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-        <ImageButton
-                android:id="@+id/btnSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_search_48"
-                android:background="@null" />
-
-        <ImageButton
-                android:id="@+id/btnLibrary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_library_music_48"
-                android:background="@null"
-                android:visibility="gone" />
-
-        <ImageButton
-                android:id="@+id/btnQueue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_queue_music_48"
-                android:background="@null"
-                android:visibility="gone" />
-    </LinearLayout>
+    <include layout="@layout/navigation_bar" />
 </LinearLayout>

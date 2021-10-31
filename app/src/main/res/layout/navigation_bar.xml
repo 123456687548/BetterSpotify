@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+    <ImageButton
+            android:id="@+id/btnLibrary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_library_48"
+            android:layout_weight="1"
+            android:background="@null" />
+
+    <ImageButton
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_search_48"
+            android:layout_weight="1"
+            android:background="@null" />
+
+    <ImageButton
+            android:id="@+id/btnQueue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_queue_48"
+            android:background="@null"
+            android:layout_weight="1"
+            android:visibility="gone" />
+</LinearLayout>

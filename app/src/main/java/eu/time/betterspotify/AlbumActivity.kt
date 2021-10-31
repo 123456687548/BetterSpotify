@@ -1,18 +1,16 @@
 package eu.time.betterspotify
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import eu.time.betterspotify.recycleview.adapter.AlbumRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.types.Album
 import eu.time.betterspotify.spotify.data.types.Track
 
-class AlbumActivity : AppCompatActivity() {
+class AlbumActivity : NavigationBarActivity() {
     companion object {
         lateinit var album: Album
     }
@@ -53,4 +51,6 @@ class AlbumActivity : AppCompatActivity() {
         super.onStart()
         PlayerController.getInstance().start(this)
     }
+
+    override fun getCurrentPage(): NavigationController.Page = NavigationController.Page.UNDEFINED
 }

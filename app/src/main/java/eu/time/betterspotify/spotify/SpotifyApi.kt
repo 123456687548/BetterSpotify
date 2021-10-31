@@ -14,11 +14,10 @@ import android.net.Uri
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import eu.time.betterspotify.MainActivity
+import eu.time.betterspotify.LibraryActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
-import eu.time.betterspotify.spotify.data.types.Album
 import eu.time.betterspotify.spotify.data.types.ResultContainer
 import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.sha256
@@ -428,7 +427,7 @@ class SpotifyApi private constructor() {
     }
 
     private fun startMainActivity(context: Context) {
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(context, LibraryActivity::class.java)
         context.startActivity(intent)
     }
 }

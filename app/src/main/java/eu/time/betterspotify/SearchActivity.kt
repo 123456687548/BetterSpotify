@@ -23,7 +23,7 @@ import eu.time.betterspotify.spotify.data.types.Track
 import java.util.*
 import kotlin.streams.toList
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : NavigationBarActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
     private lateinit var adapterTracks: TrackRecycleViewAdapter
     private lateinit var adapterArtists: ArtistRecycleViewAdapter
@@ -91,10 +91,6 @@ class SearchActivity : AppCompatActivity() {
         focusSearchField()
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
     override fun onPause() {
         super.onPause()
         PlayerController.getInstance().stop()
@@ -147,4 +143,6 @@ class SearchActivity : AppCompatActivity() {
             rvSearchResultArtists.visibility = View.INVISIBLE
         }
     }
+
+    override fun getCurrentPage(): NavigationController.Page = NavigationController.Page.SEARCH
 }

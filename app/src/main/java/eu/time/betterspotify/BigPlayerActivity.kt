@@ -1,10 +1,8 @@
 package eu.time.betterspotify
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
-import android.widget.CompoundButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import eu.time.betterspotify.spotify.SpotifyPlayer
 

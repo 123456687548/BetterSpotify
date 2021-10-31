@@ -145,7 +145,7 @@ class PlayerController private constructor() {
         })
     }
 
-    var paused = false
+    private var paused = false
 
     private fun shouldUpdate(playerState: PlayerState): Boolean {
         if (playerState.isPaused && !paused) {

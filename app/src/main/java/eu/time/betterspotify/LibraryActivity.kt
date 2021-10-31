@@ -21,7 +21,7 @@ import eu.time.betterspotify.spotify.data.results.playlist.PlaylistsResult
 import eu.time.betterspotify.spotify.data.types.Playlist
 import eu.time.betterspotify.spotify.data.types.Track
 
-class MainActivity : AppCompatActivity() {
+class LibraryActivity : NavigationBarActivity() {
     private val playlistList = mutableListOf<Playlist>()
     private val trackList = mutableListOf<Track>()
     private lateinit var adapter: PlaylistRecycleViewAdapter
@@ -39,11 +39,6 @@ class MainActivity : AppCompatActivity() {
         initRecycleView()
 
         activeColor = Color.valueOf(getColor(R.color.green_900)).toArgb()
-
-        findViewById<ImageButton>(R.id.btnSearch).setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun initRecycleView() {
@@ -121,4 +116,6 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, SpotifyAuthenticationActivity::class.java)
         startActivity(intent)
     }
+
+    override fun getCurrentPage(): NavigationController.Page = NavigationController.Page.LIBRARY
 }

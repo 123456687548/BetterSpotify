@@ -14,7 +14,7 @@ import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.types.*
 import java.lang.reflect.Type
 
-class ArtistActivity : AppCompatActivity() {
+class ArtistActivity : NavigationBarActivity() {
     companion object {
         lateinit var artist: Artist
     }
@@ -72,4 +72,6 @@ class ArtistActivity : AppCompatActivity() {
         super.onStart()
         PlayerController.getInstance().start(this)
     }
+
+    override fun getCurrentPage(): NavigationController.Page = NavigationController.Page.UNDEFINED
 }

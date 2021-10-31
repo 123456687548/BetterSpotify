@@ -12,6 +12,7 @@
             android:id="@+id/tvArtist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="SSIO"
             android:textSize="40sp" />
 
@@ -63,4 +64,6 @@
     <include
             android:id="@+id/miniPlayer"
             layout="@layout/mini_player_view" />
+
+    <include layout="@layout/navigation_bar" />
 </LinearLayout>
