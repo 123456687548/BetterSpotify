@@ -18,7 +18,6 @@ import android.graphics.drawable.GradientDrawable
 import eu.time.betterspotify.util.*
 import java.util.*
 
-
 class PlayerController private constructor() {
     companion object {
         private val INSTANCE = PlayerController()
@@ -183,7 +182,8 @@ class PlayerController private constructor() {
         val tvPlayerDevice: TextView? = activity.findViewById(R.id.tvPlayerDevice)
         val tvPlayerContextTitle: TextView? = activity.findViewById(R.id.tvPlayerContextTitle)
         val tvPlayerContextSubtitle: TextView? = activity.findViewById(R.id.tvPlayerContextSubtitle)
-        val vBackground: View? = activity.findViewById(R.id.vBackground)
+        val vBackgroundBig: View? = activity.findViewById(R.id.vBackgroundBig)
+        val vBackgroundMini: View? = activity.findViewById(R.id.vBackgroundMini)
 
         val miniPlayer: View? = activity.findViewById(R.id.miniPlayer)
 
@@ -217,12 +217,12 @@ class PlayerController private constructor() {
                     tvPlayerArtist?.text = track.artist.name
 
                     ivPlayerCover?.loadImageFromUri(track.imageUri) {
-                        if (vBackground != null) {
+                        if (vBackgroundBig != null) {
                             val dominantColor = ivPlayerCover.getDominantColor()
 
                             val gd = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(dominantColor, 0x000000, 0x000000))
                             gd.cornerRadius = 0f
-                            vBackground.background = gd
+                            vBackgroundBig.background = gd
                             val contrastColor = getContrastColor(dominantColor)
                             tvPlayerContextTitle?.setTextColor(contrastColor)
                             tvPlayerContextSubtitle?.setTextColor(contrastColor)
@@ -234,6 +234,17 @@ class PlayerController private constructor() {
                             } else {
                                 activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                             }
+                        }
+
+                        if (vBackgroundMini != null) {
+                            val dominantColor = ivPlayerCover.getDominantColor()
+
+                            val gd = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(dominantColor, 0x000000))
+                            gd.cornerRadius = 0f
+                            vBackgroundMini.background = gd
+                            val contrastColor = getContrastColor(dominantColor)
+                            tvPlayerTitle?.setTextColor(contrastColor)
+                            tvPlayerArtist?.setTextColor(contrastColor)
                         }
                     }
 
