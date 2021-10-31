@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Color1SwitchStyle">
+        <item name="colorControlActivated">@color/spotify_green</item>
+        <item name="trackColorActive">@color/green_900</item>
+    </style>
+</resources>
