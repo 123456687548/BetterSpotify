@@ -60,7 +60,6 @@ class SearchController private constructor() {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
 
-            //todo search types wie in der app
             override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
                 if (text.isNotEmpty()) {
                     if (::lastChangeTimer.isInitialized) {

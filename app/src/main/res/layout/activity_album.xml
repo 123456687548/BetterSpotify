@@ -31,4 +31,6 @@
     <include
             android:id="@+id/miniPlayer"
             layout="@layout/mini_player_view" />
+
+    <include layout="@layout/navigation_bar" />
 </LinearLayout>
