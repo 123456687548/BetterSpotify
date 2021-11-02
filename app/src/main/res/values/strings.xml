@@ -3,4 +3,24 @@
     <string name="preference_file_key">preference_file_key</string>
     <string name="spotify_access_token">spotify_access_token</string>
     <string name="spotify_refresh_token">spotify_refresh_token</string>
+    <string name="artist">Artist</string>
+    <string name="artists">Artists</string>
+    <string name="song">Song</string>
+    <string name="songs">Songs</string>
+    <string name="best_result">Best Result</string>
+    <string name="album">Album</string>
+    <string name="albums">Albums</string>
+    <string name="playlist">Playlist</string>
+    <string name="playlists">Playlists</string>
+    <string name="track">Track</string>
+    <string name="tracks">Tracks</string>
+    <string name="search">Search</string>
+    <string name="popular">Popular</string>
+    <string name="keep_alive">Keep Alive</string>
+    <string name="log_in_to_spotify">Log in to Spotify</string>
+    <string name="login">Login</string>
+    <string name="title">Title</string>
+    <string name="device_name">DeviceName</string>
+    <string name="playercontexttitle">PlayerContextTitle</string>
+    <string name="playercontextsubtitle">PlayerContextSubtitle</string>
 </resources>

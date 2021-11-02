@@ -8,7 +8,7 @@
 
     <TextView
             android:id="@+id/login_text_view"
-            android:text="Log in to Spotify"
+            android:text="@string/log_in_to_spotify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="40sp"
@@ -18,7 +18,7 @@
             android:layout_marginTop="100dp" />
 
     <Button
-            android:text="Login"
+            android:text="@string/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button"

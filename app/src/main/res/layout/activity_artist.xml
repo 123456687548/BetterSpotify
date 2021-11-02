@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="SSIO"
+            android:text="@string/artist"
             android:textSize="40sp" />
 
     <LinearLayout
@@ -25,7 +25,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Beliebt"
+                android:text="@string/popular"
                 android:textSize="26sp" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -48,7 +48,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Alben"
+                android:text="@string/albums"
                 android:textSize="26sp" />
 
         <androidx.recyclerview.widget.RecyclerView

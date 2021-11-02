@@ -26,7 +26,7 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Title"
+                    android:text="@string/title"
                     android:textSize="20sp"
                     android:maxLines="1" />
 
@@ -34,7 +34,7 @@
                     android:id="@+id/tvArtist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Artist"
+                    android:text="@string/artist"
                     android:textSize="20sp"
                     android:maxLines="1" />
         </LinearLayout>

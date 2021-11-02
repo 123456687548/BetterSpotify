@@ -19,6 +19,7 @@ import eu.time.betterspotify.LibraryActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
+import eu.time.betterspotify.spotify.data.results.search.SearchResult
 import eu.time.betterspotify.spotify.data.types.PlayerState
 import eu.time.betterspotify.spotify.data.types.ResultContainer
 import eu.time.betterspotify.spotify.data.types.Track
@@ -252,10 +253,13 @@ class SpotifyApi private constructor() {
         sendPutRequest(context, url, header, body, onSuccess, onError)
     }
 
-    fun search(context: Context, query: String, types: List<String>, onSuccess: (response: String) -> Unit) {
+    fun search(context: Context, query: String, types: List<String>, onSuccess: (result: SearchResult) -> Unit) {
         val urlEncodedTypes = types.joinToString("%2C")
 
-        sendSearch(context, query, urlEncodedTypes, onSuccess)
+        sendSearch(context, query, urlEncodedTypes, { response ->
+            val result = Gson().fromJson(response, SearchResult::class.java)
+            onSuccess(result)
+        })
     }
 
     fun getArtistAlbums(

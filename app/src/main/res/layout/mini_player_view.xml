@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Title"
+                    android:text="@string/title"
                     android:textSize="20sp"
                     android:singleLine="true" />
 
@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Artist"
+                    android:text="@string/artist"
                     android:textSize="20sp"
                     android:singleLine="true" />
         </LinearLayout>

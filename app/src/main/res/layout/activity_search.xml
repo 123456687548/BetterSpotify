@@ -13,17 +13,67 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:textSize="20sp"
-            android:hint="Search" />
+            android:hint="@string/search" />
 
-    <TextView
-            android:id="@+id/tvTitleTrack"
+    <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tracks"
+            android:scrollbars="none">
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <Button
+                    android:id="@+id/btnSearchBestResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/spotify_green"
+                    android:text="@string/best_result" />
+
+            <Button
+                    android:id="@+id/btnSearchArtist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/artist" />
+
+            <Button
+                    android:id="@+id/btnSearchSongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/track" />
+
+            <Button
+                    android:id="@+id/btnSearchAlbum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/album" />
+
+            <Button
+                    android:id="@+id/btnSearchPlaylist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/playlist" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <TextView
+            android:id="@+id/tvSearchTitleTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tracks"
+            android:textAlignment="center"
             android:textSize="26sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSearchResultTracks"
+            android:id="@+id/rvSearchResultTop"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbars="vertical"
@@ -34,14 +84,15 @@
             android:layout_weight="1" />
 
     <TextView
-            android:id="@+id/tvTitleArtist"
+            android:id="@+id/tvSearchTitleBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Artists"
+            android:text="@string/artists"
+            android:textAlignment="center"
             android:textSize="26sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSearchResultArtists"
+            android:id="@+id/rvSearchResultBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
