@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
 
 class BigPlayerActivity : AppCompatActivity() {
@@ -27,9 +28,11 @@ class BigPlayerActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        spotifyPlayer = SpotifyPlayer.getInstance(this)
+        SpotifyApi.getInstance().initialize(this) {
+            spotifyPlayer = SpotifyPlayer.getInstance(this)
 
-        PlayerController.getInstance().start(this)
+            PlayerController.getInstance().start(this)
+        }
     }
 
     override fun onPause() {

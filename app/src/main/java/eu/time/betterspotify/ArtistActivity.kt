@@ -35,21 +35,6 @@ class ArtistActivity : NavigationBarActivity() {
         tvArtist.text = artist.name
 
         initRecycleView()
-
-        SpotifyApi.getInstance().getArtistAlbums(this, artist.id, { respone ->
-            val type: Type = object : TypeToken<ResultContainer<Album>>() {}.type
-            val result = Gson().fromJson<ResultContainer<Album>>(respone, type)
-
-            albumsList.addAll(result.items)
-            albumsAdapter.notifyDataSetChanged()
-        })
-
-        SpotifyApi.getInstance().getArtistTopTracks(this, artist.id, { respone ->
-            val result = Gson().fromJson(respone, ArtistTopTracks::class.java)
-
-            topTracksList.addAll(result.tracks)
-            topTracksAdapter.notifyDataSetChanged()
-        })
     }
 
     private fun initRecycleView() {
@@ -69,7 +54,24 @@ class ArtistActivity : NavigationBarActivity() {
 
     override fun onStart() {
         super.onStart()
-        PlayerController.getInstance().start(this)
+        SpotifyApi.getInstance().initialize(this) {
+            SpotifyApi.getInstance().getArtistAlbums(this, artist.id, { respone ->
+                val type: Type = object : TypeToken<ResultContainer<Album>>() {}.type
+                val result = Gson().fromJson<ResultContainer<Album>>(respone, type)
+
+                albumsList.addAll(result.items)
+                albumsAdapter.notifyDataSetChanged()
+            })
+
+            SpotifyApi.getInstance().getArtistTopTracks(this, artist.id, { respone ->
+                val result = Gson().fromJson(respone, ArtistTopTracks::class.java)
+
+                topTracksList.addAll(result.tracks)
+                topTracksAdapter.notifyDataSetChanged()
+            })
+
+            PlayerController.getInstance().start(this)
+        }
     }
 
     override fun getCurrentPage(): NavigationController.Page = NavigationController.Page.UNDEFINED

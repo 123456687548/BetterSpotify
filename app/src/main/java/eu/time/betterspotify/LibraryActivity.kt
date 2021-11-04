@@ -62,29 +62,11 @@ class LibraryActivity : NavigationBarActivity() {
     override fun onStart() {
         super.onStart()
 
-        val token = getToken()
-
-        if (token != null) {
-            SpotifyApi.getInstance().initialize(token)
-
+        SpotifyApi.getInstance().initialize(this) {
             loadPlaylists()
 
             PlayerController.getInstance().start(this)
-        } else {
-            startLoginActivity()
         }
-    }
-
-    private fun getToken(): TokenResult? {
-        val sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        val accessToken = sharedPref.getString(getString(R.string.spotify_access_token), "").toString()
-        val refreshToken = sharedPref.getString(getString(R.string.spotify_refresh_token), "").toString()
-
-        if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
-            return TokenResult(accessToken, refreshToken)
-        }
-
-        return null
     }
 
     private fun loadPlaylists() {
@@ -108,11 +90,6 @@ class LibraryActivity : NavigationBarActivity() {
         playlistList.clear()
         playlistList.addAll(newData)
         adapter.notifyDataSetChanged()
-    }
-
-    private fun startLoginActivity() {
-        val intent = Intent(this, SpotifyAuthenticationActivity::class.java)
-        startActivity(intent)
     }
 
     override fun getCurrentPage(): NavigationController.Page = NavigationController.Page.LIBRARY

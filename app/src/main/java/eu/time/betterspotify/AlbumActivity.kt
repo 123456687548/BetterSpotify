@@ -49,7 +49,9 @@ class AlbumActivity : NavigationBarActivity() {
 
     override fun onStart() {
         super.onStart()
-        PlayerController.getInstance().start(this)
+        SpotifyApi.getInstance().initialize(this) {
+            PlayerController.getInstance().start(this)
+        }
     }
 
     override fun getCurrentPage(): NavigationController.Page = NavigationController.Page.UNDEFINED

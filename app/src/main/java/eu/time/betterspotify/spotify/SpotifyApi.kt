@@ -16,7 +16,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.spotify.protocol.client.RemoteWampClient
 import eu.time.betterspotify.LibraryActivity
+import eu.time.betterspotify.PlayerController
 import eu.time.betterspotify.R
+import eu.time.betterspotify.SpotifyAuthenticationActivity
 import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
 import eu.time.betterspotify.spotify.data.results.search.SearchResult
@@ -371,20 +373,38 @@ class SpotifyApi private constructor() {
         initialized = true
     }
 
-    fun initialize(token: TokenResult) {
-        if (initialized) return
+    fun initialize(context: Context, onSuccess: () -> Unit = {}) {
+        if (initialized) {
+            onSuccess()
+        }
 
-        this.token = token
+        val token = getToken(context)
 
-        initialized = true
+        if (token != null) {
+            this.token = token
+            initialized = true
+            onSuccess()
+        } else {
+            startLoginActivity(context)
+            return
+        }
     }
 
-    fun initialize(context: Context) {
-        if (initialized) return
+    private fun startLoginActivity(context: Context) {
+        val intent = Intent(context, SpotifyAuthenticationActivity::class.java)
+        context.startActivity(intent)
+    }
 
-        requestAccess(context)
+    private fun getToken(context: Context): TokenResult? {
+        val sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        val accessToken = sharedPref.getString(context.getString(R.string.spotify_access_token), "").toString()
+        val refreshToken = sharedPref.getString(context.getString(R.string.spotify_refresh_token), "").toString()
 
-        initialized = true
+        if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
+            return TokenResult(accessToken, refreshToken)
+        }
+
+        return null
     }
 
     private fun createHeader(): MutableMap<String, String> {
