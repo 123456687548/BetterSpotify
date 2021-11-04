@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import eu.time.betterspotify.recycleview.adapter.AlbumRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.types.*
-import java.lang.reflect.Type
+import eu.time.betterspotify.spotify.data.types.Album
+import eu.time.betterspotify.spotify.data.types.Artist
+import eu.time.betterspotify.spotify.data.types.Track
 
 class ArtistActivity : NavigationBarActivity() {
     companion object {
@@ -55,17 +54,12 @@ class ArtistActivity : NavigationBarActivity() {
     override fun onStart() {
         super.onStart()
         SpotifyApi.getInstance().initialize(this) {
-            SpotifyApi.getInstance().getArtistAlbums(this, artist.id, { respone ->
-                val type: Type = object : TypeToken<ResultContainer<Album>>() {}.type
-                val result = Gson().fromJson<ResultContainer<Album>>(respone, type)
-
+            SpotifyApi.getInstance().getArtistAlbums(this, artist.id, { result ->
                 albumsList.addAll(result.items)
                 albumsAdapter.notifyDataSetChanged()
             })
 
-            SpotifyApi.getInstance().getArtistTopTracks(this, artist.id, { respone ->
-                val result = Gson().fromJson(respone, ArtistTopTracks::class.java)
-
+            SpotifyApi.getInstance().getArtistTopTracks(this, artist.id, { result ->
                 topTracksList.addAll(result.tracks)
                 topTracksAdapter.notifyDataSetChanged()
             })

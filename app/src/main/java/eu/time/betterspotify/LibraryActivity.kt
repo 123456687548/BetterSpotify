@@ -70,9 +70,8 @@ class LibraryActivity : NavigationBarActivity() {
     }
 
     private fun loadPlaylists() {
-        SpotifyApi.getInstance().getPlaylists(this, { response ->
-            val playlists = Gson().fromJson(response, PlaylistsResult::class.java)
-            updateRecycleView(playlists.items)
+        SpotifyApi.getInstance().getPlaylists(this, { result ->
+            updateRecycleView(result.items)
         })
     }
 

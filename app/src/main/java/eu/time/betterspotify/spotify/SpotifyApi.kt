@@ -21,10 +21,9 @@ import eu.time.betterspotify.R
 import eu.time.betterspotify.SpotifyAuthenticationActivity
 import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
+import eu.time.betterspotify.spotify.data.results.playlist.PlaylistsResult
 import eu.time.betterspotify.spotify.data.results.search.SearchResult
-import eu.time.betterspotify.spotify.data.types.PlayerState
-import eu.time.betterspotify.spotify.data.types.ResultContainer
-import eu.time.betterspotify.spotify.data.types.Track
+import eu.time.betterspotify.spotify.data.types.*
 import eu.time.betterspotify.util.sha256
 import java.lang.reflect.Type
 
@@ -265,7 +264,7 @@ class SpotifyApi private constructor() {
     }
 
     fun getArtistAlbums(
-        context: Context, artistId: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, artistId: String, onSuccess: (result: ResultContainer<Album>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
                 getArtistAlbums(context, artistId, onSuccess)
             }
@@ -275,13 +274,17 @@ class SpotifyApi private constructor() {
 
         val url = "https://api.spotify.com/v1/artists/$artistId/albums?include_groups=album,single&limit=50"
 
-        sendGetRequest(context, url, header, onSuccess, onError)
+        sendGetRequest(context, url, header, { response ->
+            val type: Type = object : TypeToken<ResultContainer<Album>>() {}.type
+            val result = Gson().fromJson<ResultContainer<Album>>(response, type)
+            onSuccess(result)
+        }, onError)
     }
 
     fun getArtistTopTracks(
-        context: Context, artistId: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, artistId: String, onSuccess: (result: ArtistTopTracks) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
-                getArtistAlbums(context, artistId, onSuccess)
+                getArtistTopTracks(context, artistId, onSuccess)
             }
         }
     ) {
@@ -289,7 +292,10 @@ class SpotifyApi private constructor() {
 
         val url = "https://api.spotify.com/v1/artists/$artistId/top-tracks?market=DE"
 
-        sendGetRequest(context, url, header, onSuccess, onError)
+        sendGetRequest(context, url, header, { response ->
+            val result = Gson().fromJson(response, ArtistTopTracks::class.java)
+            onSuccess(result)
+        }, onError)
     }
 
     private fun sendSearch(
@@ -307,7 +313,7 @@ class SpotifyApi private constructor() {
     }
 
     fun getPlaylists(
-        context: Context, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, onSuccess: (result: PlaylistsResult) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
                 getPlaylists(context, onSuccess)
             }
@@ -315,7 +321,10 @@ class SpotifyApi private constructor() {
     ) {
         val header: MutableMap<String, String> = createHeader()
 
-        sendGetRequest(context, "https://api.spotify.com/v1/me/playlists?limit=50", header, onSuccess, onError)
+        sendGetRequest(context, "https://api.spotify.com/v1/me/playlists?limit=50", header, { response ->
+            val result = Gson().fromJson(response, PlaylistsResult::class.java)
+            onSuccess(result)
+        }, onError)
     }
 
     fun getPlaylistTracks(
