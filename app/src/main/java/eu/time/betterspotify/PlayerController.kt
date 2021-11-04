@@ -33,7 +33,11 @@ class PlayerController private constructor() {
     private var activeColor = -1
     private var active = false
 
+    private var lastTrack: Track? = null
+
     fun start(context: Context) {
+        lastTrack = null
+
         spotifyPlayer = SpotifyPlayer.getInstance(context)
 
         activeColor = Color.valueOf(context.getColor(R.color.green_900)).toArgb()
@@ -67,6 +71,7 @@ class PlayerController private constructor() {
         val activity = context as Activity
 
         val llPlayerInfo: LinearLayout? = activity.findViewById(R.id.llPlayerInfo)
+        val llPlayerInfoBig: LinearLayout? = activity.findViewById(R.id.llPlayerInfoBig)
         val btnRepeat: ImageButton? = activity.findViewById(R.id.btnRepeat)
         val btnShuffle: ImageButton? = activity.findViewById(R.id.btnShuffle)
         val btnPlay: ImageButton? = activity.findViewById(R.id.btnPlay)
@@ -79,8 +84,16 @@ class PlayerController private constructor() {
         llPlayerInfo?.setOnClickListener {
             stop()
             val intent = Intent(context, BigPlayerActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, 0)
+        }
+
+        llPlayerInfoBig?.setOnClickListener {
+            if (lastTrack != null) {
+                stop()
+                ArtistActivity.openArtist(it.context, lastTrack!!.artist)
+            }
         }
 
         btnRepeat?.setOnClickListener {
@@ -189,11 +202,11 @@ class PlayerController private constructor() {
         val miniPlayer: View? = activity.findViewById(R.id.miniPlayer)
 
         context.runOnUiThread {
-            val track: Track? = playerState.track
-            if (track != null && shouldUpdate(playerState)) {
+            val currentTrack: Track? = playerState.track
+            if (currentTrack != null && shouldUpdate(playerState)) {
                 miniPlayer?.visibility = View.VISIBLE
 
-                val trackDuration = track.duration
+                val trackDuration = currentTrack.duration
                 val trackProgress = playerState.playbackPosition
 
                 pbProgress?.max = trackDuration.toInt()
@@ -206,7 +219,9 @@ class PlayerController private constructor() {
 
                 tvPlayerTitle?.isSelected = true
 
-                if (tvPlayerTitle?.text != track.name) {
+                if (currentTrack != lastTrack) {
+                    lastTrack = currentTrack
+
                     if (tvPlayerContextTitle != null && tvPlayerContextSubtitle != null) {
                         spotifyPlayer.getPlayerContext { playerContext ->
                             tvPlayerContextTitle.text = playerContext.title
@@ -214,10 +229,10 @@ class PlayerController private constructor() {
                         }
                     }
 
-                    tvPlayerTitle?.text = track.name
-                    tvPlayerArtist?.text = track.artist.name
+                    tvPlayerTitle?.text = currentTrack.name
+                    tvPlayerArtist?.text = currentTrack.artist.name
 
-                    ivPlayerCover?.loadImageFromUri(track.imageUri) {
+                    ivPlayerCover?.loadImageFromUri(currentTrack.imageUri) {
                         if (vBackgroundBig != null) {
                             val dominantColor = ivPlayerCover.getDominantColor()
 
@@ -250,7 +265,7 @@ class PlayerController private constructor() {
                     }
 
                     if (btnLike != null) {
-                        spotifyPlayer.getLibraryState(track.uri) { libraryState ->
+                        spotifyPlayer.getLibraryState(currentTrack.uri) { libraryState ->
                             if (libraryState.isAdded) {
                                 btnLike.setImageResource(R.drawable.ic_liked_48)
                             } else {

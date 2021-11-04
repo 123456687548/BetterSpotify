@@ -287,6 +287,42 @@ class SpotifyApi private constructor() {
         })
     }
 
+    fun getArtist(
+        context: Context, artistId: String, onSuccess: (result: Artist) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getArtist(context, artistId, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val url = "https://api.spotify.com/v1/artists/$artistId"
+
+        sendGetRequest(context, url, header, { response ->
+            val result = Gson().fromJson(response, Artist::class.java)
+            onSuccess(result)
+        }, onError)
+    }
+
+    fun getArtist(
+        context: Context, artist: com.spotify.protocol.types.Artist, onSuccess: (result: Artist) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getArtist(context, artist, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val artistId = artist.uri.substringAfterLast(':')
+
+        val url = "https://api.spotify.com/v1/artists/$artistId"
+
+        sendGetRequest(context, url, header, { response ->
+            val result = Gson().fromJson(response, Artist::class.java)
+            onSuccess(result)
+        }, onError)
+    }
+
     fun getArtistAlbums(
         context: Context, artistId: String, onSuccess: (result: ResultContainer<Album>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {

@@ -26,9 +26,7 @@ class ArtistRecycleViewAdapter(private val dataSet: MutableList<Artist>, private
 
         init {
             view.setOnClickListener {
-                val intent = Intent(it.context, ArtistActivity::class.java)
-                ArtistActivity.artist = artist
-                it.context.startActivity(intent)
+                ArtistActivity.openArtist(it.context, artist)
             }
 
             btnPlay.setOnClickListener {
