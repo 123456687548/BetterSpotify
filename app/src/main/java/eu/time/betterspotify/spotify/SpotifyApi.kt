@@ -49,11 +49,16 @@ class SpotifyApi private constructor() {
 
     private lateinit var token: TokenResult
 
+    private lateinit var currentUser: User
+
     private val scopes = listOf(
+        "ugc-image-upload",
         "playlist-modify-private",
         "playlist-read-private",
         "playlist-modify-public",
         "playlist-read-collaborative",
+        "user-read-private",
+        "user-read-email",
         "user-read-playback-state",
         "user-modify-playback-state",
         "user-read-currently-playing",
@@ -222,6 +227,25 @@ class SpotifyApi private constructor() {
         return code
     }
 
+    fun getCurrentUser(): User = currentUser
+
+    private fun getCurrentUser(
+        context: Context, onSuccess: (result: User) -> Unit = {}, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getCurrentUser(context, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val url = "https://api.spotify.com/v1/me"
+
+        sendGetRequest(context, url, header, { response ->
+            val result = Gson().fromJson(response, User::class.java)
+            onSuccess(result)
+        }, onError)
+    }
+
     fun getPlayerState(
         context: Context, onSuccess: (result: PlayerState) -> Unit = {}, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
@@ -272,7 +296,7 @@ class SpotifyApi private constructor() {
     ) {
         val header: MutableMap<String, String> = createHeader()
 
-        val url = "https://api.spotify.com/v1/artists/$artistId/albums?include_groups=album,single&limit=50"
+        val url = "https://api.spotify.com/v1/artists/$artistId/albums?include_groups=album,single&market=${currentUser.country}&limit=50"
 
         sendGetRequest(context, url, header, { response ->
             val type: Type = object : TypeToken<ResultContainer<Album>>() {}.type
@@ -290,7 +314,7 @@ class SpotifyApi private constructor() {
     ) {
         val header: MutableMap<String, String> = createHeader()
 
-        val url = "https://api.spotify.com/v1/artists/$artistId/top-tracks?market=DE"
+        val url = "https://api.spotify.com/v1/artists/$artistId/top-tracks?market=${currentUser.country}"
 
         sendGetRequest(context, url, header, { response ->
             val result = Gson().fromJson(response, ArtistTopTracks::class.java)
@@ -307,7 +331,7 @@ class SpotifyApi private constructor() {
     ) {
         val header: MutableMap<String, String> = createHeader()
 
-        val url = "https://api.spotify.com/v1/search?q=$query&type=$types&limit=10"
+        val url = "https://api.spotify.com/v1/search?q=$query&type=$types&market=${currentUser.country}&limit=10"
 
         sendGetRequest(context, url, header, onSuccess, onError)
     }
@@ -374,14 +398,6 @@ class SpotifyApi private constructor() {
         }, onError)
     }
 
-    fun initialize(accessToken: String, refreshToken: String) {
-        if (initialized) return
-
-        token = TokenResult(accessToken, refreshToken)
-
-        initialized = true
-    }
-
     fun initialize(context: Context, onSuccess: () -> Unit = {}) {
         if (initialized) {
             onSuccess()
@@ -391,8 +407,12 @@ class SpotifyApi private constructor() {
 
         if (token != null) {
             this.token = token
-            initialized = true
-            onSuccess()
+
+            getCurrentUser(context, { result ->
+                currentUser = result
+                initialized = true
+                onSuccess()
+            })
         } else {
             startLoginActivity(context)
             return

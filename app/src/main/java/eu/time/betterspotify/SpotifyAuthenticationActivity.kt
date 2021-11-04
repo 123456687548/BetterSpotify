@@ -19,8 +19,9 @@ class SpotifyAuthenticationActivity : AppCompatActivity() {
         val refreshToken = sharedPref.getString(getString(R.string.spotify_refresh_token), "").toString()
 
         if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
-            SpotifyApi.getInstance().initialize(accessToken, refreshToken)
-            startMainActivity()
+            SpotifyApi.getInstance().initialize(this) {
+                startMainActivity()
+            }
         }
 
         val data: Uri? = intent?.data

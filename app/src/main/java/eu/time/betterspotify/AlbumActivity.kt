@@ -31,7 +31,7 @@ class AlbumActivity : NavigationBarActivity() {
 
         initRecycleView()
 
-        SpotifyApi.getInstance().getAlbumTracks(this, "https://api.spotify.com/v1/albums/${album.id}/tracks", { result ->
+        SpotifyApi.getInstance().getAlbumTracks(this, "https://api.spotify.com/v1/albums/${album.id}/tracks?market=${SpotifyApi.getInstance().getCurrentUser().country}", { result ->
             trackList.addAll(result)
             trackList.forEach { it.album = album }
             tracksAdapter.notifyDataSetChanged()
