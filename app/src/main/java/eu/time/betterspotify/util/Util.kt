@@ -1,5 +1,7 @@
 package eu.time.betterspotify.util
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.widget.ImageView
 import androidx.core.graphics.ColorUtils
@@ -7,6 +9,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toColor
 import com.spotify.protocol.types.ImageUri
 import com.squareup.picasso.Picasso
+import eu.time.betterspotify.ArtistActivity
 import java.security.MessageDigest
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -54,6 +57,12 @@ fun ImageView.getDominantColor(): Int {
     }
 
     return mostOccurringColor.toArgb()
+}
+
+fun <T> openActivity(context: Context, clazz: Class<T>) {
+    val intent = Intent(context, clazz)
+    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+    context.startActivity(intent)
 }
 
 fun isWhiteOrBlack(color: Color): Boolean {

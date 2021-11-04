@@ -30,7 +30,6 @@ class PlayerController private constructor() {
 
     private lateinit var spotifyPlayer: SpotifyPlayer
 
-    private var activeColor = -1
     private var active = false
 
     private var lastTrack: Track? = null
@@ -39,8 +38,6 @@ class PlayerController private constructor() {
         lastTrack = null
 
         spotifyPlayer = SpotifyPlayer.getInstance(context)
-
-        activeColor = Color.valueOf(context.getColor(R.color.green_900)).toArgb()
 
         initListeners(context)
 
@@ -80,6 +77,8 @@ class PlayerController private constructor() {
         val btnSkip: ImageButton? = activity.findViewById(R.id.btnSkip)
         val btnLike: ImageButton? = activity.findViewById(R.id.btnLike)
         val sbProgress: SeekBar? = activity.findViewById(R.id.sbProgress)
+        val tvPlayerContextTitle: TextView? = activity.findViewById(R.id.tvPlayerContextTitle)
+        val tvPlayerContextSubtitle: TextView? = activity.findViewById(R.id.tvPlayerContextSubtitle)
 
         llPlayerInfo?.setOnClickListener {
             stop()
@@ -94,6 +93,14 @@ class PlayerController private constructor() {
                 stop()
                 ArtistActivity.openArtist(it.context, lastTrack!!.artist)
             }
+        }
+
+        tvPlayerContextTitle?.setOnClickListener {
+            PlaylistActivity.openPlaylistFromPlayerContext(context)
+        }
+
+        tvPlayerContextSubtitle?.setOnClickListener {
+            PlaylistActivity.openPlaylistFromPlayerContext(context)
         }
 
         btnRepeat?.setOnClickListener {

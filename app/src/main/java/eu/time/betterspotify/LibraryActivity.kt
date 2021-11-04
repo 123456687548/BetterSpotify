@@ -21,12 +21,9 @@ import eu.time.betterspotify.spotify.data.types.Track
 
 class LibraryActivity : NavigationBarActivity() {
     private val playlistList = mutableListOf<Playlist>()
-    private val trackList = mutableListOf<Track>()
     private lateinit var adapter: PlaylistRecycleViewAdapter
 
     private lateinit var spotifyPlayer: SpotifyPlayer
-
-    private var activeColor = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,28 +32,17 @@ class LibraryActivity : NavigationBarActivity() {
         spotifyPlayer = SpotifyPlayer.getInstance(this)
 
         initRecycleView()
-
-        activeColor = Color.valueOf(getColor(R.color.green_900)).toArgb()
     }
 
     private fun initRecycleView() {
         val rvPlaylistList = findViewById<RecyclerView>(R.id.rvPlaylistList)
 
         adapter = PlaylistRecycleViewAdapter(playlistList, spotifyPlayer) { playlist ->
-            SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/${playlist.id}/tracks", { result ->
-                trackList.clear()
-                trackList.addAll(result)
-                rvPlaylistList.adapter = TrackRecycleViewAdapter(trackList, spotifyPlayer, playlist.uri)
-            })
+            PlaylistActivity.openPlaylist(this, playlist)
         }
 
         rvPlaylistList.adapter = adapter
         rvPlaylistList.layoutManager = LinearLayoutManager(this)
-    }
-
-    override fun onBackPressed() {
-        initRecycleView()
-        updateRecycleView(playlistList.toList())
     }
 
     override fun onStart() {

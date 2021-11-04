@@ -372,6 +372,21 @@ class SpotifyApi private constructor() {
         sendGetRequest(context, url, header, onSuccess, onError)
     }
 
+    fun getPlaylist(
+        context: Context, playlistId: String, onSuccess: (result: Playlist) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getPlaylist(context, playlistId, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        sendGetRequest(context, "https://api.spotify.com/v1/playlists/$playlistId", header, { response ->
+            val result = Gson().fromJson(response, Playlist::class.java)
+            onSuccess(result)
+        }, onError)
+    }
+
     fun getPlaylists(
         context: Context, onSuccess: (result: PlaylistsResult) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
