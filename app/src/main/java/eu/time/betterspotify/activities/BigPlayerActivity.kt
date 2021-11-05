@@ -1,9 +1,11 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.activities
 
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import eu.time.betterspotify.controllers.PlayerController
+import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
 

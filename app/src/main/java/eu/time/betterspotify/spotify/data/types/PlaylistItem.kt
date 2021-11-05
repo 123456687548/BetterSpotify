@@ -1,7 +1,4 @@
-package eu.time.betterspotify.spotify.data.results.playlist
-
-import eu.time.betterspotify.spotify.data.types.Track
-import eu.time.betterspotify.spotify.data.types.VideoThumbnail
+package eu.time.betterspotify.spotify.data.types
 
 data class PlaylistItem(
     val added_at: String,

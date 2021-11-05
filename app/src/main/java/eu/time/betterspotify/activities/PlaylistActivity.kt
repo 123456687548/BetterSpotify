@@ -1,10 +1,13 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.activities
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import eu.time.betterspotify.controllers.NavigationController
+import eu.time.betterspotify.controllers.PlayerController
+import eu.time.betterspotify.R
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
@@ -17,7 +20,7 @@ class PlaylistActivity : NavigationBarActivity() {
         private lateinit var playlist: Playlist
 
         fun openPlaylist(context: Context, playlist: Playlist) {
-            this.playlist = playlist
+            Companion.playlist = playlist
 
             val intent = Intent(context, PlaylistActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -31,7 +34,7 @@ class PlaylistActivity : NavigationBarActivity() {
                 val playlistId = playerContext.uri.substringAfterLast(':')
 
                 SpotifyApi.getInstance().getPlaylist(context, playlistId, { result ->
-                    this.playlist = result
+                    playlist = result
                     openActivity(context, PlaylistActivity::class.java)
                 })
             }

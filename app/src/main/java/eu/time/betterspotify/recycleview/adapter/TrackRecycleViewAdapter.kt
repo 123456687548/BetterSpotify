@@ -9,12 +9,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
-import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.results.playlist.PlaylistItem
 import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.loadImageFromUrl
-import kotlin.properties.Delegates
 
 class TrackRecycleViewAdapter(private val dataSet: MutableList<Track>, private val spotifyPlayer: SpotifyPlayer, private val contextUri: String? = null) :
     RecyclerView.Adapter<TrackRecycleViewAdapter.ViewHolder>() {

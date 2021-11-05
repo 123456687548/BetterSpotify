@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import eu.time.betterspotify.AlbumActivity
-import eu.time.betterspotify.ArtistActivity
+import eu.time.betterspotify.activities.AlbumActivity
 import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.types.Album

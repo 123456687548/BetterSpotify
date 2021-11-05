@@ -1,7 +1,9 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageButton
+import eu.time.betterspotify.controllers.NavigationController
+import eu.time.betterspotify.R
 
 abstract class NavigationBarActivity : AppCompatActivity() {
     private val navigationController = NavigationController.getInstance()

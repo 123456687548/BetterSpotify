@@ -1,6 +1,4 @@
-package eu.time.betterspotify.spotify.data.results.search
-
-import eu.time.betterspotify.spotify.data.types.*
+package eu.time.betterspotify.spotify.data.types
 
 data class SearchResult(
     val tracks: ResultContainer<Track>,

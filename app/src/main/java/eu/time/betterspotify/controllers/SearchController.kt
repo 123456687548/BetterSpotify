@@ -1,4 +1,4 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.controllers
 
 import android.app.Activity
 import android.content.Context
@@ -7,8 +7,9 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyApi
-import eu.time.betterspotify.spotify.data.results.search.SearchResult
+import eu.time.betterspotify.spotify.data.types.SearchResult
 import java.util.*
 
 class SearchController private constructor() {

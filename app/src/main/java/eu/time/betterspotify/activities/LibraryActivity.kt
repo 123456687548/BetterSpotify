@@ -1,23 +1,17 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.activities
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
-import com.google.gson.Gson
+import eu.time.betterspotify.controllers.NavigationController
+import eu.time.betterspotify.controllers.PlayerController
+import eu.time.betterspotify.R
 
 import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
-import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.TokenResult
-import eu.time.betterspotify.spotify.data.results.playlist.PlaylistsResult
 import eu.time.betterspotify.spotify.data.types.Playlist
-import eu.time.betterspotify.spotify.data.types.Track
 
 class LibraryActivity : NavigationBarActivity() {
     private val playlistList = mutableListOf<Playlist>()

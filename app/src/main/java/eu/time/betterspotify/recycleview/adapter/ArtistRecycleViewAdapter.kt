@@ -1,6 +1,5 @@
 package eu.time.betterspotify.recycleview.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.types.Artist
 import eu.time.betterspotify.util.loadImageFromUrl
 
-import eu.time.betterspotify.ArtistActivity
+import eu.time.betterspotify.activities.ArtistActivity
 
 class ArtistRecycleViewAdapter(private val dataSet: MutableList<Artist>, private val spotifyPlayer: SpotifyPlayer) :
     RecyclerView.Adapter<ArtistRecycleViewAdapter.ViewHolder>() {

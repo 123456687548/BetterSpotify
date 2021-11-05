@@ -1,4 +1,4 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.controllers
 
 import android.app.Activity
 import android.content.Context
@@ -15,6 +15,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
+import eu.time.betterspotify.R
+import eu.time.betterspotify.activities.ArtistActivity
+import eu.time.betterspotify.activities.BigPlayerActivity
+import eu.time.betterspotify.activities.PlaylistActivity
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.util.*
 import java.util.*

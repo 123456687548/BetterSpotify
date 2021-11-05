@@ -1,4 +1,4 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,13 +9,17 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import eu.time.betterspotify.R
+import eu.time.betterspotify.controllers.NavigationController
+import eu.time.betterspotify.controllers.PlayerController
+import eu.time.betterspotify.controllers.SearchController
 import eu.time.betterspotify.recycleview.adapter.AlbumRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.ArtistRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.results.search.SearchResult
+import eu.time.betterspotify.spotify.data.types.SearchResult
 import eu.time.betterspotify.spotify.data.types.Album
 import eu.time.betterspotify.spotify.data.types.Artist
 import eu.time.betterspotify.spotify.data.types.Playlist

@@ -1,9 +1,12 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.activities
 
 import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import eu.time.betterspotify.controllers.NavigationController
+import eu.time.betterspotify.controllers.PlayerController
+import eu.time.betterspotify.R
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer

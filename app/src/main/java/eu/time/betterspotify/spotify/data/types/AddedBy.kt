@@ -1,6 +1,4 @@
-package eu.time.betterspotify.spotify.data.results.playlist
-
-import eu.time.betterspotify.spotify.data.types.ExternalUrls
+package eu.time.betterspotify.spotify.data.types
 
 data class AddedBy(
     val external_urls: ExternalUrls,

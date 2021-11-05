@@ -12,22 +12,22 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.BetterSpotify">
         <activity
-                android:name=".PlaylistActivity"
+                android:name=".activities.PlaylistActivity"
                 android:exported="true" />
         <activity
-                android:name=".AlbumActivity"
+                android:name=".activities.AlbumActivity"
                 android:exported="true" />
         <activity
-                android:name=".ArtistActivity"
+                android:name=".activities.ArtistActivity"
                 android:exported="true" />
         <activity
-                android:name=".SearchActivity"
+                android:name=".activities.SearchActivity"
                 android:exported="true" />
         <activity
-                android:name=".BigPlayerActivity"
+                android:name=".activities.BigPlayerActivity"
                 android:exported="true" />
         <activity
-                android:name=".SpotifyAuthenticationActivity"
+                android:name=".activities.SpotifyAuthenticationActivity"
                 android:exported="true">
 
             <!-- <intent-filter> -->
@@ -50,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".LibraryActivity"
+                android:name=".activities.LibraryActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

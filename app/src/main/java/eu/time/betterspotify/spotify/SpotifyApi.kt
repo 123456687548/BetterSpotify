@@ -14,15 +14,12 @@ import android.net.Uri
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.spotify.protocol.client.RemoteWampClient
-import eu.time.betterspotify.LibraryActivity
-import eu.time.betterspotify.PlayerController
+import eu.time.betterspotify.activities.LibraryActivity
 import eu.time.betterspotify.R
-import eu.time.betterspotify.SpotifyAuthenticationActivity
+import eu.time.betterspotify.activities.SpotifyAuthenticationActivity
 import eu.time.betterspotify.spotify.data.TokenResult
-import eu.time.betterspotify.spotify.data.results.playlist.PlaylistTracksResult
-import eu.time.betterspotify.spotify.data.results.playlist.PlaylistsResult
-import eu.time.betterspotify.spotify.data.results.search.SearchResult
+import eu.time.betterspotify.spotify.data.types.PlaylistItem
+import eu.time.betterspotify.spotify.data.types.SearchResult
 import eu.time.betterspotify.spotify.data.types.*
 import eu.time.betterspotify.util.sha256
 import java.lang.reflect.Type
@@ -388,7 +385,7 @@ class SpotifyApi private constructor() {
     }
 
     fun getPlaylists(
-        context: Context, onSuccess: (result: PlaylistsResult) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, onSuccess: (result: ResultContainer<Playlist>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
                 getPlaylists(context, onSuccess)
             }
@@ -397,7 +394,8 @@ class SpotifyApi private constructor() {
         val header: MutableMap<String, String> = createHeader()
 
         sendGetRequest(context, "https://api.spotify.com/v1/me/playlists?limit=50", header, { response ->
-            val result = Gson().fromJson(response, PlaylistsResult::class.java)
+            val type: Type = object : TypeToken<ResultContainer<Playlist>>() {}.type
+            val result = Gson().fromJson<ResultContainer<Playlist>>(response, type)
             onSuccess(result)
         }, onError)
     }
@@ -411,8 +409,9 @@ class SpotifyApi private constructor() {
     ) {
         val header: MutableMap<String, String> = createHeader()
 
-        sendGetRequest(context, url, header, { result ->
-            val result = Gson().fromJson(result, PlaylistTracksResult::class.java)
+        sendGetRequest(context, url, header, { response ->
+            val type: Type = object : TypeToken<ResultContainer<PlaylistItem>>() {}.type
+            val result = Gson().fromJson<ResultContainer<PlaylistItem>>(response, type)
 
             val tracks = mutableListOf<Track>()
 

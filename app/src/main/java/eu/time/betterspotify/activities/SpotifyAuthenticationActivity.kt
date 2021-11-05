@@ -1,4 +1,4 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.activities
 
 import android.content.Context
 import android.content.Intent
@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import eu.time.betterspotify.R
 import eu.time.betterspotify.spotify.SpotifyApi
 
 class SpotifyAuthenticationActivity : AppCompatActivity() {

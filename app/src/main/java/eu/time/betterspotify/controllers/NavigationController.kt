@@ -1,7 +1,9 @@
-package eu.time.betterspotify
+package eu.time.betterspotify.controllers
 
 import android.content.Context
 import android.content.Intent
+import eu.time.betterspotify.activities.SearchActivity
+import eu.time.betterspotify.activities.LibraryActivity
 
 class NavigationController {
     companion object {
