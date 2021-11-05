@@ -57,5 +57,10 @@ class AlbumActivity : NavigationBarActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        PlayerController.getInstance().stop()
+    }
+
     override fun getCurrentPage(): NavigationController.Page = NavigationController.Page.UNDEFINED
 }
