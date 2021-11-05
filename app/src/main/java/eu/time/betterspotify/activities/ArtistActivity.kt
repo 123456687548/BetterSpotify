@@ -82,7 +82,7 @@ class ArtistActivity : NavigationBarActivity() {
             })
 
             SpotifyApi.getInstance().getArtistTopTracks(this, artist.id, { result ->
-                topTracksList.addAll(result.tracks)
+                topTracksList.addAll(result)
                 topTracksAdapter.notifyDataSetChanged()
             })
 
