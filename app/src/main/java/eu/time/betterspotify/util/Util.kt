@@ -7,7 +7,9 @@ import android.widget.ImageView
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toColor
+import com.spotify.protocol.types.Artist
 import com.spotify.protocol.types.ImageUri
+import com.spotify.protocol.types.Track
 import com.squareup.picasso.Picasso
 import eu.time.betterspotify.ArtistActivity
 import java.security.MessageDigest
@@ -106,3 +108,6 @@ fun Long.toTimestampString(): String {
 
     return "$hoursString$minutesString$secondsString"
 }
+
+fun Track.getArtistsString(): String = this.artists.joinToString(", ") { it.name }
+

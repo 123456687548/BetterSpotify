@@ -237,7 +237,7 @@ class PlayerController private constructor() {
                     }
 
                     tvPlayerTitle?.text = currentTrack.name
-                    tvPlayerArtist?.text = currentTrack.artist.name
+                    tvPlayerArtist?.text = currentTrack.getArtistsString()
 
                     ivPlayerCover?.loadImageFromUri(currentTrack.imageUri) {
                         if (vBackgroundBig != null) {
