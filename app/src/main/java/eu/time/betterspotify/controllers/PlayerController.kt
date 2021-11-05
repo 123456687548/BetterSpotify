@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.graphics.drawable.GradientDrawable
-import android.util.Log
 import eu.time.betterspotify.R
 import eu.time.betterspotify.activities.ArtistActivity
 import eu.time.betterspotify.activities.BigPlayerActivity
@@ -29,15 +28,25 @@ class PlayerController private constructor() {
         private val INSTANCE = PlayerController()
 
         fun getInstance(): PlayerController {
+            INSTANCE.stop()
             return INSTANCE
         }
     }
 
     private lateinit var spotifyPlayer: SpotifyPlayer
 
-    private var active = false
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private lateinit var updateUIRunnable: UpdateUIRunnable
 
     private var lastTrack: Track? = null
+
+    class UpdateUIRunnable(private val mainHandler: Handler, val updatePlayerUIFunc: () -> Unit) : Runnable {
+        override fun run() {
+            updatePlayerUIFunc()
+
+            mainHandler.postDelayed(this, 50)
+        }
+    }
 
     fun start(context: Context) {
         lastTrack = null
@@ -46,27 +55,21 @@ class PlayerController private constructor() {
 
         initListeners(context)
 
-        active = true
-
-        val mainHandler = Handler(Looper.getMainLooper())
-
-        mainHandler.post(object : Runnable {
-            override fun run() {
-                CoroutineScope(Dispatchers.IO).launch {
-                    spotifyPlayer.getPlayerState { playerState ->
-                        updatePlayerUI(context, playerState)
-                    }
-                }
-
-                if (active) {
-                    mainHandler.postDelayed(this, 50)
+        updateUIRunnable = UpdateUIRunnable(mainHandler) {
+            CoroutineScope(Dispatchers.IO).launch {
+                spotifyPlayer.getPlayerState { playerState ->
+                    updatePlayerUI(context, playerState)
                 }
             }
-        })
+        }
+
+        mainHandler.post(updateUIRunnable)
     }
 
     fun stop() {
-        active = false
+        if (::updateUIRunnable.isInitialized) {
+            mainHandler.removeCallbacks(updateUIRunnable)
+        }
     }
 
     private fun initListeners(context: Context) {
@@ -121,7 +124,7 @@ class PlayerController private constructor() {
         }
 
         btnClose?.setOnClickListener {
-            active = false
+            stop()
             context.finish()
         }
 
@@ -230,6 +233,8 @@ class PlayerController private constructor() {
                 tvPlayerMaxProgress?.text = trackDuration.toTimestampString()
 
                 tvPlayerTitle?.isSelected = true
+
+//                Log.d("lastTrack", lastTrack.toString())
 
                 if (currentTrack != lastTrack) {
                     lastTrack = currentTrack
