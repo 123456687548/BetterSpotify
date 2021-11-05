@@ -339,7 +339,7 @@ class SpotifyApi private constructor() {
     }
 
     fun getArtistTopTracks(
-        context: Context, artistId: String, onSuccess: (result: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, artistId: String, onSuccess: (result: ArtistTopTracks) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
                 getArtistTopTracks(context, artistId, onSuccess)
             }
@@ -350,8 +350,7 @@ class SpotifyApi private constructor() {
         val url = "https://api.spotify.com/v1/artists/$artistId/top-tracks?market=${currentUser.country}"
 
         sendGetRequest(context, url, header, { response ->
-            val type: Type = object : TypeToken<List<Track>>() {}.type
-            val result = Gson().fromJson<List<Track>>(response, type)
+            val result = Gson().fromJson(response, ArtistTopTracks::class.java)
             onSuccess(result)
         }, onError)
     }
