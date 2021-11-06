@@ -12,18 +12,22 @@ import eu.time.betterspotify.spotify.SpotifyPlayer
 class BigPlayerActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
 
+    private val swKeepAlive = findViewById<SwitchCompat>(R.id.swKeepAwake)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_big_player)
 
-        val swKeepAlive = findViewById<SwitchCompat>(R.id.swKeepAwake)
-
         swKeepAlive.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            } else {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            }
+            setKeepAlive(isChecked)
+        }
+    }
+
+    private fun setKeepAlive(active: Boolean) {
+        if (active) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 
@@ -35,6 +39,8 @@ class BigPlayerActivity : AppCompatActivity() {
 
             PlayerController.getInstance().start(this)
         }
+
+        setKeepAlive(swKeepAlive.isChecked)
     }
 
     override fun onPause() {
