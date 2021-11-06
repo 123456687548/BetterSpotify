@@ -68,6 +68,7 @@ class LibraryActivity : NavigationBarActivity() {
     private fun updateRecycleView(newData: List<Playlist>) {
         playlistList.clear()
         playlistList.addAll(newData)
+        playlistList.add(Playlist.savedTracksPlaylist)
         adapter.notifyDataSetChanged()
     }
 

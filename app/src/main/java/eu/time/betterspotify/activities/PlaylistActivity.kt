@@ -67,12 +67,19 @@ class PlaylistActivity : NavigationBarActivity() {
         super.onStart()
 
         SpotifyApi.getInstance().initialize(this) {
-            SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/${playlist.id}/tracks", { result ->
-                trackList.clear()
-                trackList.addAll(result)
-                adapter.notifyDataSetChanged()
-            })
-
+            if (playlist == Playlist.savedTracksPlaylist) {
+                SpotifyApi.getInstance().getSavedTracks(this, onSuccess =  { result ->
+                    trackList.clear()
+                    trackList.addAll(result)
+                    adapter.notifyDataSetChanged()
+                })
+            } else {
+                SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/${playlist.id}/tracks", { result ->
+                    trackList.clear()
+                    trackList.addAll(result)
+                    adapter.notifyDataSetChanged()
+                })
+            }
             PlayerController.getInstance().start(this)
         }
     }
