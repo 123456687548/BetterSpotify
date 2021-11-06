@@ -94,6 +94,10 @@ fun Color.similarTo(c: Color): Boolean {
     return distance > 0.2
 }
 
+fun Int.toTimestampString(): String {
+    return this.toLong().toTimestampString()
+}
+
 fun Long.toTimestampString(): String {
     val hours = TimeUnit.MILLISECONDS.toHours(this).toInt()
     val minutes = (TimeUnit.MILLISECONDS.toMinutes(this) % 60).toInt()

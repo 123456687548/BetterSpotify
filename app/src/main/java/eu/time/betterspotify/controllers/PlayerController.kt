@@ -152,25 +152,17 @@ class PlayerController private constructor() {
         }
 
         sbProgress?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            lateinit var lastChangeTimer: Timer
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    if (::lastChangeTimer.isInitialized) {
-                        lastChangeTimer.cancel()
-                    }
-
-                    lastChangeTimer = Timer("lastChangeTimer")
-                    lastChangeTimer.schedule(object : TimerTask() {
-                        override fun run() {
-                            spotifyPlayer.seekTo(progress)
-                        }
-                    }, 20)
+                    updateTrackProgressText(activity)
                 }
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {}
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                spotifyPlayer.seekTo(seekBar.progress)
+            }
         })
     }
 
@@ -229,7 +221,7 @@ class PlayerController private constructor() {
                 sbProgress?.max = trackDuration.toInt()
                 sbProgress?.progress = trackProgress.toInt()
 
-                tvPlayerCurrentProgress?.text = trackProgress.toTimestampString()
+                updateTrackProgressText(activity)
                 tvPlayerMaxProgress?.text = trackDuration.toTimestampString()
 
                 tvPlayerTitle?.isSelected = true
@@ -331,5 +323,12 @@ class PlayerController private constructor() {
 //                miniPlayer.visibility = View.GONE
             }
         }
+    }
+
+    private fun updateTrackProgressText(activity: Activity) {
+        val tvPlayerCurrentProgress: TextView? = activity.findViewById(R.id.tvPlayerCurrentProgress)
+        val sbProgress: SeekBar? = activity.findViewById(R.id.sbProgress)
+
+        tvPlayerCurrentProgress?.text = sbProgress?.progress?.toTimestampString()
     }
 }
