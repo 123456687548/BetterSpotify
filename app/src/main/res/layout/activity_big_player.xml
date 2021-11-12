@@ -105,6 +105,13 @@
             </LinearLayout>
 
             <ImageButton
+                    android:id="@+id/btnQueue"
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:src="@drawable/ic_baseline_queue_48" />
+
+            <ImageButton
                     android:id="@+id/btnLike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -228,7 +235,7 @@
                     android:layout_marginStart="20dp" />
 
             <ImageButton
-                    android:id="@+id/btnQueue"
+                    android:id="@+id/btnQueueList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_queue_24"

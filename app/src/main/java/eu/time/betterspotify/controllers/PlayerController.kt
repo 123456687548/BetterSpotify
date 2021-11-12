@@ -83,6 +83,7 @@ class PlayerController private constructor() {
         val btnPrevious: ImageButton? = activity.findViewById(R.id.btnPrevious)
         val btnSkip: ImageButton? = activity.findViewById(R.id.btnSkip)
         val btnLike: ImageButton? = activity.findViewById(R.id.btnLike)
+        val btnQueue: ImageButton? = activity.findViewById(R.id.btnQueue)
         val sbProgress: SeekBar? = activity.findViewById(R.id.sbProgress)
         val tvPlayerContextTitle: TextView? = activity.findViewById(R.id.tvPlayerContextTitle)
         val tvPlayerContextSubtitle: TextView? = activity.findViewById(R.id.tvPlayerContextSubtitle)
@@ -150,6 +151,16 @@ class PlayerController private constructor() {
             }
         }
 
+        btnQueue?.setOnClickListener {
+            if (lastTrack != null) {
+                val context = it.context
+
+                SpotifyPlayer.getInstance(context).queueUri(lastTrack!!.uri) {
+                    Toast.makeText(context, "${lastTrack!!.name} queued!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         sbProgress?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -203,7 +214,7 @@ class PlayerController private constructor() {
 
                 tvPlayerTitle?.isSelected = true
             } else {
-                miniPlayer?.visibility = View.GONE
+//                miniPlayer?.visibility = View.GONE
             }
         }
     }
