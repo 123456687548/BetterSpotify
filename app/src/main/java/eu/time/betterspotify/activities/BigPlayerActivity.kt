@@ -12,12 +12,11 @@ import eu.time.betterspotify.spotify.SpotifyPlayer
 class BigPlayerActivity : AppCompatActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
 
-    private val swKeepAlive = findViewById<SwitchCompat>(R.id.swKeepAwake)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_big_player)
 
+        val swKeepAlive = findViewById<SwitchCompat>(R.id.swKeepAwake)
         swKeepAlive.setOnCheckedChangeListener { _, isChecked ->
             setKeepAlive(isChecked)
         }
@@ -33,6 +32,7 @@ class BigPlayerActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        val swKeepAlive = findViewById<SwitchCompat>(R.id.swKeepAwake)
 
         SpotifyApi.getInstance().initialize(this) {
             spotifyPlayer = SpotifyPlayer.getInstance(this)
