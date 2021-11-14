@@ -112,4 +112,3 @@ fun Long.toTimestampString(): String {
 }
 
 fun Track.getArtistsString(): String = this.artists.joinToString(", ") { it.name }
-

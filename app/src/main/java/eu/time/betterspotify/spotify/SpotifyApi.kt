@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import eu.time.betterspotify.activities.LibraryActivity
@@ -21,6 +22,7 @@ import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.types.PlaylistItem
 import eu.time.betterspotify.spotify.data.types.SearchResult
 import eu.time.betterspotify.spotify.data.types.*
+import eu.time.betterspotify.util.NetworkHandler
 import eu.time.betterspotify.util.sha256
 import java.lang.reflect.Type
 
@@ -124,6 +126,10 @@ class SpotifyApi private constructor() {
     private fun needsToRefreshToken(error: VolleyError): Boolean = error.networkResponse.statusCode == 401
 
     private fun refreshTokenIfNeeded(context: Context, error: VolleyError, retryCallback: () -> Unit) {
+        if (!NetworkHandler.isNetworkConnected) {
+            Toast.makeText(context, "No Internet connection", Toast.LENGTH_LONG).show()
+            return
+        }
         if (!needsToRefreshToken(error)) return
 
         refreshToken(context, retryCallback)
@@ -362,6 +368,8 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
+        if (!::currentUser.isInitialized) return
+
         val header: MutableMap<String, String> = createHeader()
 
         val url = "https://api.spotify.com/v1/search?q=$query&type=$types&market=${currentUser.country}&limit=10"
@@ -436,6 +444,8 @@ class SpotifyApi private constructor() {
         val header: MutableMap<String, String> = createHeader()
 
         sendGetRequest(context, url, header, { response ->
+            if (response.isBlank()) onSuccess(trackList)
+
             val type: Type = object : TypeToken<ResultContainer<PlaylistItem>>() {}.type
             val result = Gson().fromJson<ResultContainer<PlaylistItem>>(response, type)
 

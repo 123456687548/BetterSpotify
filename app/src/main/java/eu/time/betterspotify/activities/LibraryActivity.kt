@@ -12,6 +12,7 @@ import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
 import eu.time.betterspotify.spotify.data.types.Playlist
+import eu.time.betterspotify.util.NetworkHandler
 
 class LibraryActivity : NavigationBarActivity() {
     private val playlistList = mutableListOf<Playlist>()
@@ -22,6 +23,8 @@ class LibraryActivity : NavigationBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
+
+        NetworkHandler.registerNetworkCallback(applicationContext)
 
         spotifyPlayer = SpotifyPlayer.getInstance(this)
 
