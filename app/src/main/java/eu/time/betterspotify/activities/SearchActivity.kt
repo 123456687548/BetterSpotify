@@ -2,6 +2,7 @@ package eu.time.betterspotify.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -27,6 +28,14 @@ import eu.time.betterspotify.spotify.data.types.Track
 import kotlin.streams.toList
 
 class SearchActivity : NavigationBarActivity() {
+    companion object {
+        fun open(context: Context) {
+            val intent = Intent(context, SearchActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            context.startActivity(intent)
+        }
+    }
+
     private lateinit var spotifyPlayer: SpotifyPlayer
     private lateinit var adapterTracks: TrackRecycleViewAdapter
     private lateinit var adapterArtists: ArtistRecycleViewAdapter

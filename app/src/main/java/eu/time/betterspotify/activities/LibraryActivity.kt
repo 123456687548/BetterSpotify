@@ -1,6 +1,8 @@
 package eu.time.betterspotify.activities
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +17,14 @@ import eu.time.betterspotify.spotify.data.types.Playlist
 import eu.time.betterspotify.util.NetworkHandler
 
 class LibraryActivity : NavigationBarActivity() {
+    companion object {
+        fun openLibrary(context: Context) {
+            val intent = Intent(context, LibraryActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            context.startActivity(intent)
+        }
+    }
+
     private val playlistList = mutableListOf<Playlist>()
     private lateinit var adapter: PlaylistRecycleViewAdapter
 
@@ -53,7 +63,7 @@ class LibraryActivity : NavigationBarActivity() {
     }
 
     private fun loadPlaylists() {
-        SpotifyApi.getInstance().getPlaylists(this, { result ->
+        SpotifyApi.getInstance().getUsersPlaylists(this, { result ->
             updateRecycleView(result.items)
         })
     }

@@ -1,6 +1,5 @@
 package eu.time.betterspotify.recycleview.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,9 +26,7 @@ class AlbumRecycleViewAdapter(private val dataSet: MutableList<Album>, private v
 
         init {
             view.setOnClickListener {
-                val intent = Intent(it.context, AlbumActivity::class.java)
-                AlbumActivity.album = album
-                it.context.startActivity(intent)
+                AlbumActivity.openAlbum(it.context, album)
             }
 
             btnPlay.setOnClickListener {

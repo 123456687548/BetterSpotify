@@ -102,7 +102,7 @@ class SpotifyApi private constructor() {
                 }
             }
 
-            startMainActivity(context)
+            LibraryActivity.openLibrary(context)
         }, {
             it.message?.let { it1 -> Log.d("request", it1) }
         }) {
@@ -392,10 +392,10 @@ class SpotifyApi private constructor() {
         }, onError)
     }
 
-    fun getPlaylists(
+    fun getUsersPlaylists(
         context: Context, onSuccess: (result: ResultContainer<Playlist>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
-                getPlaylists(context, onSuccess)
+                getUsersPlaylists(context, onSuccess)
             }
         }
     ) {
@@ -590,10 +590,5 @@ class SpotifyApi private constructor() {
         }
 
         queue.add(stringRequest)
-    }
-
-    private fun startMainActivity(context: Context) {
-        val intent = Intent(context, LibraryActivity::class.java)
-        context.startActivity(intent)
     }
 }

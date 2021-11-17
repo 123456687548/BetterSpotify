@@ -1,5 +1,7 @@
 package eu.time.betterspotify.activities
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +17,24 @@ import eu.time.betterspotify.spotify.data.types.Track
 
 class AlbumActivity : NavigationBarActivity() {
     companion object {
-        lateinit var album: Album
+        private lateinit var album: Album
+
+        fun openAlbum(context: Context, album: Album) {
+            val intent = Intent(context, AlbumActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            Companion.album = album
+            context.startActivity(intent)
+        }
+
+        fun openAlbum(context: Context, album: com.spotify.protocol.types.Album) {
+            SpotifyApi.getInstance().getAlbum(context, album, { result ->
+                if (result == null) return@getAlbum
+                val intent = Intent(context, AlbumActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                Companion.album = result
+                context.startActivity(intent)
+            })
+        }
     }
 
     private val trackList = mutableListOf<Track>()

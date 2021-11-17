@@ -1,14 +1,12 @@
 package eu.time.betterspotify.controllers
 
 import android.content.Context
-import android.content.Intent
 import eu.time.betterspotify.activities.SearchActivity
 import eu.time.betterspotify.activities.LibraryActivity
 
 class NavigationController {
     companion object {
         private val INSTANCE = NavigationController()
-
 
         fun getInstance(): NavigationController {
             return INSTANCE
@@ -28,15 +26,12 @@ class NavigationController {
     fun navigateTo(context: Context, destination: Page) {
         if (destination == currentPage) return
 
-        val activityClass = when (destination) {
-            Page.LIBRARY -> LibraryActivity::class.java
-            Page.SEARCH -> SearchActivity::class.java
-            else -> return
-        }
-
         currentPage = destination
 
-        val intent = Intent(context, activityClass)
-        context.startActivity(intent)
+        when (destination) {
+            Page.LIBRARY -> LibraryActivity.openLibrary(context)
+            Page.SEARCH -> SearchActivity.open(context)
+            else -> return
+        }
     }
 }
