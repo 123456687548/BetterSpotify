@@ -23,4 +23,11 @@
     <string name="device_name">DeviceName</string>
     <string name="playercontexttitle">PlayerContextTitle</string>
     <string name="playercontextsubtitle">PlayerContextSubtitle</string>
+    <string name="like">Like</string>
+    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="add_to_queue">Add to Queue</string>
+    <string name="open_album">Open Album</string>
+    <string name="open_artist">Open Artist</string>
+    <string name="share">Share</string>
+    <string name="remove_like">Remove Like</string>
 </resources>

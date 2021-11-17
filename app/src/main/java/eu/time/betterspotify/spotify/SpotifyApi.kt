@@ -15,8 +15,8 @@ import android.util.Log
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import eu.time.betterspotify.activities.LibraryActivity
 import eu.time.betterspotify.R
+import eu.time.betterspotify.activities.LibraryActivity
 import eu.time.betterspotify.activities.SpotifyAuthenticationActivity
 import eu.time.betterspotify.spotify.data.TokenResult
 import eu.time.betterspotify.spotify.data.types.PlaylistItem
@@ -377,6 +377,24 @@ class SpotifyApi private constructor() {
         sendGetRequest(context, url, header, onSuccess, onError)
     }
 
+    fun addTracksToPlaylist(
+        context: Context, tracks: List<String>, playlist: Playlist, onSuccess: (response: String) -> Unit = {}, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                addTracksToPlaylist(context, tracks, playlist, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val url = "https://api.spotify.com/v1/playlists/${playlist.id}/tracks"
+
+        val uris = tracks.joinToString { "\"$it\"" }
+
+        val body = "{\"uris\":[$uris]}"
+
+        sendPostRequest(context, url, header, body, onSuccess, onError)
+    }
+
     fun getPlaylist(
         context: Context, playlistId: String, onSuccess: (result: Playlist) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
@@ -404,6 +422,23 @@ class SpotifyApi private constructor() {
         sendGetRequest(context, "https://api.spotify.com/v1/me/playlists?limit=50", header, { response ->
             val type: Type = object : TypeToken<ResultContainer<Playlist>>() {}.type
             val result = Gson().fromJson<ResultContainer<Playlist>>(response, type)
+            onSuccess(result)
+        }, onError)
+    }
+
+    fun getTrack(
+        context: Context, track: com.spotify.protocol.types.Track, onSuccess: (result: Track) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getTrack(context, track, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val trackId = track.uri.substringAfterLast(':')
+
+        sendGetRequest(context, "https://api.spotify.com/v1/tracks/$trackId", header, { response ->
+            val result = Gson().fromJson(response, Track::class.java)
             onSuccess(result)
         }, onError)
     }
@@ -459,6 +494,23 @@ class SpotifyApi private constructor() {
             } else {
                 getPlaylistTracks(context, result.next, onSuccess, onError, trackList)
             }
+        }, onError)
+    }
+
+    fun getAlbum(
+        context: Context, album: com.spotify.protocol.types.Album, onSuccess: (result: Album) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getAlbum(context, album, onSuccess)
+            }
+        }
+    ) {
+        val header: MutableMap<String, String> = createHeader()
+
+        val albumId = album.uri.substringAfterLast(':')
+
+        sendGetRequest(context, "https://api.spotify.com/v1/albums/$albumId", header, { response ->
+            val result = Gson().fromJson(response, Album::class.java)
+            onSuccess(result)
         }, onError)
     }
 
@@ -569,6 +621,30 @@ class SpotifyApi private constructor() {
             @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {
                 return header
+            }
+        }
+
+        queue.add(stringRequest)
+    }
+
+    private fun sendPostRequest(
+        context: Context,
+        url: String,
+        header: MutableMap<String, String>,
+        body: String,
+        onSuccess: (response: String) -> Unit,
+        onError: (error: VolleyError) -> Unit = {}
+    ) {
+        val queue = Volley.newRequestQueue(context)
+
+        val stringRequest = object : StringRequest(Method.POST, url, onSuccess, onError) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                return header
+            }
+
+            override fun getBody(): ByteArray {
+                return body.toByteArray()
             }
         }
 

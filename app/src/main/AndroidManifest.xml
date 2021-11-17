@@ -13,6 +13,9 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.BetterSpotify">
         <activity
+                android:name=".activities.PlaylistPickerActivity"
+                android:exported="true" />
+        <activity
                 android:name=".activities.PlaylistActivity"
                 android:exported="true" />
         <activity

@@ -21,6 +21,7 @@ import eu.time.betterspotify.activities.BigPlayerActivity
 import eu.time.betterspotify.activities.PlaylistActivity
 import eu.time.betterspotify.spotify.SpotifyApi
 import eu.time.betterspotify.util.*
+import android.widget.Toast
 
 class PlayerController private constructor() {
     companion object {
@@ -80,6 +81,7 @@ class PlayerController private constructor() {
         val btnShuffle: ImageButton? = activity.findViewById(R.id.btnShuffle)
         val btnPlay: ImageButton? = activity.findViewById(R.id.btnPlay)
         val btnClose: ImageButton? = activity.findViewById(R.id.btnClose)
+        val btnOptions: ImageButton? = activity.findViewById(R.id.btnOptions)
         val btnPrevious: ImageButton? = activity.findViewById(R.id.btnPrevious)
         val btnSkip: ImageButton? = activity.findViewById(R.id.btnSkip)
         val btnLike: ImageButton? = activity.findViewById(R.id.btnLike)
@@ -127,6 +129,12 @@ class PlayerController private constructor() {
         btnClose?.setOnClickListener {
             stop()
             context.finish()
+        }
+
+        btnOptions?.setOnClickListener {
+            if (lastTrack != null) {
+                MenuController.getInstance().openMenuTrack(context, it, lastTrack!!)
+            }
         }
 
         btnPrevious?.setOnClickListener {

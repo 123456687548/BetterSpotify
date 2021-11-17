@@ -109,6 +109,12 @@ class SpotifyPlayer private constructor() {
         getRemote()?.playerApi?.queue(track.uri)?.setResultCallback(callback)
     }
 
+    fun isLiked(uri: String, callback: (Boolean) -> Unit) {
+        getLibraryState(uri) { libraryState ->
+            callback(libraryState.isAdded)
+        }
+    }
+
     fun toggleLike(uri: String, callback: (Boolean) -> Unit = {}) {
         getLibraryState(uri) { libraryState ->
             if (libraryState.isAdded) {
