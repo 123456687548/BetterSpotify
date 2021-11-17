@@ -17,6 +17,8 @@ import eu.time.betterspotify.util.openActivity
 
 class PlaylistActivity : NavigationBarActivity() {
     companion object {
+        private val EXTRA_TRACK_KEY = "EXTRA_TRACK_KEY"
+
         private lateinit var playlist: Playlist
 
         fun openPlaylist(context: Context, playlist: Playlist) {
@@ -27,15 +29,21 @@ class PlaylistActivity : NavigationBarActivity() {
             context.startActivity(intent)
         }
 
-        fun openPlaylistFromPlayerContext(context: Context) {
+        fun openPlaylistFromPlayerContext(context: Context, currentTrack: com.spotify.protocol.types.Track?) {
             SpotifyPlayer.getInstance(context).getPlayerContext { playerContext ->
                 if (playerContext.uri == null) return@getPlayerContext
 
                 val playlistId = playerContext.uri.substringAfterLast(':')
 
+                val extras = Bundle()
+
+                if (currentTrack != null) {
+                    extras.putString(EXTRA_TRACK_KEY, currentTrack.uri)
+                }
+
                 SpotifyApi.getInstance().getPlaylist(context, playlistId, { result ->
                     playlist = result
-                    openActivity(context, PlaylistActivity::class.java)
+                    openActivity(context, PlaylistActivity::class.java, extras)
                 })
             }
         }
@@ -46,6 +54,7 @@ class PlaylistActivity : NavigationBarActivity() {
     private lateinit var spotifyPlayer: SpotifyPlayer
 
     private lateinit var adapter: TrackRecycleViewAdapter
+    private lateinit var layoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +69,16 @@ class PlaylistActivity : NavigationBarActivity() {
         val rvPlaylistList = findViewById<RecyclerView>(R.id.rvPlaylistList)
         adapter = TrackRecycleViewAdapter(trackList, spotifyPlayer, playlist.uri)
         rvPlaylistList.adapter = adapter
-        rvPlaylistList.layoutManager = LinearLayoutManager(this)
+        layoutManager = LinearLayoutManager(this)
+        rvPlaylistList.layoutManager = layoutManager
+    }
+
+    private fun scrollToTrack() {
+        val trackUri = intent.getStringExtra(EXTRA_TRACK_KEY) ?: return
+
+        val trackPos = trackList.indexOfFirst { track -> track.uri == trackUri }
+
+        layoutManager.scrollToPosition(trackPos)
     }
 
     override fun onStart() {
@@ -68,16 +86,18 @@ class PlaylistActivity : NavigationBarActivity() {
 
         SpotifyApi.getInstance().initialize(this) {
             if (playlist == Playlist.savedTracksPlaylist) {
-                SpotifyApi.getInstance().getSavedTracks(this, onSuccess =  { result ->
+                SpotifyApi.getInstance().getSavedTracks(this, onSuccess = { result ->
                     trackList.clear()
                     trackList.addAll(result)
                     adapter.notifyDataSetChanged()
+                    scrollToTrack()
                 })
             } else {
                 SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/${playlist.id}/tracks", { result ->
                     trackList.clear()
                     trackList.addAll(result)
                     adapter.notifyDataSetChanged()
+                    scrollToTrack()
                 })
             }
             PlayerController.getInstance().start(this)

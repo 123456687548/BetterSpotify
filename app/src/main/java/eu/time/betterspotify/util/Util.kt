@@ -3,6 +3,7 @@ package eu.time.betterspotify.util
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.widget.ImageView
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
@@ -59,8 +60,11 @@ fun ImageView.getDominantColor(): Int {
     return mostOccurringColor.toArgb()
 }
 
-fun <T> openActivity(context: Context, clazz: Class<T>) {
+fun <T> openActivity(context: Context, clazz: Class<T>, extras: Bundle? = null) {
     val intent = Intent(context, clazz)
+    if (extras != null){
+        intent.putExtras(extras)
+    }
     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
     context.startActivity(intent)
 }

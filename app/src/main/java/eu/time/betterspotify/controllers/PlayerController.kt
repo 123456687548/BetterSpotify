@@ -104,11 +104,11 @@ class PlayerController private constructor() {
         }
 
         tvPlayerContextTitle?.setOnClickListener {
-            PlaylistActivity.openPlaylistFromPlayerContext(context)
+            PlaylistActivity.openPlaylistFromPlayerContext(context, lastTrack)
         }
 
         tvPlayerContextSubtitle?.setOnClickListener {
-            PlaylistActivity.openPlaylistFromPlayerContext(context)
+            PlaylistActivity.openPlaylistFromPlayerContext(context, lastTrack)
         }
 
         btnRepeat?.setOnClickListener {
