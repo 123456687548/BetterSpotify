@@ -62,7 +62,7 @@ fun ImageView.getDominantColor(): Int {
 
 fun <T> openActivity(context: Context, clazz: Class<T>, extras: Bundle? = null) {
     val intent = Intent(context, clazz)
-    if (extras != null){
+    if (extras != null) {
         intent.putExtras(extras)
     }
     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -116,3 +116,8 @@ fun Long.toTimestampString(): String {
 }
 
 fun Track.getArtistsString(): String = this.artists.joinToString(", ") { it.name }
+
+fun Track.share(context: Context) {
+    val trackId = uri.substringAfterLast(':')
+    share(context, "https://open.spotify.com/track/$trackId")
+}
