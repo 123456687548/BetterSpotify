@@ -83,7 +83,7 @@ class PlayerController private constructor() {
         val btnPrevious: ImageButton? = activity.findViewById(R.id.btnPrevious)
         val btnSkip: ImageButton? = activity.findViewById(R.id.btnSkip)
         val btnLike: ImageButton? = activity.findViewById(R.id.btnLike)
-        val btnQueue: ImageButton? = activity.findViewById(R.id.btnQueue)
+        val btnQueueBigPlayer: ImageButton? = activity.findViewById(R.id.btnQueueBigPlayer)
         val sbProgress: SeekBar? = activity.findViewById(R.id.sbProgress)
         val tvPlayerContextTitle: TextView? = activity.findViewById(R.id.tvPlayerContextTitle)
         val tvPlayerContextSubtitle: TextView? = activity.findViewById(R.id.tvPlayerContextSubtitle)
@@ -151,7 +151,7 @@ class PlayerController private constructor() {
             }
         }
 
-        btnQueue?.setOnClickListener {
+        btnQueueBigPlayer?.setOnClickListener {
             if (lastTrack != null) {
                 val context = it.context
 
