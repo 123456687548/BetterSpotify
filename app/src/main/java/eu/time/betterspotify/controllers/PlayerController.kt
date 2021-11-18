@@ -189,24 +189,6 @@ class PlayerController private constructor() {
         })
     }
 
-    private var paused = false
-
-    private fun shouldUpdate(playerState: PlayerState): Boolean {
-        if (playerState.isPaused && !paused) {
-            paused = true
-            return true
-        }
-
-        if (!playerState.isPaused && paused) {
-            paused = false
-            return true
-        }
-
-        if (!playerState.isPaused && !paused) return true
-
-        return false
-    }
-
     private fun updatePlayerUI(context: Context, playerState: PlayerState) {
         val activity = context as Activity
 
@@ -215,20 +197,19 @@ class PlayerController private constructor() {
 
         context.runOnUiThread {
             val currentTrack: Track? = playerState.track
-            if (currentTrack != null && shouldUpdate(playerState)) {
+            if (currentTrack != null) {
                 miniPlayer?.visibility = View.VISIBLE
 
                 updateTrackProgress(activity, playerState)
-                updateButtonImages(activity, playerState)
 
                 if (currentTrack != lastTrack) {
                     onTrackChange(activity, playerState)
                 }
 
                 tvPlayerTitle?.isSelected = true
-            } else {
-//                miniPlayer?.visibility = View.GONE
             }
+
+            updateButtonImages(activity, playerState)
         }
     }
 
