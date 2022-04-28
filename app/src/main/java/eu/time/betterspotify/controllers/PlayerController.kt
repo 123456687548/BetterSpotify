@@ -87,6 +87,7 @@ class PlayerController private constructor() {
         val btnLike: ImageButton? = activity.findViewById(R.id.btnLike)
         val btnShare: ImageButton? = activity.findViewById(R.id.btnShare)
         val btnQueueBigPlayer: ImageButton? = activity.findViewById(R.id.btnQueueBigPlayer)
+        val btnAddToTemp: ImageButton? = activity.findViewById(R.id.btnAddToTemp)
         val sbProgress: SeekBar? = activity.findViewById(R.id.sbProgress)
         val tvPlayerContextTitle: TextView? = activity.findViewById(R.id.tvPlayerContextTitle)
         val tvPlayerContextSubtitle: TextView? = activity.findViewById(R.id.tvPlayerContextSubtitle)
@@ -171,6 +172,16 @@ class PlayerController private constructor() {
                 SpotifyPlayer.getInstance(context).queueUri(lastTrack!!.uri) {
                     Toast.makeText(context, "${lastTrack!!.name} queued!", Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+
+        btnAddToTemp?.setOnClickListener {
+            if (lastTrack != null) {
+                val context = it.context
+
+                SpotifyApi.getInstance().addToTemp(context, lastTrack!!.uri, {
+                    Toast.makeText(context, "${lastTrack!!.name} added to temp Playlist!", Toast.LENGTH_SHORT).show()
+                })
             }
         }
 

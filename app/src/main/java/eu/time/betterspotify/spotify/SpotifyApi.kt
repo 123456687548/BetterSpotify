@@ -517,6 +517,57 @@ class SpotifyApi private constructor() {
         }, onError)
     }
 
+    fun getPlaylistByName(
+        context: Context, name: String, onSuccess: (response: Playlist?) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getPlaylistByName(context, name, onSuccess)
+            }
+        }
+    ) {
+        getUsersPlaylists(context, onSuccess = { playlists ->
+            val playlist = playlists.firstOrNull { it.name == name }
+            onSuccess(playlist)
+
+        })
+    }
+
+    fun createPlaylist(
+        context: Context, name: String, onSuccess: (response: Playlist) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                createPlaylist(context, name, onSuccess)
+            }
+        }
+    ) {
+        val body = "{\"name\":\"$name\"}"
+        sendPostRequest(context, "https://api.spotify.com/v1/users/${currentUser.id}/playlists", body, { response ->
+            val playlist = Gson().fromJson(response, Playlist::class.java)
+            onSuccess(playlist)
+        })
+    }
+
+    fun addToTemp(
+        context: Context, uri: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                addToTemp(context, uri, onSuccess)
+            }
+        }
+    ) {
+        val playlistName = "temp"
+        getPlaylistByName(context, playlistName, { playlist ->
+            if (playlist == null) {
+                createPlaylist(context, playlistName, onSuccess = { playlist ->
+                    addTracksToPlaylist(context, listOf(uri), playlist, { resp ->
+                        onSuccess(resp)
+                    })
+                })
+            } else {
+                addTracksToPlaylist(context, listOf(uri), playlist, { resp ->
+                    onSuccess(resp)
+                })
+            }
+        })
+    }
+
     fun initialize(context: Context, onSuccess: () -> Unit = {}) {
         if (initialized) {
             onSuccess()
@@ -587,15 +638,21 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
-    private fun sendGetRequest(context: Context, url: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
-        val queue = Volley.newRequestQueue(context)
+//    private fun sendGetRequest(context: Context, url: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
+//        val queue = Volley.newRequestQueue(context)
+//
+//        val stringRequest = object : StringRequest(Method.GET, url, onSuccess, onError) {}
+//
+//        queue.add(stringRequest)
+//    }
 
-        val stringRequest = object : StringRequest(Method.GET, url, onSuccess, onError) {}
-
-        queue.add(stringRequest)
-    }
-
-    private fun sendGetRequest(context: Context, url: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}, header: MutableMap<String, String> = createHeader()) {
+    private fun sendGetRequest(
+        context: Context,
+        url: String,
+        onSuccess: (response: String) -> Unit,
+        onError: (error: VolleyError) -> Unit = {},
+        header: MutableMap<String, String> = createHeader()
+    ) {
         val queue = Volley.newRequestQueue(context)
 
         val stringRequest = object : StringRequest(Method.GET, url, onSuccess, onError) {
@@ -632,7 +689,13 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
-    private fun sendPostRequest(context: Context, url: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}, header: MutableMap<String, String> = createHeader()) {
+    private fun sendPostRequest(
+        context: Context,
+        url: String,
+        onSuccess: (response: String) -> Unit,
+        onError: (error: VolleyError) -> Unit = {},
+        header: MutableMap<String, String> = createHeader()
+    ) {
         val queue = Volley.newRequestQueue(context)
 
         val stringRequest = object : StringRequest(Method.POST, url, onSuccess, onError) {

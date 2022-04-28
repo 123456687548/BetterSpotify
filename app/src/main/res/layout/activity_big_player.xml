@@ -105,6 +105,13 @@
             </LinearLayout>
 
             <ImageButton
+                    android:id="@+id/btnAddToTemp"
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:src="@drawable/ic_add_temp_48" />
+
+            <ImageButton
                     android:id="@+id/btnQueueBigPlayer"
                     android:layout_width="64dp"
                     android:layout_height="match_parent"
