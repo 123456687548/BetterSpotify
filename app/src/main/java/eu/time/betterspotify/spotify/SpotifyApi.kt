@@ -411,18 +411,28 @@ class SpotifyApi private constructor() {
     }
 
     fun getUsersPlaylists(
-        context: Context, onSuccess: (result: ResultContainer<Playlist>) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, url: String = "https://api.spotify.com/v1/me/playlists?limit=50", onSuccess: (result: List<Playlist>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
-                getUsersPlaylists(context, onSuccess)
+                getUsersPlaylists(context, onSuccess = onSuccess)
             }
-        }
+        }, playlistList: MutableList<Playlist> = mutableListOf()
     ) {
         val header: MutableMap<String, String> = createHeader()
 
-        sendGetRequest(context, "https://api.spotify.com/v1/me/playlists?limit=50", header, { response ->
+        sendGetRequest(context, url, header, { response ->
             val type: Type = object : TypeToken<ResultContainer<Playlist>>() {}.type
             val result = Gson().fromJson<ResultContainer<Playlist>>(response, type)
-            onSuccess(result)
+
+            val playlists = mutableListOf<Playlist>()
+
+            result.items.forEach { playlists.add(it) }
+
+            playlistList.addAll(playlists)
+            if (result.next == null) {
+                onSuccess(playlistList)
+            } else {
+                getUsersPlaylists(context, result.next, onSuccess, onError, playlistList)
+            }
         }, onError)
     }
 

@@ -55,8 +55,8 @@ class PlaylistPickerActivity : AppCompatActivity() {
     }
 
     private fun loadPlaylists() {
-        SpotifyApi.getInstance().getUsersPlaylists(this, { result ->
-            updateRecycleView(result.items)
+        SpotifyApi.getInstance().getUsersPlaylists(this, onSuccess = { result ->
+            updateRecycleView(result)
         })
     }
 
