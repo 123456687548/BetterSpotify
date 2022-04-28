@@ -44,8 +44,8 @@ class LibraryActivity : NavigationBarActivity() {
     private fun initRecycleView() {
         val rvPlaylistList = findViewById<RecyclerView>(R.id.rvPlaylistList)
 
-        adapter = PlaylistRecycleViewAdapter(playlistList, spotifyPlayer) { playlist ->
-            PlaylistActivity.openPlaylist(this, playlist)
+        adapter = PlaylistRecycleViewAdapter(playlistList, spotifyPlayer) { playlist, reversed ->
+            PlaylistActivity.openPlaylist(this, playlist, reversed)
         }
 
         rvPlaylistList.adapter = adapter

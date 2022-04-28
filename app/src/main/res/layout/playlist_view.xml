@@ -10,7 +10,6 @@
             android:layout_marginRight="2dp"
             android:orientation="horizontal">
 
-
         <ImageView
                 android:id="@+id/ivCover"
                 android:layout_width="64dp"
@@ -20,6 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:layout_gravity="center">
 
@@ -28,7 +28,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center"
-                    android:layout_weight="1"
                     android:text="@string/title"
                     android:textSize="20sp"
                     android:maxLines="1" />
@@ -38,13 +37,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center"
-                    android:layout_weight="1"
                     android:text="12"
                     android:textSize="20sp"
                     android:maxLines="1" />
 
-
         </LinearLayout>
+
+        <ImageButton
+                android:id="@+id/btnOpenPlaylistReversed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/ic_reverse_48" />
     </LinearLayout>
 
     <View

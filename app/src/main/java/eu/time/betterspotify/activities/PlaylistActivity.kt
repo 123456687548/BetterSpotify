@@ -20,9 +20,11 @@ class PlaylistActivity : NavigationBarActivity() {
         private val EXTRA_TRACK_KEY = "EXTRA_TRACK_KEY"
 
         private lateinit var playlist: Playlist
+        private var reversed = false
 
-        fun openPlaylist(context: Context, playlist: Playlist) {
+        fun openPlaylist(context: Context, playlist: Playlist, reversed: Boolean = false) {
             Companion.playlist = playlist
+            Companion.reversed = reversed
 
             val intent = Intent(context, PlaylistActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -89,6 +91,7 @@ class PlaylistActivity : NavigationBarActivity() {
                 SpotifyApi.getInstance().getSavedTracks(this, onSuccess = { result ->
                     trackList.clear()
                     trackList.addAll(result)
+                    if(reversed) trackList.reverse()
                     adapter.notifyDataSetChanged()
                     scrollToTrack()
                 })
@@ -96,6 +99,7 @@ class PlaylistActivity : NavigationBarActivity() {
                 SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/${playlist.id}/tracks", { result ->
                     trackList.clear()
                     trackList.addAll(result)
+                    if(reversed) trackList.reverse()
                     adapter.notifyDataSetChanged()
                     scrollToTrack()
                 })
