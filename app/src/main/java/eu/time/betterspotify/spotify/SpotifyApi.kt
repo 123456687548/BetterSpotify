@@ -239,11 +239,9 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val url = "https://api.spotify.com/v1/me"
 
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val result = Gson().fromJson(response, User::class.java)
             onSuccess(result)
         }, onError)
@@ -256,11 +254,9 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val url = "https://api.spotify.com/v1/me/player"
 
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val result = Gson().fromJson(response, PlayerState::class.java)
             onSuccess(result)
         }, onError)
@@ -297,11 +293,9 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val url = "https://api.spotify.com/v1/artists/$artistId"
 
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val result = Gson().fromJson(response, Artist::class.java)
             onSuccess(result)
         }, onError)
@@ -314,13 +308,11 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val artistId = artist.uri.substringAfterLast(':')
 
         val url = "https://api.spotify.com/v1/artists/$artistId"
 
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val result = Gson().fromJson(response, Artist::class.java)
             onSuccess(result)
         }, onError)
@@ -333,11 +325,9 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val url = "https://api.spotify.com/v1/artists/$artistId/albums?include_groups=album,single&market=${currentUser.country}&limit=50"
 
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val type: Type = object : TypeToken<ResultContainer<Album>>() {}.type
             val result = Gson().fromJson<ResultContainer<Album>>(response, type)
             onSuccess(result)
@@ -351,11 +341,9 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val url = "https://api.spotify.com/v1/artists/$artistId/top-tracks?market=${currentUser.country}"
 
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val result = Gson().fromJson(response, ArtistTopTracks::class.java)
             onSuccess(result)
         }, onError)
@@ -370,11 +358,9 @@ class SpotifyApi private constructor() {
     ) {
         if (!::currentUser.isInitialized) return
 
-        val header: MutableMap<String, String> = createHeader()
-
         val url = "https://api.spotify.com/v1/search?q=$query&type=$types&market=${currentUser.country}&limit=10"
 
-        sendGetRequest(context, url, header, onSuccess, onError)
+        sendGetRequest(context, url, onSuccess, onError)
     }
 
     fun addTracksToPlaylist(
@@ -384,15 +370,13 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val url = "https://api.spotify.com/v1/playlists/${playlist.id}/tracks"
 
         val uris = tracks.joinToString { "\"$it\"" }
 
         val body = "{\"uris\":[$uris]}"
 
-        sendPostRequest(context, url, header, body, onSuccess, onError)
+        sendPostRequest(context, url, body, onSuccess, onError)
     }
 
     fun getPlaylist(
@@ -402,9 +386,8 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
 
-        sendGetRequest(context, "https://api.spotify.com/v1/playlists/$playlistId", header, { response ->
+        sendGetRequest(context, "https://api.spotify.com/v1/playlists/$playlistId", { response ->
             val result = Gson().fromJson(response, Playlist::class.java)
             onSuccess(result)
         }, onError)
@@ -417,9 +400,7 @@ class SpotifyApi private constructor() {
             }
         }, playlistList: MutableList<Playlist> = mutableListOf()
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val type: Type = object : TypeToken<ResultContainer<Playlist>>() {}.type
             val result = Gson().fromJson<ResultContainer<Playlist>>(response, type)
 
@@ -443,11 +424,9 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val trackId = track.uri.substringAfterLast(':')
 
-        sendGetRequest(context, "https://api.spotify.com/v1/tracks/$trackId", header, { response ->
+        sendGetRequest(context, "https://api.spotify.com/v1/tracks/$trackId", { response ->
             val result = Gson().fromJson(response, Track::class.java)
             onSuccess(result)
         }, onError)
@@ -460,9 +439,7 @@ class SpotifyApi private constructor() {
             }
         }, trackList: MutableList<Track> = mutableListOf()
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val type: Type = object : TypeToken<ResultContainer<PlaylistItem>>() {}.type
             val result = Gson().fromJson<ResultContainer<PlaylistItem>>(response, type)
 
@@ -486,9 +463,7 @@ class SpotifyApi private constructor() {
             }
         }, trackList: MutableList<Track> = mutableListOf()
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             if (response.isBlank()) onSuccess(trackList)
 
             val type: Type = object : TypeToken<ResultContainer<PlaylistItem>>() {}.type
@@ -514,11 +489,9 @@ class SpotifyApi private constructor() {
             }
         }
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
         val albumId = album.uri.substringAfterLast(':')
 
-        sendGetRequest(context, "https://api.spotify.com/v1/albums/$albumId", header, { response ->
+        sendGetRequest(context, "https://api.spotify.com/v1/albums/$albumId", { response ->
             val result = Gson().fromJson(response, Album::class.java)
             onSuccess(result)
         }, onError)
@@ -531,9 +504,7 @@ class SpotifyApi private constructor() {
             }
         }, trackList: MutableList<Track> = mutableListOf()
     ) {
-        val header: MutableMap<String, String> = createHeader()
-
-        sendGetRequest(context, url, header, { response ->
+        sendGetRequest(context, url, { response ->
             val type: Type = object : TypeToken<ResultContainer<Track>>() {}.type
             val result = Gson().fromJson<ResultContainer<Track>>(response, type)
 
@@ -624,7 +595,7 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
-    private fun sendGetRequest(context: Context, url: String, header: MutableMap<String, String>, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
+    private fun sendGetRequest(context: Context, url: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}, header: MutableMap<String, String> = createHeader()) {
         val queue = Volley.newRequestQueue(context)
 
         val stringRequest = object : StringRequest(Method.GET, url, onSuccess, onError) {
@@ -640,10 +611,10 @@ class SpotifyApi private constructor() {
     private fun sendPostRequest(
         context: Context,
         url: String,
-        header: MutableMap<String, String>,
         body: String,
         onSuccess: (response: String) -> Unit,
-        onError: (error: VolleyError) -> Unit = {}
+        onError: (error: VolleyError) -> Unit = {},
+        header: MutableMap<String, String> = createHeader()
     ) {
         val queue = Volley.newRequestQueue(context)
 
@@ -661,7 +632,7 @@ class SpotifyApi private constructor() {
         queue.add(stringRequest)
     }
 
-    private fun sendPostRequest(context: Context, url: String, header: MutableMap<String, String>, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
+    private fun sendPostRequest(context: Context, url: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}, header: MutableMap<String, String> = createHeader()) {
         val queue = Volley.newRequestQueue(context)
 
         val stringRequest = object : StringRequest(Method.POST, url, onSuccess, onError) {
