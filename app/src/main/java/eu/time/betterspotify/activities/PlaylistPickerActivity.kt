@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.R
 import eu.time.betterspotify.recycleview.adapter.PlaylistPickerRecycleViewAdapter
-import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.getUsersPlaylists
 import eu.time.betterspotify.spotify.data.types.Playlist
 
 class PlaylistPickerActivity : AppCompatActivity() {
@@ -55,9 +56,7 @@ class PlaylistPickerActivity : AppCompatActivity() {
     }
 
     private fun loadPlaylists() {
-        SpotifyApi.getInstance().getUsersPlaylists(this, onSuccess = { result ->
-            updateRecycleView(result)
-        })
+        getUsersPlaylists(this, this::updateRecycleView)
     }
 
     @SuppressLint("NotifyDataSetChanged")

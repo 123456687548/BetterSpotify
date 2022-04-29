@@ -10,8 +10,9 @@ import eu.time.betterspotify.R
 import eu.time.betterspotify.activities.AlbumActivity
 import eu.time.betterspotify.activities.ArtistActivity
 import eu.time.betterspotify.activities.PlaylistPickerActivity
-import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
+import eu.time.betterspotify.spotify.data.spotifyApi.addTracksToPlaylist
 import eu.time.betterspotify.util.share
 
 class MenuController {
@@ -58,7 +59,7 @@ class MenuController {
                     }
                     MENU_ADD_TO_PLAYLIST -> {
                         PlaylistPickerActivity.openPlaylistPicker(context) { playlist ->
-                            SpotifyApi.getInstance().addTracksToPlaylist(context, listOf(selectedTrack.uri), playlist)
+                            addTracksToPlaylist(context, listOf(selectedTrack.uri), playlist)
                         }
                     }
                     MENU_QUEUE -> {

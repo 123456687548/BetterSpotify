@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import eu.time.betterspotify.R
-import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.sendSearch
 import eu.time.betterspotify.spotify.data.types.SearchResult
 import java.util.*
 
@@ -111,7 +111,7 @@ class SearchController private constructor() {
     private fun search(context: Context) {
         if (searchQuery.isBlank()) return
 
-        SpotifyApi.getInstance().search(context, searchQuery, currentSearchType.types) { result ->
+        sendSearch(context, searchQuery, currentSearchType.types) { result ->
             searchCallback(result, currentSearchType)
         }
     }

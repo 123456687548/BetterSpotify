@@ -11,8 +11,9 @@ import eu.time.betterspotify.controllers.PlayerController
 import eu.time.betterspotify.R
 
 import eu.time.betterspotify.recycleview.adapter.PlaylistRecycleViewAdapter
-import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
+import eu.time.betterspotify.spotify.data.spotifyApi.getUsersPlaylists
 import eu.time.betterspotify.spotify.data.types.Playlist
 import eu.time.betterspotify.util.NetworkHandler
 
@@ -63,9 +64,7 @@ class LibraryActivity : NavigationBarActivity() {
     }
 
     private fun loadPlaylists() {
-        SpotifyApi.getInstance().getUsersPlaylists(this, onSuccess = { result ->
-            updateRecycleView(result)
-        })
+        getUsersPlaylists(this, this::updateRecycleView)
     }
 
     override fun onPause() {

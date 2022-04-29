@@ -9,8 +9,11 @@ import eu.time.betterspotify.controllers.NavigationController
 import eu.time.betterspotify.controllers.PlayerController
 import eu.time.betterspotify.R
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
-import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
+import eu.time.betterspotify.spotify.data.spotifyApi.getPlaylist
+import eu.time.betterspotify.spotify.data.spotifyApi.getPlaylistTracks
+import eu.time.betterspotify.spotify.data.spotifyApi.getSavedTracks
 import eu.time.betterspotify.spotify.data.types.Playlist
 import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.openActivity
@@ -43,7 +46,7 @@ class PlaylistActivity : NavigationBarActivity() {
                     extras.putString(EXTRA_TRACK_KEY, currentTrack.uri)
                 }
 
-                SpotifyApi.getInstance().getPlaylist(context, playlistId, { result ->
+                getPlaylist(context, playlistId, { result ->
                     playlist = result
                     openActivity(context, PlaylistActivity::class.java, extras)
                 })
@@ -88,9 +91,9 @@ class PlaylistActivity : NavigationBarActivity() {
 
         SpotifyApi.getInstance().initialize(this) {
             if (playlist == Playlist.savedTracksPlaylist) {
-                SpotifyApi.getInstance().getSavedTracks(this, this::updateTracklist)
+                getSavedTracks(this, this::updateTracklist)
             } else {
-                SpotifyApi.getInstance().getPlaylistTracks(this, playlist.id, this::updateTracklist)
+                getPlaylistTracks(this, playlist.id, this::updateTracklist)
             }
             PlayerController.getInstance().start(this)
         }

@@ -7,8 +7,9 @@ import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.*
-import eu.time.betterspotify.spotify.SpotifyApi.Companion.CLIENT_ID
-import eu.time.betterspotify.spotify.SpotifyApi.Companion.REDIRECT_URI
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi.Companion.CLIENT_ID
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi.Companion.REDIRECT_URI
+import eu.time.betterspotify.spotify.data.spotifyApi.playContextApi
 import eu.time.betterspotify.spotify.data.types.Track
 
 class SpotifyPlayer private constructor() {
@@ -98,7 +99,7 @@ class SpotifyPlayer private constructor() {
 
     fun playContext(contextUri: String, offset: Int) {
         if (context == null) return
-        SpotifyApi.getInstance().playContext(context!!, contextUri, offset)
+        playContextApi(context!!, contextUri, offset)
     }
 
     fun queueUri(uri: String, callback: (Empty) -> Unit = {}) {

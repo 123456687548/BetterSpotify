@@ -10,8 +10,10 @@ import eu.time.betterspotify.controllers.NavigationController
 import eu.time.betterspotify.controllers.PlayerController
 import eu.time.betterspotify.R
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
-import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
+import eu.time.betterspotify.spotify.data.spotifyApi.getAlbum
+import eu.time.betterspotify.spotify.data.spotifyApi.getAlbumTracks
 import eu.time.betterspotify.spotify.data.types.Album
 import eu.time.betterspotify.spotify.data.types.Track
 
@@ -27,12 +29,9 @@ class AlbumActivity : NavigationBarActivity() {
         }
 
         fun openAlbum(context: Context, album: com.spotify.protocol.types.Album) {
-            SpotifyApi.getInstance().getAlbum(context, album, { result ->
+            getAlbum(context, album, { result ->
                 if (result == null) return@getAlbum
-                val intent = Intent(context, AlbumActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                Companion.album = result
-                context.startActivity(intent)
+                openAlbum(context, result)
             })
         }
     }
@@ -53,7 +52,7 @@ class AlbumActivity : NavigationBarActivity() {
 
         initRecycleView()
 
-        SpotifyApi.getInstance().getAlbumTracks(this, album.id, { result ->
+        getAlbumTracks(this, album.id, { result ->
             trackList.addAll(result)
             trackList.forEach { it.album = album }
             tracksAdapter.notifyDataSetChanged()

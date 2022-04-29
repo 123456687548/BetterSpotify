@@ -21,7 +21,7 @@
             android:text="@string/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button"
+            android:id="@+id/btnLogin"
             android:textSize="20sp"
             app:layout_constraintTop_toBottomOf="@+id/login_text_view"
             app:layout_constraintEnd_toEndOf="@+id/login_text_view"

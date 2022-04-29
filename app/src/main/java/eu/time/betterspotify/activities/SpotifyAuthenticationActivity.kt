@@ -7,9 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import eu.time.betterspotify.R
-import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 
 class SpotifyAuthenticationActivity : AppCompatActivity() {
+    companion object {
+        fun startLoginActivity(context: Context) {
+            val intent = Intent(context, SpotifyAuthenticationActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +38,9 @@ class SpotifyAuthenticationActivity : AppCompatActivity() {
             if (code != null) {
                 SpotifyApi.getInstance().requestToken(this, code)
             }
-
         }
 
-        findViewById<Button>(R.id.button).setOnClickListener {
+        findViewById<Button>(R.id.btnLogin).setOnClickListener {
             SpotifyApi.getInstance().requestAccess(this)
         }
     }

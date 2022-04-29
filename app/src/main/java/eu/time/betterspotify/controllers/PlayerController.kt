@@ -19,9 +19,11 @@ import eu.time.betterspotify.R
 import eu.time.betterspotify.activities.ArtistActivity
 import eu.time.betterspotify.activities.BigPlayerActivity
 import eu.time.betterspotify.activities.PlaylistActivity
-import eu.time.betterspotify.spotify.SpotifyApi
+import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 import eu.time.betterspotify.util.*
 import android.widget.Toast
+import eu.time.betterspotify.spotify.data.spotifyApi.addToTemp
+import eu.time.betterspotify.spotify.data.spotifyApi.getPlayerState
 
 class PlayerController private constructor() {
     companion object {
@@ -179,7 +181,7 @@ class PlayerController private constructor() {
             if (lastTrack != null) {
                 val context = it.context
 
-                SpotifyApi.getInstance().addToTemp(context, lastTrack!!.uri, {
+                addToTemp(context, lastTrack!!.uri, {
                     Toast.makeText(context, "${lastTrack!!.name} added to temp Playlist!", Toast.LENGTH_SHORT).show()
                 })
             }
@@ -239,7 +241,7 @@ class PlayerController private constructor() {
         val tvPlayerDevice: TextView? = activity.findViewById(R.id.tvPlayerDevice)
 
         if (tvPlayerDevice != null) {
-            SpotifyApi.getInstance().getPlayerState(activity, { ownPlayerState ->
+            getPlayerState(activity, { ownPlayerState ->
                 tvPlayerDevice.text = ownPlayerState.device.name
             })
         }
