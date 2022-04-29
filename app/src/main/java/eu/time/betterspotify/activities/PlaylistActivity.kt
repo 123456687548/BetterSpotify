@@ -88,24 +88,20 @@ class PlaylistActivity : NavigationBarActivity() {
 
         SpotifyApi.getInstance().initialize(this) {
             if (playlist == Playlist.savedTracksPlaylist) {
-                SpotifyApi.getInstance().getSavedTracks(this, onSuccess = { result ->
-                    trackList.clear()
-                    trackList.addAll(result)
-                    if(reversed) trackList.reverse()
-                    adapter.notifyDataSetChanged()
-                    scrollToTrack()
-                })
+                SpotifyApi.getInstance().getSavedTracks(this, this::updateTracklist)
             } else {
-                SpotifyApi.getInstance().getPlaylistTracks(this, "https://api.spotify.com/v1/playlists/${playlist.id}/tracks", { result ->
-                    trackList.clear()
-                    trackList.addAll(result)
-                    if(reversed) trackList.reverse()
-                    adapter.notifyDataSetChanged()
-                    scrollToTrack()
-                })
+                SpotifyApi.getInstance().getPlaylistTracks(this, playlist.id, this::updateTracklist)
             }
             PlayerController.getInstance().start(this)
         }
+    }
+
+    private fun updateTracklist(result: List<Track>) {
+        trackList.clear()
+        trackList.addAll(result)
+        if (reversed) trackList.reverse()
+        adapter.notifyDataSetChanged()
+        scrollToTrack()
     }
 
     override fun onPause() {

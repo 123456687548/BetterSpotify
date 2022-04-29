@@ -433,33 +433,29 @@ class SpotifyApi private constructor() {
     }
 
     fun getSavedTracks(
-        context: Context, url: String = "https://api.spotify.com/v1/me/tracks?limit=50", onSuccess: (response: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
+        context: Context, onSuccess: (response: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
-                getSavedTracks(context, url, onSuccess)
+                getSavedTracks(context, onSuccess)
             }
-        }, trackList: MutableList<Track> = mutableListOf()
+        }
     ) {
-        sendGetRequest(context, url, { response ->
-            val type: Type = object : TypeToken<ResultContainer<PlaylistItem>>() {}.type
-            val result = Gson().fromJson<ResultContainer<PlaylistItem>>(response, type)
-
-            val tracks = mutableListOf<Track>()
-
-            result.items.forEach { tracks.add(it.track) }
-
-            trackList.addAll(tracks)
-            if (result.next == null) {
-                onSuccess(trackList)
-            } else {
-                getSavedTracks(context, result.next, onSuccess, onError, trackList)
-            }
-        }, onError)
+        getPlaylistTracks(context, url = "https://api.spotify.com/v1/me/tracks?limit=50", onSuccess, onError)
     }
 
     fun getPlaylistTracks(
+        context: Context, trackId: String, onSuccess: (response: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getPlaylistTracks(context, trackId, onSuccess)
+            }
+        }
+    ) {
+        getPlaylistTracks(context, url = "https://api.spotify.com/v1/playlists/${trackId}/tracks", onSuccess, onError)
+    }
+
+    private fun getPlaylistTracks(
         context: Context, url: String, onSuccess: (response: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
-                getPlaylistTracks(context, url, onSuccess)
+                getPlaylistTracks(context, url = url, onSuccess)
             }
         }, trackList: MutableList<Track> = mutableListOf()
     ) {
@@ -498,9 +494,19 @@ class SpotifyApi private constructor() {
     }
 
     fun getAlbumTracks(
+        context: Context, albumId: String, onSuccess: (response: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
+            refreshTokenIfNeeded(context, it) {
+                getAlbumTracks(context, albumId, onSuccess)
+            }
+        }
+    ) {
+        getAlbumTracks(context, url = "https://api.spotify.com/v1/albums/${albumId}/tracks?market=${currentUser.country}", onSuccess, onError)
+    }
+
+    private fun getAlbumTracks(
         context: Context, url: String, onSuccess: (response: List<Track>) -> Unit, onError: (error: VolleyError) -> Unit = {
             refreshTokenIfNeeded(context, it) {
-                getAlbumTracks(context, url, onSuccess)
+                getAlbumTracks(context, url = url, onSuccess)
             }
         }, trackList: MutableList<Track> = mutableListOf()
     ) {
@@ -527,7 +533,6 @@ class SpotifyApi private constructor() {
         getUsersPlaylists(context, onSuccess = { playlists ->
             val playlist = playlists.firstOrNull { it.name == name }
             onSuccess(playlist)
-
         })
     }
 
@@ -637,14 +642,6 @@ class SpotifyApi private constructor() {
 
         queue.add(stringRequest)
     }
-
-//    private fun sendGetRequest(context: Context, url: String, onSuccess: (response: String) -> Unit, onError: (error: VolleyError) -> Unit = {}) {
-//        val queue = Volley.newRequestQueue(context)
-//
-//        val stringRequest = object : StringRequest(Method.GET, url, onSuccess, onError) {}
-//
-//        queue.add(stringRequest)
-//    }
 
     private fun sendGetRequest(
         context: Context,
