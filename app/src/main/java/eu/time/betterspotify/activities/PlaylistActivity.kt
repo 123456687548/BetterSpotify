@@ -9,11 +9,8 @@ import eu.time.betterspotify.controllers.NavigationController
 import eu.time.betterspotify.controllers.PlayerController
 import eu.time.betterspotify.R
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
-import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.spotifyApi.getPlaylist
-import eu.time.betterspotify.spotify.data.spotifyApi.getPlaylistTracks
-import eu.time.betterspotify.spotify.data.spotifyApi.getSavedTracks
+import eu.time.betterspotify.spotify.data.spotifyApi.*
 import eu.time.betterspotify.spotify.data.types.Playlist
 import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.openActivity
@@ -34,23 +31,17 @@ class PlaylistActivity : NavigationBarActivity() {
             context.startActivity(intent)
         }
 
-        fun openPlaylistFromPlayerContext(context: Context, currentTrack: com.spotify.protocol.types.Track?) {
-            SpotifyPlayer.getInstance(context).getPlayerContext { playerContext ->
-                if (playerContext.uri == null) return@getPlayerContext
+        fun openPlaylistFromPlayerContext(context: Context, playlistId: String, currentTrack: com.spotify.protocol.types.Track?) {
+            val extras = Bundle()
 
-                val playlistId = playerContext.uri.substringAfterLast(':')
-
-                val extras = Bundle()
-
-                if (currentTrack != null) {
-                    extras.putString(EXTRA_TRACK_KEY, currentTrack.uri)
-                }
-
-                getPlaylist(context, playlistId, { result ->
-                    playlist = result
-                    openActivity(context, PlaylistActivity::class.java, extras)
-                })
+            if (currentTrack != null) {
+                extras.putString(EXTRA_TRACK_KEY, currentTrack.uri)
             }
+
+            getPlaylist(context, playlistId, { result ->
+                playlist = result
+                openActivity(context, PlaylistActivity::class.java, extras)
+            })
         }
     }
 

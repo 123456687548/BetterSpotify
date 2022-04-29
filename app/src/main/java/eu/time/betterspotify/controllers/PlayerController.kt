@@ -15,15 +15,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.graphics.drawable.GradientDrawable
+import android.os.Bundle
 import eu.time.betterspotify.R
 import eu.time.betterspotify.activities.ArtistActivity
 import eu.time.betterspotify.activities.BigPlayerActivity
 import eu.time.betterspotify.activities.PlaylistActivity
-import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 import eu.time.betterspotify.util.*
 import android.widget.Toast
-import eu.time.betterspotify.spotify.data.spotifyApi.addToTemp
-import eu.time.betterspotify.spotify.data.spotifyApi.getPlayerState
+import com.spotify.protocol.types.Artist
+import eu.time.betterspotify.spotify.data.spotifyApi.*
 
 class PlayerController private constructor() {
     companion object {
@@ -110,11 +110,11 @@ class PlayerController private constructor() {
         }
 
         tvPlayerContextTitle?.setOnClickListener {
-            PlaylistActivity.openPlaylistFromPlayerContext(context, lastTrack)
+            openPlayerContext(context, lastTrack)
         }
 
         tvPlayerContextSubtitle?.setOnClickListener {
-            PlaylistActivity.openPlaylistFromPlayerContext(context, lastTrack)
+            openPlayerContext(context, lastTrack)
         }
 
         btnRepeat?.setOnClickListener {
@@ -408,5 +408,18 @@ class PlayerController private constructor() {
         val sbProgress: SeekBar? = activity.findViewById(R.id.sbProgress)
 
         tvPlayerCurrentProgress?.text = sbProgress?.progress?.toTimestampString()
+    }
+
+    private fun openPlayerContext(context: Context, currentTrack: com.spotify.protocol.types.Track?) {
+        SpotifyPlayer.getInstance(context).getPlayerContext { playerContext ->
+            if (playerContext.uri == null) return@getPlayerContext
+
+            val id = playerContext.uri.substringAfterLast(':')
+
+            when (playerContext.type) {
+                "artist" -> ArtistActivity.openArtistFromPlayerContext(context, id)
+                "playlist" -> PlaylistActivity.openPlaylistFromPlayerContext(context, id, currentTrack)
+            }
+        }
     }
 }

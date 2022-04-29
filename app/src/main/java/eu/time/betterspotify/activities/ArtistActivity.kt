@@ -11,14 +11,12 @@ import eu.time.betterspotify.controllers.PlayerController
 import eu.time.betterspotify.R
 import eu.time.betterspotify.recycleview.adapter.AlbumRecycleViewAdapter
 import eu.time.betterspotify.recycleview.adapter.TrackRecycleViewAdapter
-import eu.time.betterspotify.spotify.data.spotifyApi.SpotifyApi
 import eu.time.betterspotify.spotify.SpotifyPlayer
-import eu.time.betterspotify.spotify.data.spotifyApi.getArtist
-import eu.time.betterspotify.spotify.data.spotifyApi.getArtistAlbums
-import eu.time.betterspotify.spotify.data.spotifyApi.getArtistTopTracks
+import eu.time.betterspotify.spotify.data.spotifyApi.*
 import eu.time.betterspotify.spotify.data.types.Album
 import eu.time.betterspotify.spotify.data.types.Artist
 import eu.time.betterspotify.spotify.data.types.Track
+import eu.time.betterspotify.util.openActivity
 
 class ArtistActivity : NavigationBarActivity() {
     companion object {
@@ -33,6 +31,12 @@ class ArtistActivity : NavigationBarActivity() {
 
         fun openArtist(context: Context, artist: com.spotify.protocol.types.Artist) {
             getArtist(context, artist, { result ->
+                openArtist(context, result)
+            })
+        }
+
+        fun openArtistFromPlayerContext(context: Context, artistId: String) {
+            getArtist(context, artistId, { result ->
                 openArtist(context, result)
             })
         }
