@@ -3,6 +3,9 @@ package eu.time.betterspotify.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import eu.time.betterspotify.controllers.NavigationController
@@ -14,6 +17,7 @@ import eu.time.betterspotify.spotify.data.spotifyApi.*
 import eu.time.betterspotify.spotify.data.types.Playlist
 import eu.time.betterspotify.spotify.data.types.Track
 import eu.time.betterspotify.util.openActivity
+import kotlin.math.floor
 
 class PlaylistActivity : NavigationBarActivity() {
     companion object {
@@ -54,9 +58,10 @@ class PlaylistActivity : NavigationBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_library)
+        setContentView(R.layout.activity_playlist)
 
         spotifyPlayer = SpotifyPlayer.getInstance(this)
+
 
         initRecycleView()
     }
@@ -80,14 +85,41 @@ class PlaylistActivity : NavigationBarActivity() {
     override fun onStart() {
         super.onStart()
 
+        findViewById<TextView>(R.id.tvPlaylistName).text = playlist.name
+
         SpotifyApi.getInstance().initialize(this) {
             if (playlist == Playlist.savedTracksPlaylist) {
                 getSavedTracks(this, this::updateTracklist)
             } else {
                 getPlaylistTracks(this, playlist.id, this::updateTracklist)
             }
+
+
             PlayerController.getInstance().start(this)
         }
+    }
+
+    private fun updatePlaylistInfo() {
+        findViewById<TextView>(R.id.tvPlaylistSize).text = trackList.size.toString()
+        findViewById<TextView>(R.id.tvPlaylistPlaytime).text = calcPlaylistPlaytime()
+        findViewById<LinearLayout>(R.id.llPlaylistInfo).visibility = View.VISIBLE
+    }
+
+    private fun calcPlaylistPlaytime(): String {
+        var milliseconds = 0
+
+        trackList.forEach { track ->
+            milliseconds += track.duration_ms
+        }
+
+        var seconds = floor((milliseconds / 1000).toDouble())
+        var minutes = floor(seconds / 60)
+        var hours = floor(minutes / 60)
+
+        seconds %= 60
+        minutes %= 60
+
+        return "${hours.toInt()}h ${minutes.toInt()}m ${seconds.toInt()}s"
     }
 
     private fun updateTracklist(result: List<Track>) {
@@ -96,6 +128,8 @@ class PlaylistActivity : NavigationBarActivity() {
         if (reversed) trackList.reverse()
         adapter.notifyDataSetChanged()
         scrollToTrack()
+
+        updatePlaylistInfo()
     }
 
     override fun onPause() {

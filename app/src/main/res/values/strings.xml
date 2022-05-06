@@ -30,4 +30,6 @@
     <string name="open_artist">Open Artist</string>
     <string name="share">Share</string>
     <string name="remove_like">Remove Like</string>
+    <string name="playtime">"Playtime: "</string>
+    <string name="tracksCount">"Tracks: "</string>
 </resources>
