@@ -15,11 +15,10 @@
 
         <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="2dp"
-                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1">
 
             <TextView
@@ -40,17 +39,10 @@
         </LinearLayout>
 
         <ImageButton
-                android:id="@+id/btnPlay"
-                android:layout_width="64dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_baseline_play_arrow_48"
-                android:background="@null"
-                android:visibility="gone" />
-
-        <ImageButton
                 android:id="@+id/btnQueue"
-                android:layout_width="64dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:background="@null"
                 android:src="@drawable/ic_baseline_queue_48" />
     </LinearLayout>

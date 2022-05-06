@@ -22,7 +22,6 @@ class TrackRecycleViewAdapter(private val dataSet: MutableList<Track>, private v
         val tvTrack: TextView = view.findViewById(R.id.tvTitle)
         val tvArtist: TextView = view.findViewById(R.id.tvArtist)
         val ivCover: ImageView = view.findViewById(R.id.ivCover)
-        private val btnPlay: ImageButton = view.findViewById(R.id.btnPlay)
         private val btnQueue: ImageButton = view.findViewById(R.id.btnQueue)
 
         init {
@@ -32,10 +31,6 @@ class TrackRecycleViewAdapter(private val dataSet: MutableList<Track>, private v
                 } else {
                     playTrack()
                 }
-            }
-
-            btnPlay.setOnClickListener {
-                playTrack()
             }
 
             btnQueue.setOnClickListener { view ->
